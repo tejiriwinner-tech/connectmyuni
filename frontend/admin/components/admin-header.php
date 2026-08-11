@@ -1,15 +1,17 @@
 <?php
-// Require authentication for all admin pages
-require_once __DIR__ . '/../middleware/AuthMiddleware.php';
+// Bootstrap backend layer (autoloading + configuration + BASE_URL).
+require_once __DIR__ . '/../../../backend/bootstrap.php';
+
 use ConnectMyUni\Middleware\AuthMiddleware;
 
+// Require authentication for all admin pages
 AuthMiddleware::requireAuth();
 
 // Refresh session to prevent timeout
 AuthMiddleware::refreshSession();
 
-$base_url   = '/myuni/';
-$admin_url  = '/myuni/admin/';
+$base_url   = CONNECTMYUNI_BASE_URL;
+$admin_url  = CONNECTMYUNI_BASE_URL . 'frontend/admin/';
 $style_version = @filemtime(__DIR__ . '/../style.css') ?: time();
 $current_page = basename($_SERVER['PHP_SELF']);
 $currentUser = AuthMiddleware::user();

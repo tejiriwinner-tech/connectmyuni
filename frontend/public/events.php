@@ -1,4 +1,4 @@
-<?php include 'components/header.php'; ?>
+<?php include __DIR__ . '/../components/header.php'; ?>
 
 <?php
 require_once __DIR__ . '/../../backend/helpers/CacheManager.php';
@@ -92,4 +92,4 @@ sort($categories);
     });
 </script>
 
-<?php include 'components/footer.php'; ?>
+<?php include __DIR__ . '/../components/footer.php'; ?>

@@ -1,9 +1,12 @@
 <?php
+// Bootstrap the backend layer (autoloading + configuration) first.
+require_once __DIR__ . '/../../backend/bootstrap.php';
+
 // Define base URL for consistent navigation across all pages
-$base_url = '';
+$base_url = CONNECTMYUNI_BASE_URL;
 
 // Get cache buster version based on file modification time
-$style_version = @filemtime(__DIR__ . '/style.css') ?: time();
+$style_version = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,7 +35,7 @@ $style_version = @filemtime(__DIR__ . '/style.css') ?: time();
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo $base_url; ?>style.css?v=<?php echo $style_version; ?>">
+    <link rel="stylesheet" href="<?php echo $base_url; ?>frontend/assets/css/style.css?v=<?php echo $style_version; ?>">
 </head>
 
 <body>

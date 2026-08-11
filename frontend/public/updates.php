@@ -1,4 +1,4 @@
-<?php include 'components/header.php'; ?>
+<?php include __DIR__ . '/../components/header.php'; ?>
 
 <?php
 // Include cache manager
@@ -110,4 +110,4 @@ usort($events, function ($a, $b) {
     });
 </script>
 
-<?php include 'components/footer.php'; ?>
+<?php include __DIR__ . '/../components/footer.php'; ?>

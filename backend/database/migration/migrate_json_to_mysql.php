@@ -17,7 +17,7 @@ if (php_sapi_name() === 'cli') {
     ini_set('display_errors', '1');
 }
 
-require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/db_config.php';
 require_once __DIR__ . '/../../config/app.php';
 require_once __DIR__ . '/../../config/Database.php';
 

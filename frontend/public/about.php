@@ -1,4 +1,4 @@
-<?php include 'components/header.php'; ?>
+<?php include __DIR__ . '/../components/header.php'; ?>
 
 <section class="page-header">
     <div class="container page-header-content">
@@ -226,4 +226,4 @@
     </div>
 </section>
 
-<?php include 'components/footer.php'; ?>
+<?php include __DIR__ . '/../components/footer.php'; ?>

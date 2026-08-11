@@ -5,7 +5,7 @@ echo "\n========================================\n";
 echo "Connect MyUni - Simple Migration\n";
 echo "========================================\n\n";
 
-$config = require __DIR__ . '/../../config/database.php';
+$config = require __DIR__ . '/../../config/db_config.php';
 
 echo "[INFO] Connecting to database...\n";
 

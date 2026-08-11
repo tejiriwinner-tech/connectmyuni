@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../backend/middleware/AuthMiddleware.php';
+require_once __DIR__ . '/../../backend/bootstrap.php';
 
 use ConnectMyUni\Middleware\AuthMiddleware;
 

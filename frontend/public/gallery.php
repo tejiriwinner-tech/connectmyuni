@@ -1,6 +1,6 @@
 <?php
 $page_title = 'Gallery';
-require_once 'header.php';
+require_once __DIR__ . '/../components/header.php';
 
 // ─────────────────────────────────────────────────────────────
 // Gallery Images
@@ -770,4 +770,4 @@ $categories = [
     })();
 </script>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once __DIR__ . '/../components/footer.php'; ?>

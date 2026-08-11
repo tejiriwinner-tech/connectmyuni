@@ -1,4 +1,4 @@
-<?php include 'components/header.php'; ?>
+<?php include __DIR__ . '/../components/header.php'; ?>
 
 <!-- Services Section -->
 <section class="services-page-section">
@@ -134,4 +134,4 @@
     }
 </script>
 
-<?php include 'components/footer.php'; ?>
+<?php include __DIR__ . '/../components/footer.php'; ?>

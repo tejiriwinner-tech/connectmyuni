@@ -43,8 +43,12 @@ class AuthMiddleware
         if (!self::check()) {
             // Store intended URL for redirect after login
             $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'] ?? '/admin/index.php';
-            
-            header('Location: /admin/login.php');
+
+            $loginUrl = defined('CONNECTMYUNI_BASE_URL')
+                ? CONNECTMYUNI_BASE_URL . 'frontend/admin/login.php'
+                : '/ConnectMyUni/frontend/admin/login.php';
+
+            header('Location: ' . $loginUrl);
             exit;
         }
     }

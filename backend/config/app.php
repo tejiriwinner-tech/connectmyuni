@@ -14,22 +14,35 @@ namespace ConnectMyUni\Config;
 
 /**
  * Helper function to get environment variables
+ *
+ * Resolution order:
+ *   1. Real process environment (getenv) — supports CLI/container-injected
+ *      variables and takes precedence over the project .env file.
+ *   2. Values parsed from the project .env file (cached in-process).
+ *   3. The supplied default.
  */
 if (!function_exists('ConnectMyUni\Config\env')) {
     function env(string $key, mixed $default = null): mixed {
+        // Real environment first (never cached, so putenv()/setenv()/export
+        // all work immediately from CLI, cron, containers, and unit tests).
+        $real = getenv($key);
+        if ($real !== false) {
+            return $real;
+        }
+
         static $envVars = null;
-        
+
         if ($envVars === null) {
             $envFile = dirname(__DIR__, 2) . '/.env';
             $envVars = [];
-            
+
             if (file_exists($envFile)) {
                 $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
                 foreach ($lines as $line) {
                     if (strpos(trim($line), '#') === 0) {
                         continue;
                     }
-                    
+
                     $parts = explode('=', $line, 2);
                     if (count($parts) === 2) {
                         $envVars[trim($parts[0])] = trim($parts[1]);
@@ -37,7 +50,7 @@ if (!function_exists('ConnectMyUni\Config\env')) {
                 }
             }
         }
-        
+
         return $envVars[$key] ?? $default;
     }
 }
@@ -52,6 +65,7 @@ return [
     'env'     => env('APP_ENV', 'local'),
     'debug'   => filter_var(env('APP_DEBUG', 'true'), FILTER_VALIDATE_BOOLEAN),
     'url'     => 'http://localhost/ConnectMyUni',
+    'base_url' => env('APP_BASE_URL', '/ConnectMyUni/'),
 
     // Session
     'session' => [

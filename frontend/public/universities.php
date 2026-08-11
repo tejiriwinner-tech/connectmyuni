@@ -1,6 +1,6 @@
 <?php
 $page_title = 'Partner Universities';
-require_once 'header.php';
+require_once __DIR__ . '/../components/header.php';
 
 // ─────────────────────────────────────────────
 // Partner Universities Data
@@ -503,4 +503,4 @@ $featured_partners = [
     })();
 </script>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once __DIR__ . '/../components/footer.php'; ?>

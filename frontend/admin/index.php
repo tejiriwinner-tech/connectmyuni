@@ -1,13 +1,8 @@
 <?php include 'components/admin-header.php'; ?>
 
 <?php
-// Load real database statistics
-require_once __DIR__ . '/../../backend/repositories/EventRepository.php';
-require_once __DIR__ . '/../../backend/repositories/CountryRepository.php';
-require_once __DIR__ . '/../../backend/repositories/UniversityRepository.php';
-require_once __DIR__ . '/../../backend/repositories/ContactMessageRepository.php';
-require_once __DIR__ . '/../../backend/repositories/TestimonialRepository.php';
-require_once __DIR__ . '/../../backend/repositories/GalleryRepository.php';
+// Load real database statistics (classes autoloaded via bootstrap.php)
+require_once __DIR__ . '/../../backend/bootstrap.php';
 
 use ConnectMyUni\Repositories\EventRepository;
 use ConnectMyUni\Repositories\CountryRepository;

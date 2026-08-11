@@ -1,4 +1,4 @@
-<?php include 'components/header.php'; ?>
+<?php include __DIR__ . '/../components/header.php'; ?>
 
 <!-- =============================================
      HERO SECTION — full-width background image
@@ -442,4 +442,4 @@
     </div>
 </section>
 
-<?php include 'components/footer.php'; ?>
+<?php include __DIR__ . '/../components/footer.php'; ?>

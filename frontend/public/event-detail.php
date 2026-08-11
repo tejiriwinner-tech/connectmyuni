@@ -1,4 +1,4 @@
-<?php include 'components/header.php'; ?>
+<?php include __DIR__ . '/../components/header.php'; ?>
 
 <?php
 // Include cache manager
@@ -28,7 +28,7 @@ if (!$event) {
         </div>
     </section>
 <?php
-    include 'components/footer.php';
+    include __DIR__ . '/../components/footer.php';
     exit;
 }
 ?>
@@ -210,4 +210,4 @@ if (!empty($relatedEvents)):
     </section>
 <?php endif; ?>
 
-<?php include 'components/footer.php'; ?>
+<?php include __DIR__ . '/../components/footer.php'; ?>
