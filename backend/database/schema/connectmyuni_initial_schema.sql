@@ -1,14 +1,26 @@
 -- ==========================================================
 -- Connect MyUni — PostgreSQL Schema for Supabase
--- Database: connect_myuni (or postgres in Supabase)
--- Character Set: UTF8
+-- Database: postgres (Supabase default)
 -- ==========================================================
 
 -- ==========================================================
+-- Generic trigger function for updated_at timestamps
+-- ==========================================================
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ==========================================================
 -- Table: admin_users
+-- Purpose: Admin authentication and authorization
+-- SECURITY: Sensitive - contains credentials
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS admin_users (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
@@ -19,30 +31,24 @@ CREATE TABLE IF NOT EXISTS admin_users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for admin_users
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_admin_users_username ON admin_users(username);
 CREATE INDEX IF NOT EXISTS idx_admin_users_email ON admin_users(email);
 CREATE INDEX IF NOT EXISTS idx_admin_users_is_active ON admin_users(is_active);
 
--- Trigger for updated_at on admin_users
-CREATE OR REPLACE FUNCTION update_admin_users_updated_at()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE TRIGGER trigger_admin_users_updated_at
+-- Trigger for updated_at
+CREATE TRIGGER trigger_admin_users_updated_at
     BEFORE UPDATE ON admin_users
     FOR EACH ROW
-    EXECUTE FUNCTION update_admin_users_updated_at();
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- ==========================================================
 -- Table: countries
+-- Purpose: Study destination countries
+-- SECURITY: Public - no sensitive data
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS countries (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     slug VARCHAR(100) NOT NULL UNIQUE,
     flag_emoji VARCHAR(10) NULL,
@@ -53,22 +59,24 @@ CREATE TABLE IF NOT EXISTS countries (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for countries
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_countries_slug ON countries(slug);
 CREATE INDEX IF NOT EXISTS idx_countries_is_featured ON countries(is_featured);
 CREATE INDEX IF NOT EXISTS idx_countries_sort_order ON countries(sort_order);
 
--- Trigger for updated_at on countries
-CREATE OR REPLACE TRIGGER trigger_countries_updated_at
+-- Trigger for updated_at
+CREATE TRIGGER trigger_countries_updated_at
     BEFORE UPDATE ON countries
     FOR EACH ROW
-    EXECUTE FUNCTION update_admin_users_updated_at();
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- ==========================================================
 -- Table: universities
+-- Purpose: Partner universities
+-- SECURITY: Public - no sensitive data
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS universities (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     country_id INTEGER NOT NULL REFERENCES countries(id) ON DELETE CASCADE,
     name VARCHAR(200) NOT NULL,
     slug VARCHAR(200) NOT NULL UNIQUE,
@@ -82,22 +90,24 @@ CREATE TABLE IF NOT EXISTS universities (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for universities
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_universities_country_id ON universities(country_id);
 CREATE INDEX IF NOT EXISTS idx_universities_slug ON universities(slug);
 CREATE INDEX IF NOT EXISTS idx_universities_is_featured ON universities(is_featured);
 
--- Trigger for updated_at on universities
-CREATE OR REPLACE TRIGGER trigger_universities_updated_at
+-- Trigger for updated_at
+CREATE TRIGGER trigger_universities_updated_at
     BEFORE UPDATE ON universities
     FOR EACH ROW
-    EXECUTE FUNCTION update_admin_users_updated_at();
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- ==========================================================
 -- Table: services
+-- Purpose: Services offered by Connect MyUni
+-- SECURITY: Public - no sensitive data
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS services (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
     slug VARCHAR(200) NOT NULL UNIQUE,
     description TEXT NOT NULL,
@@ -108,23 +118,24 @@ CREATE TABLE IF NOT EXISTS services (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for services
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_services_slug ON services(slug);
 CREATE INDEX IF NOT EXISTS idx_services_is_active ON services(is_active);
 CREATE INDEX IF NOT EXISTS idx_services_sort_order ON services(sort_order);
 
--- Trigger for updated_at on services
-CREATE OR REPLACE TRIGGER trigger_services_updated_at
+-- Trigger for updated_at
+CREATE TRIGGER trigger_services_updated_at
     BEFORE UPDATE ON services
     FOR EACH ROW
-    EXECUTE FUNCTION update_admin_users_updated_at();
-
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- ==========================================================
 -- Table: testimonials
+-- Purpose: Student success stories
+-- SECURITY: Public - no sensitive data
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS testimonials (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     student_name VARCHAR(100) NOT NULL,
     student_university VARCHAR(200) NULL,
     student_country VARCHAR(100) NULL,
@@ -137,21 +148,23 @@ CREATE TABLE IF NOT EXISTS testimonials (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for testimonials
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_testimonials_is_featured ON testimonials(is_featured);
 CREATE INDEX IF NOT EXISTS idx_testimonials_sort_order ON testimonials(sort_order);
 
--- Trigger for updated_at on testimonials
-CREATE OR REPLACE TRIGGER trigger_testimonials_updated_at
+-- Trigger for updated_at
+CREATE TRIGGER trigger_testimonials_updated_at
     BEFORE UPDATE ON testimonials
     FOR EACH ROW
-    EXECUTE FUNCTION update_admin_users_updated_at();
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- ==========================================================
 -- Table: gallery_images
+-- Purpose: Gallery images for website
+-- SECURITY: Public - no sensitive data
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS gallery_images (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     title VARCHAR(200) NULL,
     image_path VARCHAR(255) NOT NULL,
     alt_text VARCHAR(255) NULL,
@@ -162,22 +175,24 @@ CREATE TABLE IF NOT EXISTS gallery_images (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for gallery_images
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_gallery_images_category ON gallery_images(category);
 CREATE INDEX IF NOT EXISTS idx_gallery_images_is_active ON gallery_images(is_active);
 CREATE INDEX IF NOT EXISTS idx_gallery_images_sort_order ON gallery_images(sort_order);
 
--- Trigger for updated_at on gallery_images
-CREATE OR REPLACE TRIGGER trigger_gallery_images_updated_at
+-- Trigger for updated_at
+CREATE TRIGGER trigger_gallery_images_updated_at
     BEFORE UPDATE ON gallery_images
     FOR EACH ROW
-    EXECUTE FUNCTION update_admin_users_updated_at();
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- ==========================================================
 -- Table: hero_slides
+-- Purpose: Homepage hero banners/carousels
+-- SECURITY: Public - no sensitive data
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS hero_slides (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     subtitle TEXT NULL,
     cta_text VARCHAR(100) NULL,
@@ -190,22 +205,24 @@ CREATE TABLE IF NOT EXISTS hero_slides (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for hero_slides
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_hero_slides_is_active ON hero_slides(is_active);
 CREATE INDEX IF NOT EXISTS idx_hero_slides_sort_order ON hero_slides(sort_order);
 
--- Trigger for updated_at on hero_slides
-CREATE OR REPLACE TRIGGER trigger_hero_slides_updated_at
+-- Trigger for updated_at
+CREATE TRIGGER trigger_hero_slides_updated_at
     BEFORE UPDATE ON hero_slides
     FOR EACH ROW
-    EXECUTE FUNCTION update_admin_users_updated_at();
+    EXECUTE FUNCTION update_updated_at_column();
 
 
 -- ==========================================================
 -- Table: events
+-- Purpose: Events (webinars, workshops, announcements, videos)
+-- SECURITY: Public - published events accessible, drafts admin-only
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS events (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,
     category VARCHAR(20) DEFAULT 'announcement' CHECK (category IN ('webinar', 'workshop', 'announcement', 'video')),
@@ -226,25 +243,26 @@ CREATE TABLE IF NOT EXISTS events (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for events
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_events_slug ON events(slug);
 CREATE INDEX IF NOT EXISTS idx_events_category ON events(category);
 CREATE INDEX IF NOT EXISTS idx_events_status ON events(status);
 CREATE INDEX IF NOT EXISTS idx_events_event_date ON events(event_date);
 CREATE INDEX IF NOT EXISTS idx_events_created_at ON events(created_at);
 
--- Trigger for updated_at on events
-CREATE OR REPLACE TRIGGER trigger_events_updated_at
+-- Trigger for updated_at
+CREATE TRIGGER trigger_events_updated_at
     BEFORE UPDATE ON events
     FOR EACH ROW
-    EXECUTE FUNCTION update_admin_users_updated_at();
-
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- ==========================================================
 -- Table: event_registrations
+-- Purpose: Event registration records
+-- SECURITY: Sensitive - contains PII (email, phone, field_of_study)
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS event_registrations (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
@@ -254,16 +272,18 @@ CREATE TABLE IF NOT EXISTS event_registrations (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for event_registrations
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_event_registrations_event_id ON event_registrations(event_id);
 CREATE INDEX IF NOT EXISTS idx_event_registrations_email ON event_registrations(email);
 CREATE INDEX IF NOT EXISTS idx_event_registrations_created_at ON event_registrations(created_at);
 
 -- ==========================================================
 -- Table: contact_messages
+-- Purpose: Contact form submissions
+-- SECURITY: Sensitive - contains PII (name, email, phone, message)
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS contact_messages (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NULL,
@@ -274,23 +294,25 @@ CREATE TABLE IF NOT EXISTS contact_messages (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for contact_messages
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_contact_messages_email ON contact_messages(email);
 CREATE INDEX IF NOT EXISTS idx_contact_messages_status ON contact_messages(status);
 CREATE INDEX IF NOT EXISTS idx_contact_messages_created_at ON contact_messages(created_at);
 
--- Trigger for updated_at on contact_messages
-CREATE OR REPLACE TRIGGER trigger_contact_messages_updated_at
+-- Trigger for updated_at
+CREATE TRIGGER trigger_contact_messages_updated_at
     BEFORE UPDATE ON contact_messages
     FOR EACH ROW
-    EXECUTE FUNCTION update_admin_users_updated_at();
+    EXECUTE FUNCTION update_updated_at_column();
 
 
 -- ==========================================================
 -- Table: blog_posts
+-- Purpose: Blog articles and news
+-- SECURITY: Mixed - published posts public, drafts admin-only
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS blog_posts (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,
     excerpt TEXT NULL,
@@ -303,23 +325,25 @@ CREATE TABLE IF NOT EXISTS blog_posts (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for blog_posts
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_blog_posts_slug ON blog_posts(slug);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_status ON blog_posts(status);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_published_at ON blog_posts(published_at);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_author_id ON blog_posts(author_id);
 
--- Trigger for updated_at on blog_posts
-CREATE OR REPLACE TRIGGER trigger_blog_posts_updated_at
+-- Trigger for updated_at
+CREATE TRIGGER trigger_blog_posts_updated_at
     BEFORE UPDATE ON blog_posts
     FOR EACH ROW
-    EXECUTE FUNCTION update_admin_users_updated_at();
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- ==========================================================
 -- Table: scholarships
+-- Purpose: Scholarship opportunities
+-- SECURITY: Public - no sensitive data
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS scholarships (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,
     university_id INTEGER NULL REFERENCES universities(id) ON DELETE SET NULL,
@@ -334,24 +358,26 @@ CREATE TABLE IF NOT EXISTS scholarships (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for scholarships
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_scholarships_slug ON scholarships(slug);
 CREATE INDEX IF NOT EXISTS idx_scholarships_is_featured ON scholarships(is_featured);
 CREATE INDEX IF NOT EXISTS idx_scholarships_deadline ON scholarships(deadline);
 CREATE INDEX IF NOT EXISTS idx_scholarships_university_id ON scholarships(university_id);
 CREATE INDEX IF NOT EXISTS idx_scholarships_country_id ON scholarships(country_id);
 
--- Trigger for updated_at on scholarships
-CREATE OR REPLACE TRIGGER trigger_scholarships_updated_at
+-- Trigger for updated_at
+CREATE TRIGGER trigger_scholarships_updated_at
     BEFORE UPDATE ON scholarships
     FOR EACH ROW
-    EXECUTE FUNCTION update_admin_users_updated_at();
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- ==========================================================
 -- Table: ai_content_requests
+-- Purpose: AI content generation tracking
+-- SECURITY: Sensitive - admin-only data
 -- ==========================================================
 CREATE TABLE IF NOT EXISTS ai_content_requests (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     admin_user_id INTEGER NULL REFERENCES admin_users(id) ON DELETE SET NULL,
     content_type VARCHAR(50) NOT NULL,
     prompt TEXT NOT NULL,
@@ -363,25 +389,25 @@ CREATE TABLE IF NOT EXISTS ai_content_requests (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for ai_content_requests
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_ai_content_requests_status ON ai_content_requests(status);
 CREATE INDEX IF NOT EXISTS idx_ai_content_requests_content_type ON ai_content_requests(content_type);
 CREATE INDEX IF NOT EXISTS idx_ai_content_requests_created_at ON ai_content_requests(created_at);
 CREATE INDEX IF NOT EXISTS idx_ai_content_requests_admin_user_id ON ai_content_requests(admin_user_id);
 
--- Trigger for updated_at on ai_content_requests
-CREATE OR REPLACE TRIGGER trigger_ai_content_requests_updated_at
+-- Trigger for updated_at
+CREATE TRIGGER trigger_ai_content_requests_updated_at
     BEFORE UPDATE ON ai_content_requests
     FOR EACH ROW
-    EXECUTE FUNCTION update_admin_users_updated_at();
+    EXECUTE FUNCTION update_updated_at_column();
 
 
 -- ==========================================================
 -- Seed Data
 -- ==========================================================
 
--- Seed: Default admin user (password: admin123)
--- Note: Password is already hashed with PHP password_hash()
+-- Seed: Default admin user
+-- SECURITY: password_hash is bcrypt-hashed via PHP password_hash()
 INSERT INTO admin_users (username, email, password_hash, role, is_active)
 VALUES (
     'admin',
@@ -393,12 +419,12 @@ VALUES (
 
 -- Seed: Sample countries
 INSERT INTO countries (name, slug, flag_emoji, description, is_featured, sort_order) VALUES
-('United Kingdom', 'united-kingdom', '🇬🇧', 'Study in the UK with world-renowned universities.', TRUE, 1),
-('United States', 'united-states', '🇺🇸', 'Study in the USA with top-ranked institutions.', TRUE, 2),
-('Canada', 'canada', '🇨🇦', 'Study in Canada with welcoming communities.', TRUE, 3),
-('Australia', 'australia', '🇦🇺', 'Study in Australia with excellent quality of life.', TRUE, 4),
-('Malaysia', 'malaysia', '🇲🇾', 'Affordable quality education in Malaysia.', FALSE, 5),
-('Philippines', 'philippines', '🇵🇭', 'Study in the Philippines with affordable tuition.', FALSE, 6)
+('United Kingdom', 'united-kingdom', 'GB', 'Study in the UK with world-renowned universities.', TRUE, 1),
+('United States', 'united-states', 'US', 'Study in the USA with top-ranked institutions.', TRUE, 2),
+('Canada', 'canada', 'CA', 'Study in Canada with welcoming communities.', TRUE, 3),
+('Australia', 'australia', 'AU', 'Study in Australia with excellent quality of life.', TRUE, 4),
+('Malaysia', 'malaysia', 'MY', 'Affordable quality education in Malaysia.', FALSE, 5),
+('Philippines', 'philippines', 'PH', 'Study in the Philippines with affordable tuition.', FALSE, 6)
 ON CONFLICT (slug) DO NOTHING;
 
 -- Seed: Sample services
