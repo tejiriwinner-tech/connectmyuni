@@ -1,17 +1,45 @@
 # Enable Rewrite Engine
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /ConnectMyUni/
 
-    # Remove trailing slash
+    # Remove trailing slash (except for root)
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.+)/$ /$1 [L,R=301]
+    RewriteRule ^(.+)/$ $1 [L,R=301]
+
+    # Route all requests to frontend/public/ if file/directory doesn't exist
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !^/frontend/
+    RewriteRule ^(.*)$ frontend/public/$1 [L]
 </IfModule>
 
 # Disable directory listing
 Options -Indexes
 
+# Protect backend directory from direct web access
+<Directory "backend">
+    Require all denied
+</Directory>
+
+# Protect storage directory (except uploads)
+<Directory "storage">
+    Require all denied
+</Directory>
+
+<Directory "storage/uploads">
+    Require all granted
+</Directory>
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
 # php -- BEGIN cPanel-generated handler, do not edit
-# Set the “ea-php84” package as the default “PHP” programming language.
+# Set the "ea-php84" package as the default "PHP" programming language.
 <IfModule mime_module>
   AddHandler application/x-httpd-ea-php84 .php .php8 .phtml
 </IfModule>
