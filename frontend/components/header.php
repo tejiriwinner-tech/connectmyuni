@@ -68,7 +68,7 @@ $style_version = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time();
                         'events.php'           => 'Events',
                         'gallery.php'          => 'Gallery',
                         'registration.php'     => 'Event Registration',
-                        'partner-universities.php' => 'Partner Universities',
+                        'universities.php' => 'Partner Universities',
                     ];
                     foreach ($pages as $file => $label) {
                         $active = ($current === $file) ? 'active' : '';
