@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 declare(strict_types=1);
 
@@ -8,7 +8,7 @@ use PDO;
 use PDOException;
 
 /**
- * Database Connection Singleton
+ * Database Connection Singleton for PostgreSQL/Supabase
  *
  * @package ConnectMyUni
  */
@@ -30,13 +30,18 @@ class Database
         if (self::$pdo === null) {
             $config = require __DIR__ . '/database.php';
 
+            // Build PostgreSQL DSN
             $dsn = sprintf(
-                'mysql:host=%s;port=%d;dbname=%s;charset=%s',
+                'pgsql:host=%s;port=%d;dbname=%s',
                 $config['host'],
                 $config['port'],
-                $config['dbname'],
-                $config['charset']
+                $config['dbname']
             );
+
+            // Add SSL mode if specified (required for Supabase)
+            if (!empty($config['sslmode'])) {
+                $dsn .= ';sslmode=' . $config['sslmode'];
+            }
 
             try {
                 self::$pdo = new PDO($dsn, $config['username'], $config['password'], $config['options']);
