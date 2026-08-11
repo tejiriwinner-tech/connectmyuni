@@ -1,0 +1,24 @@
+# Environment configuration
+.env
+.env.local
+
+# Database
+*.sql.bak
+
+# Logs
+logs/*.log
+!logs/.gitkeep
+
+# Backup
+backup_stage02/
+
+# IDE / OS
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Composer / Node (if added later)
+vendor/
+node_modules/
