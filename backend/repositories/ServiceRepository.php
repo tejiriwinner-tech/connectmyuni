@@ -24,7 +24,7 @@ class ServiceRepository
     public function getAllActive(): array
     {
         $pdo = Database::getConnection();
-        $stmt = $pdo->query("SELECT * FROM services WHERE is_active = 1 ORDER BY sort_order ASC, title ASC");
+        $stmt = $pdo->query("SELECT * FROM services WHERE is_active = TRUE ORDER BY sort_order ASC, title ASC");
         return $stmt->fetchAll();
     }
 

@@ -28,7 +28,13 @@ class Database
     public static function getConnection(): PDO
     {
         if (self::$pdo === null) {
-            $config = require_once __DIR__ . '/db_config.php';
+            // NOTE: do not rely on the return value of require_once — if the
+            // config file was already included earlier in the request, PHP
+            // returns true instead of the array. Cache it explicitly instead.
+            if (!isset($GLOBALS['connectmyuni_db_config'])) {
+                $GLOBALS['connectmyuni_db_config'] = require __DIR__ . '/db_config.php';
+            }
+            $config = $GLOBALS['connectmyuni_db_config'];
 
             // Build PostgreSQL DSN.
             $dsn = sprintf(

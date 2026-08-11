@@ -43,7 +43,7 @@ class UniversityRepository
             SELECT u.*, c.name as country_name, c.flag_emoji 
             FROM universities u 
             LEFT JOIN countries c ON u.country_id = c.id 
-            WHERE u.is_featured = 1 
+            WHERE u.is_featured = TRUE
             ORDER BY u.sort_order ASC, u.name ASC
         ");
         $stmt->execute();

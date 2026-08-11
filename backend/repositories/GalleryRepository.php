@@ -26,7 +26,7 @@ class GalleryRepository
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare("
             SELECT * FROM gallery_images 
-            WHERE is_active = 1 
+            WHERE is_active = TRUE
             ORDER BY sort_order ASC, created_at DESC
             LIMIT ?
         ");

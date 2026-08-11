@@ -123,7 +123,7 @@ class AdminUserRepository
         
         $stmt = $pdo->prepare("
             INSERT INTO admin_users (username, email, password_hash, role, is_active)
-            VALUES (?, ?, ?, ?, 1)
+            VALUES (?, ?, ?, ?, TRUE)
         ");
         
         $stmt->execute([$username, $email, $passwordHash, $role]);
@@ -137,6 +137,6 @@ class AdminUserRepository
     {
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare("UPDATE admin_users SET is_active = ?, updated_at = NOW() WHERE id = ?");
-        return $stmt->execute([$isActive ? 1 : 0, $userId]);
+        return $stmt->execute([$isActive, $userId]);
     }
 }

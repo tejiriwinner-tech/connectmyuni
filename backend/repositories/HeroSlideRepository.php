@@ -26,7 +26,7 @@ class HeroSlideRepository
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare("
             SELECT * FROM hero_slides 
-            WHERE is_active = 1 
+            WHERE is_active = TRUE
             ORDER BY sort_order ASC 
             LIMIT ?
         ");

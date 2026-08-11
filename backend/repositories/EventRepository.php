@@ -77,6 +77,16 @@ class EventRepository
     }
 
     /**
+     * Get all events (admin - includes drafts/latest first)
+     */
+    public function getAll(): array
+    {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->query("SELECT * FROM events ORDER BY created_at DESC");
+        return $stmt->fetchAll();
+    }
+
+    /**
      * Get upcoming events
      */
     public function getUpcoming(int $limit = 6): array
@@ -84,7 +94,7 @@ class EventRepository
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare("
             SELECT * FROM events 
-            WHERE status = 'published' AND event_date >= CURDATE() 
+            WHERE status = 'published' AND event_date >= CURRENT_DATE
             ORDER BY event_date ASC
             LIMIT ?
         ");

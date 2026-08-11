@@ -34,7 +34,7 @@ class CountryRepository
     public function getFeatured(): array
     {
         $pdo = Database::getConnection();
-        $stmt = $pdo->prepare("SELECT * FROM countries WHERE is_featured = 1 ORDER BY sort_order ASC, name ASC");
+        $stmt = $pdo->prepare("SELECT * FROM countries WHERE is_featured = TRUE ORDER BY sort_order ASC, name ASC");
         $stmt->execute();
         return $stmt->fetchAll();
     }

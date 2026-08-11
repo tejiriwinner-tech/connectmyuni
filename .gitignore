@@ -5,9 +5,11 @@
 # Database
 *.sql.bak
 
-# Logs
-logs/*.log
-!logs/.gitkeep
+# Logs (all server/runtime logs live under storage/logs/)
+storage/logs/*.log
+storage/logs/*.pid
+storage/logs/*.ps1
+!storage/logs/.gitkeep
 
 # Backup
 backup_stage02/
