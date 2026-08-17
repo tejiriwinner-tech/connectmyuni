@@ -4,12 +4,88 @@
      HERO SECTION — full-width background image
      Cards overlap out of the bottom, like FAB Ed
      ============================================= -->
+<?php
+// ─────────────────────────────────────────────────────────────
+// HERO CMS → HOMEPAGE
+// Active hero slides are fetched through the existing service /
+// repository layer (Supabase) and rendered as a Bootstrap carousel.
+// If there are no active slides (or the query fails) we fall back to
+// the safe static hero below, so the homepage never breaks.
+// ─────────────────────────────────────────────────────────────
+use ConnectMyUni\Services\HeroSlideService;
+use ConnectMyUni\Helpers\MediaResolver;
+
+$heroItems = [];
+try {
+    $heroSlides = (new HeroSlideService())->getActiveSlides();
+} catch (\Throwable $e) {
+    error_log('Hero slides load failed: ' . $e->getMessage());
+    $heroSlides = [];
+}
+
+foreach ($heroSlides as $slide) {
+    $desktop = MediaResolver::url((string) ($slide['image_path'] ?? ''));
+    if ($desktop === '') {
+        continue; // a hero slide must have a displayable desktop image
+    }
+    $heroItems[] = [
+        'title'      => htmlspecialchars((string) ($slide['title'] ?? '')),
+        'subtitle'   => htmlspecialchars((string) ($slide['subtitle'] ?? '')),
+        'cta_text'   => htmlspecialchars((string) ($slide['cta_text'] ?? '')),
+        'cta_url'    => htmlspecialchars((string) ($slide['cta_url'] ?? '')),
+        'image_url'  => $desktop,
+        'mobile_url' => MediaResolver::url((string) ($slide['mobile_image_path'] ?? '')),
+    ];
+}
+?>
 <section id="home" class="hero-section">
 
-    <!-- Dark overlay -->
+    <?php if (!empty($heroItems)): $heroIsCarousel = count($heroItems) > 1; ?>
+    <div id="homeHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
+        <div class="carousel-inner">
+            <?php foreach ($heroItems as $i => $slide): ?>
+            <div class="carousel-item<?php echo $i === 0 ? ' active' : ''; ?>">
+                <div class="hero-slide-bg">
+                    <picture>
+                        <?php if ($slide['mobile_url'] !== ''): ?>
+                            <source media="(max-width: 767px)" srcset="<?php echo $slide['mobile_url']; ?>">
+                        <?php endif; ?>
+                        <img src="<?php echo $slide['image_url']; ?>" alt="<?php echo $slide['title']; ?>"<?php echo $i === 0 ? '' : ' loading="lazy"'; ?>>
+                    </picture>
+                </div>
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 col-md-10 text-center text-white position-relative">
+                                <h1 class="hero-title fw-bold mb-3"><?php echo $slide['title']; ?></h1>
+                                <?php if ($slide['subtitle'] !== ''): ?>
+                                    <p class="hero-subtitle mb-4"><?php echo $slide['subtitle']; ?></p>
+                                <?php endif; ?>
+                                <?php if ($slide['cta_text'] !== '' && $slide['cta_url'] !== ''): ?>
+                                    <a href="<?php echo $slide['cta_url']; ?>" class="btn btn-hero-cta"><?php echo $slide['cta_text']; ?></a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <?php if ($heroIsCarousel): ?>
+            <button class="carousel-control-prev" type="button" data-bs-target="#homeHeroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous slide</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#homeHeroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next slide</span>
+            </button>
+        <?php endif; ?>
+    </div>
+    <?php else: ?>
+    <!-- Fallback hero — shown only when there are no active hero slides -->
     <div class="hero-overlay"></div>
-
-    <!-- Hero text — vertically centred in upper portion -->
     <div class="hero-content">
         <div class="container">
             <div class="row justify-content-center">
@@ -26,6 +102,16 @@
             </div>
         </div>
     </div>
+    <?php endif; ?>
+
+    <script>
+        (function () {
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                var el = document.getElementById('homeHeroCarousel');
+                if (el) { el.setAttribute('data-bs-ride', 'false'); }
+            }
+        })();
+    </script>
 
     <!-- Scroll indicator -->
     <div class="cmi-scroll-indicator" aria-hidden="true"></div>
