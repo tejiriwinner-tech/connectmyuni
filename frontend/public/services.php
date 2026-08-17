@@ -1,12 +1,12 @@
 <?php include __DIR__ . '/../components/header.php'; ?>
 
 <!-- Services Section -->
-<section class="services-page-section">
+<section class="services-page-section cmi-section-enter">
     <div class="container">
         <div class="services-content-wrapper">
             <!-- Left Services List -->
             <div class="services-left">
-                <h2 class="services-page-title">Our Services</h2>
+                <h2 class="services-page-title cmi-fade-up">Our Services</h2>
 
                 <div class="services-accordion">
                     <div class="service-accordion-item">
@@ -82,9 +82,9 @@
             </div>
 
             <!-- Right Services Image -->
-            <div class="services-right">
+            <div class="services-right cmi-slide-in-right">
                 <div class="services-image-container">
-                    <img src="<?php echo $base_url; ?>asset/background1.png" alt="Our Services">
+                    <img src="<?php echo $base_url; ?>frontend/assets/images/background1.png" alt="Our Services">
                 </div>
             </div>
         </div>
@@ -92,23 +92,23 @@
 </section>
 
 <!-- Get In Touch Section -->
-<section class="get-in-touch-section">
+<section class="get-in-touch-section cmi-section-enter">
     <div class="container">
-        <h2 class="get-in-touch-title">Get In Touch With Us</h2>
+        <h2 class="get-in-touch-title cmi-fade-up">Get In Touch With Us</h2>
         <div class="contact-details">
-            <div class="contact-detail-item">
+            <div class="contact-detail-item cmi-fade-up">
                 <i class="fas fa-phone"></i>
                 <span>Phone: +234 806 332 5541</span>
             </div>
-            <div class="contact-detail-item">
+            <div class="contact-detail-item cmi-fade-up">
                 <i class="fas fa-envelope"></i>
                 <span>Email: info@connectmyuni.org</span>
             </div>
-            <div class="contact-detail-item">
+            <div class="contact-detail-item cmi-fade-up">
                 <i class="fas fa-globe"></i>
                 <span>Visit: www.connectmyuni.org</span>
             </div>
-            <div class="contact-detail-item">
+            <div class="contact-detail-item cmi-fade-up">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>Office: Suite B3, 1st Floor, 2 Michika St, Abuja, Nigeria</span>
             </div>

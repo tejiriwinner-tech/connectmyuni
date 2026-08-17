@@ -1,0 +1,647 @@
+/* =============================================================
+   Connect MyUni — Premium Visual System (Stage 04B)
+   -------------------------------------------------------------
+   Additive design layer. Loaded AFTER style.css + animations.css.
+   Reuses the existing brand palette & the Stage 04A cmi-* system.
+   Goal: SUBTLE PREMIUM MOTION + DEPTH. No new frameworks.
+   ============================================================= */
+
+/* ── Extended design tokens (superset of style.css + animations.css) ── */
+:root {
+    --surface:        #ffffff;
+    --surface-soft:   #f8fafd;
+    --border-soft:    rgba(26, 86, 219, 0.12);
+
+    --shadow-sm: 0 2px 10px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 14px 34px rgba(15, 23, 42, 0.10);
+    --shadow-lg: 0 28px 60px rgba(15, 23, 42, 0.14);
+    --shadow-brand: 0 10px 28px rgba(26, 86, 219, 0.24);
+
+    --grad-brand:  linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    --grad-accent: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%);
+
+    --font-body: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+
+/* Prevent horizontal overflow from any decorative/3D element without
+   breaking position:sticky (clip does NOT create a scroll container). */
+html,
+body {
+    overflow-x: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
+}
+
+/* =============================================================
+   1. HEADER / NAVIGATION
+   ============================================================= */
+.navbar {
+    transition: box-shadow 0.3s ease, padding 0.3s ease, background-color 0.3s ease;
+}
+.navbar.navbar--scrolled {
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.10);
+}
+
+.navbar-brand {
+    gap: 0.55rem;
+}
+.navbar-brand .logo-img {
+    transition: transform 0.3s var(--anim-ease-out);
+}
+.navbar-brand:hover .logo-img {
+    transform: scale(1.05);
+}
+
+/* Nav links: reuse cmi-nav-link for the animated underline */
+.navbar-nav .nav-link.cmi-nav-link {
+    margin: 0 0.65rem;
+    padding: 0.5rem 0.15rem;
+}
+.navbar-nav .nav-link.cmi-nav-link::after {
+    height: 2px;
+    border-radius: 999px;
+    background: var(--grad-brand);
+}
+.navbar-nav .nav-link.cmi-nav-link:hover {
+    color: var(--primary-color);
+    transform: translateY(-1px);
+}
+.navbar-nav .nav-link.cmi-nav-link.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* =============================================================
+   2. SHARED SECTION HEADINGS
+   ============================================================= */
+.cmi-section-heading {
+    position: relative;
+    margin-bottom: 2.75rem;
+}
+.cmi-section-heading .cmi-kicker {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+.cmi-section-heading h2,
+.cmi-section-heading .cmi-heading {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 0.9rem;
+}
+.cmi-section-heading .cmi-rule {
+    width: 66px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--grad-accent);
+    margin-bottom: 1rem;
+}
+.cmi-section-heading.cmi-section-heading--center {
+    text-align: center;
+}
+.cmi-section-heading.cmi-section-heading--center .cmi-rule {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* =============================================================
+   3. HERO SYSTEM
+   ============================================================= */
+.hero-section {
+    background-attachment: fixed;   /* existing parallax — preserved */
+}
+/* Layered depth: strengthen the cinematic overlay + add inner glow */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+        radial-gradient(1200px 500px at 85% -10%, rgba(255, 255, 255, 0.10), transparent 60%),
+        linear-gradient(180deg, rgba(11, 31, 63, 0.30) 0%, rgba(11, 31, 63, 0.72) 100%);
+    pointer-events: none;
+}
+/* Decorative floating ring (layered depth) */
+.hero-section::after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: -140px;
+    top: -140px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.10);
+    pointer-events: none;
+}
+
+.hero-title {
+    animation-fill-mode: both;
+}
+/* headline accent — gradient word */
+.hero-title .text-highlight {
+    background: linear-gradient(90deg, #ffffff 0%, var(--accent-color) 55%, var(--accent-dark) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+.hero-subtitle {
+    color: rgba(255, 255, 255, 0.94);
+}
+
+/* Scroll indicator */
+.cmi-scroll-indicator {
+    position: absolute;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    z-index: 2;
+    width: 26px;
+    height: 44px;
+    border: 2px solid rgba(255, 255, 255, 0.55);
+    border-radius: 999px;
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+    pointer-events: none;
+}
+.cmi-scroll-indicator::after {
+    content: '';
+    width: 4px;
+    height: 9px;
+    border-radius: 999px;
+    background: #ffffff;
+    animation: cmiScrollPulse 1.8s ease-in-out infinite;
+}
+@keyframes cmiScrollPulse {
+    0%   { opacity: 0; transform: translateY(0); }
+    40%  { opacity: 1; }
+    100% { opacity: 0; transform: translateY(14px); }
+}
+
+/* =============================================================
+   4. BUTTONS / INTERACTIONS
+   ============================================================= */
+.btn,
+.btn-hero-cta,
+.btn-about,
+.btn-approach-hero,
+.btn-embark,
+.btn-subscribe,
+.btn-event-details,
+.btn-event-link,
+.btn-view-all,
+.btn-submit-registration,
+.btn-whatsapp {
+    transition: transform 0.22s var(--anim-ease-out),
+                box-shadow 0.22s var(--anim-ease-out),
+                background-color 0.22s ease,
+                color 0.22s ease;
+    will-change: transform;
+}
+.btn:hover,
+.btn-hero-cta:hover,
+.btn-about:hover,
+.btn-approach-hero:hover,
+.btn-embark:hover,
+.btn-subscribe:hover,
+.btn-event-details:hover,
+.btn-event-link:hover,
+.btn-view-all:hover,
+.btn-submit-registration:hover,
+.btn-whatsapp:hover {
+    transform: translateY(-3px);
+}
+
+/* Clear keyboard focus ring (accessibility) */
+.btn:focus-visible,
+.btn-hero-cta:focus-visible,
+a:focus-visible,
+.nav-link:focus-visible,
+.accordion-button:focus-visible,
+.filter-btn:focus-visible,
+.form-control:focus-visible,
+.form-input:focus-visible,
+.form-group input:focus-visible,
+.form-group textarea:focus-visible,
+.form-group select:focus-visible,
+.navbar-toggler:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+.navbar-toggler:focus-visible {
+    box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.35);
+}
+
+/* =============================================================
+   5. CARDS — unified premium treatment
+   Reuses Stage 04A .cmi-* hover/tilt utilities where present.
+   ============================================================= */
+.service-card-item,
+.event-card,
+.event-page-card,
+.update-card,
+.university-card,
+.value-card,
+.why-item-content,
+.fp-card,
+.team-card {
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s var(--anim-ease-out),
+                box-shadow 0.3s var(--anim-ease-out);
+}
+.service-card-item:hover,
+.event-card:hover,
+.event-page-card:hover,
+.update-card:hover,
+.university-card:hover,
+.value-card:hover,
+.why-item-content:hover,
+.fp-card:hover,
+.team-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-8px);
+    border-color: rgba(26, 86, 219, 0.22);
+}
+
+/* Image zoom within cards on hover */
+.event-card:hover .event-image img,
+.event-page-card:hover .event-page-image img,
+.update-card:hover .update-card-image img,
+.fp-card:hover .fp-card__image img {
+    transform: scale(1.07);
+}
+.event-image,
+.event-page-image,
+.update-card-image {
+    overflow: hidden;
+}
+.event-image img,
+.event-page-image img,
+.update-card-image img {
+    transition: transform 0.5s var(--anim-ease-out);
+}
+
+/* service icon circles — soft brand tint */
+.service-icon-circle {
+    background: linear-gradient(135deg, var(--primary-light), #ffffff);
+    box-shadow: 0 6px 18px rgba(26, 86, 219, 0.14);
+    transition: transform 0.3s var(--anim-ease-out), box-shadow 0.3s var(--anim-ease-out);
+}
+.service-card-item:hover .service-icon-circle {
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 10px 26px rgba(26, 86, 219, 0.24);
+}
+
+/* ── 3D tilt cards (JS sets --cmi-tilt-x / --cmi-tilt-y) ── */
+.cmi-tilt {
+    transform: perspective(1000px) rotateX(var(--cmi-tilt-x, 0deg)) rotateY(var(--cmi-tilt-y, 0deg));
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 0.25s var(--anim-ease-out),
+                box-shadow 0.3s var(--anim-ease-out);
+}
+.cmi-tilt.cmi-tilt--active {
+    transform: perspective(1000px) translateY(-5px) rotateX(var(--cmi-tilt-x, 0deg)) rotateY(var(--cmi-tilt-y, 0deg));
+    transition: transform 0.12s ease-out;
+}
+
+/* =============================================================
+   6. FOOTER
+   ============================================================= */
+.footer-section {
+    box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.06) inset;
+}
+.footer-text {
+    letter-spacing: 0.2px;
+}
+.footer-text .website-credit {
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+/* =============================================================
+   7. PAGE HEADERS (inner pages)
+   ============================================================= */
+.page-header,
+.page-hero {
+    background:
+        linear-gradient(180deg, var(--primary-light) 0%, var(--surface-soft) 100%);
+}
+.page-title,
+.page-hero__title {
+    color: var(--primary-dark);
+}
+
+/* =============================================================
+   8. RESPONSIVE
+   ============================================================= */
+@media (max-width: 768px) {
+    .hero-section::after { display: none; }   /* drop decorative ring on small screens */
+    .cmi-scroll-indicator { display: none; }  /* no scroll indicator on touch */
+    .navbar-nav .nav-link.cmi-nav-link { margin: 0; padding: 0.8rem 0; }
+    .navbar.navbar--scrolled { padding: 0.5rem 0; }
+}
+
+/* =============================================================
+   9. REDUCED MOTION — enforce on the whole premium layer
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+    .hero-section,
+    .hero-section::before,
+    .hero-section::after {
+        background-attachment: scroll;
+    }
+    .navbar,
+    .navbar-brand .logo-img,
+    .btn,
+    .service-card-item,
+    .event-card,
+    .event-page-card,
+    .update-card,
+    .university-card,
+    .value-card,
+    .why-item-content,
+    .fp-card,
+    .team-card,
+    .event-image img,
+    .event-page-image img,
+    .update-card-image img,
+    .service-icon-circle,
+    .cmi-scroll-indicator {
+        transition: none !important;
+        transform: none !important;
+        animation: none !important;
+    }
+    .cmi-scroll-indicator::after {
+        animation: none !important;
+        opacity: 0.6;
+    }
+}
+
+
+/* =============================================================
+   10. STAGE 04C — UX MICRO-INTERACTIONS
+   Reuses the existing brand tokens + Stage 04A easing system.
+   All subtler than gaming-style; no continuous loops.
+   ============================================================= */
+
+/* ── Hero: text readability + CTA depth ── */
+.hero-title {
+    text-shadow: 0 2px 26px rgba(11, 31, 63, 0.55), 0 1px 3px rgba(11, 31, 63, 0.40);
+}
+.hero-subtitle {
+    text-shadow: 0 1px 14px rgba(11, 31, 63, 0.50);
+}
+.btn-hero-cta {
+    box-shadow: 0 10px 30px rgba(204, 51, 51, 0.32);
+}
+.btn-hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 42px rgba(204, 51, 51, 0.42);
+}
+
+/* ── Buttons: consistent pressed state ── */
+.btn:active,
+.btn-hero-cta:active,
+.btn-about:active,
+.btn-approach-hero:active,
+.btn-embark:active,
+.btn-subscribe:active,
+.btn-event-details:active,
+.btn-event-link:active,
+.btn-view-all:active,
+.btn-submit:active,
+.btn-submit-registration:active,
+.btn-whatsapp:active {
+    transform: translateY(0) scale(0.985);
+}
+
+/* Arrow micro-move on CTA links that carry icons */
+.btn-event-link i,
+.btn-read-more i,
+.btn-register i,
+.btn-view-event i,
+.btn-event-details i {
+    display: inline-block;
+    transition: transform 0.25s var(--anim-ease-out);
+}
+.btn-event-link:hover i,
+.btn-read-more:hover i,
+.btn-register:hover i,
+.btn-view-event:hover i,
+.btn-event-details:hover i {
+    transform: translateX(4px);
+}
+
+/* Disabled state (clear NORMAL/HOVER/ACTIVE/FOCUS/DISABLED) */
+button[disabled],
+.btn[disabled],
+.btn.disabled,
+input[disabled],
+select[disabled],
+textarea[disabled] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ── Cards: title emphasis on hover (works even when transform pinned) ── */
+.event-page-card:hover .event-page-title-card,
+.event-card:hover .event-title,
+.related-event-card:hover h4,
+.update-card:hover .update-card-title {
+    color: var(--primary-color);
+}
+
+/* ── Event / update metadata hierarchy ── */
+.event-page-date,
+.update-date,
+.event-date {
+    color: var(--secondary-color);
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+/* ── Forms ── */
+.form-control,
+.form-input,
+.form-group input,
+.form-group textarea,
+.form-group select {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.form-control:hover,
+.form-input:hover {
+    border-color: rgba(26, 86, 219, 0.45);
+}
+.form-control:focus,
+.form-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.22rem rgba(26, 86, 219, 0.14);
+    outline: none;   /* replaced by brand glow ring below */
+}
+.form-field label,
+.form-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    transition: color 0.2s ease;
+}
+.form-field:focus-within label,
+.form-group:focus-within label,
+.mb-3:focus-within .form-label {
+    color: var(--primary-color);
+}
+textarea.form-control,
+textarea.form-input {
+    resize: vertical;
+}
+
+
+/* ── Registration + contact alerts ── */
+.success-alert,
+.error-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.4rem;
+    border: 1px solid transparent;
+}
+.success-alert i,
+.error-alert i {
+    font-size: 1.15rem;
+    margin-top: 0.1rem;
+}
+.success-alert {
+    background: #e8f7ee;
+    border-color: rgba(34, 197, 94, 0.35);
+    color: #14532d;
+}
+.success-alert i {
+    color: #16a34a;
+}
+.error-alert {
+    background: #fdeceb;
+    border-color: rgba(225, 29, 72, 0.30);
+    color: #7f1d1d;
+}
+.error-alert i {
+    color: #dc2626;
+}
+
+/* ── Universities: table row + tab polish ── */
+.uni-row:hover {
+    background: var(--primary-light);
+}
+.uni-tabs .nav-link {
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+.uni-tabs .nav-link:hover {
+    transform: translateY(-1px);
+}
+
+/* ── Gallery: keyboard focus + image depth ── */
+.masonry-item:focus-visible,
+.lightbox__close:focus-visible,
+.lightbox__nav:focus-visible,
+.masonry-item__zoom:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 3px;
+}
+.masonry-item__inner {
+    box-shadow: 0 4px 18px rgba(26, 86, 219, 0.10);
+    transition: box-shadow 0.3s var(--anim-ease-out);
+}
+.masonry-item:hover .masonry-item__inner {
+    box-shadow: 0 16px 40px rgba(26, 86, 219, 0.24);
+}
+.masonry-item__zoom:focus-visible,
+.lightbox__close:focus-visible {
+    outline-offset: 2px;
+}
+
+/* ── Back-to-top button ── */
+.cmi-to-top {
+    position: fixed;
+    right: 22px;
+    bottom: 26px;
+    z-index: 1040;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: none;
+    background: var(--grad-brand);
+    color: #ffffff;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-brand);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity 0.28s var(--anim-ease-out),
+                transform 0.28s var(--anim-ease-out),
+                visibility 0.28s,
+                box-shadow 0.28s ease;
+}
+.cmi-to-top.cmi-to-top--show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.cmi-to-top:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 34px rgba(26, 86, 219, 0.35);
+}
+.cmi-to-top:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 3px;
+}
+
+/* ── Mobile refinements ── */
+@media (max-width: 480px) {
+    .cmi-to-top {
+        right: 16px;
+        bottom: 16px;
+        width: 42px;
+        height: 42px;
+    }
+}
+
+/* ── Reduced motion for the 04C layer ── */
+@media (prefers-reduced-motion: reduce) {
+    .cmi-to-top {
+        transition: none !important;
+    }
+    .cmi-to-top:hover {
+        transform: translateY(0);
+    }
+    .btn-event-link i,
+    .btn-read-more i,
+    .btn-register i,
+    .btn-view-event i,
+    .btn-event-details i {
+        transform: none !important;
+    }
+    .masonry-item__inner {
+        box-shadow: none;
+    }
+    .uni-tabs .nav-link:hover {
+        transform: none;
+    }
+}
+

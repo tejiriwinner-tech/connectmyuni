@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace ConnectMyUni\Services;
 
 use ConnectMyUni\Repositories\EventRepository;
+use ConnectMyUni\Helpers\MediaResolver;
 
 /**
  * Class EventService
@@ -36,6 +37,14 @@ class EventService
     }
 
     /**
+     * Get all events (admin - includes drafts, latest first)
+     */
+    public function getAll(): array
+    {
+        return $this->eventRepo->getAll();
+    }
+
+    /**
      * Get single event by ID or slug
      */
     public function getEvent(string $identifier): ?array
@@ -55,6 +64,51 @@ class EventService
     public function getUpcomingEvents(int $limit = 6): array
     {
         return $this->eventRepo->getUpcoming($limit);
+    }
+
+    /**
+     * Map a repository row to the keys the public templates expect.
+     * (Repository: image_path / event_date  ->  Template: image / date)
+     */
+    public function present(array $event): array
+    {
+        $imageKey = $event['image_path'] ?? $event['image'] ?? '';
+        return [
+            'id'          => $event['id'] ?? null,
+            'title'       => $event['title'] ?? '',
+            'slug'        => $event['slug'] ?? '',
+            'category'    => $event['category'] ?? 'announcement',
+            'date'        => $event['event_date'] ?? ($event['date'] ?? ''),
+            'event_time'  => $event['event_time'] ?? '',
+            'description' => $event['description'] ?? '',
+            'details'     => $event['details'] ?? null,
+            'image'       => MediaResolver::url((string) $imageKey),
+            'image_path'  => $event['image_path'] ?? null,
+            'registration_link' => $event['registration_link'] ?? null,
+            'location'    => $event['location'] ?? null,
+            'duration'    => $event['duration'] ?? null,
+            'capacity'    => $event['capacity'] ?? null,
+            'requirements' => $event['requirements'] ?? null,
+            'contact_info' => $event['contact_info'] ?? null,
+            'status'      => $event['status'] ?? 'published',
+        ];
+    }
+
+    /**
+     * Published events mapped to public template keys.
+     */
+    public function getAllForPublic(): array
+    {
+        return array_map([$this, 'present'], $this->eventRepo->getAllPublished());
+    }
+
+    /**
+     * A single event mapped to public template keys.
+     */
+    public function getForPublic(string $identifier): ?array
+    {
+        $event = $this->getEvent($identifier);
+        return $event ? $this->present($event) : null;
     }
 
     /**
@@ -91,7 +145,7 @@ class EventService
             'event_time' => $data['event_time'] ?? null,
             'description' => $data['description'],
             'details' => $data['details'] ?? null,
-            'image_path' => $data['image'] ?? 'asset/image1.png',
+            'image_path' => $data['image_path'] ?? null,
             'registration_link' => $data['registration_link'] ?? null,
             'location' => $data['location'] ?? null,
             'duration' => $data['duration'] ?? null,
@@ -114,6 +168,11 @@ class EventService
             throw new \InvalidArgumentException("Event not found");
         }
 
+        // Preserve the existing image unless a new path was supplied.
+        if (!array_key_exists('image_path', $data)) {
+            $data['image_path'] = $event['image_path'] ?? null;
+        }
+
         // Update slug if title changed
         if ($data['title'] !== $event['title']) {
             $slug = $this->generateSlug($data['title']);
@@ -126,6 +185,10 @@ class EventService
         } else {
             $data['slug'] = $event['slug'];
         }
+
+        // Normalise template keys to repository keys before persisting.
+        $data['event_date'] = $data['date'] ?? null;
+        $data['status']     = $data['status'] ?? $event['status'] ?? 'published';
 
         return $this->eventRepo->update($id, $data);
     }

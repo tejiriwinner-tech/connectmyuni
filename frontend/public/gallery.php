@@ -4,58 +4,88 @@ require_once __DIR__ . '/../components/header.php';
 
 // ─────────────────────────────────────────────────────────────
 // Gallery Images
-// Uses images from asset/ folder with gallery prefix
+// Uses images from frontend/assets/images/gallery/ folder
 // ─────────────────────────────────────────────────────────────
 $gallery_items = [
     [
-        'file'     => $base_url . 'asset/gallery1.png',
+        'file'     => $base_url . 'frontend/assets/images/gallery/gallery1.png',
         'caption'  => 'Students collaborating during campus orientation',
         'category' => 'campus',
         'label'    => 'Campus Life',
     ],
     [
-        'file'     => $base_url . 'asset/gallery2.png',
+        'file'     => $base_url . 'frontend/assets/images/gallery/gallery2.png',
         'caption'  => 'Connect MyUni team at a student outreach event',
         'category' => 'events',
         'label'    => 'Events',
     ],
     [
-        'file'     => $base_url . 'asset/gallery3.png',
+        'file'     => $base_url . 'frontend/assets/images/gallery/gallery3.png',
         'caption'  => 'Students at the international departures',
         'category' => 'airport',
         'label'    => 'Departure',
     ],
     [
-        'file'     => $base_url . 'asset/gallery4.png',
+        'file'     => $base_url . 'frontend/assets/images/gallery/gallery4.png',
         'caption'  => 'Our student representative on campus',
         'category' => 'campus',
         'label'    => 'Campus Life',
     ],
     [
-        'file'     => $base_url . 'asset/gallery5.png',
+        'file'     => $base_url . 'frontend/assets/images/gallery/gallery5.png',
         'caption'  => 'Graduation ceremony celebration',
         'category' => 'graduation',
         'label'    => 'Graduation',
     ],
     [
-        'file'     => $base_url . 'asset/gallery6.png',
+        'file'     => $base_url . 'frontend/assets/images/gallery/gallery6.png',
         'caption'  => 'Students on their international journey',
         'category' => 'events',
         'label'    => 'Events',
     ],
     [
-        'file'     => $base_url . 'asset/gallery7.png',
+        'file'     => $base_url . 'frontend/assets/images/gallery/gallery7.png',
         'caption'  => 'A lively classroom session at university',
         'category' => 'campus',
         'label'    => 'Campus Life',
     ],
     [
-        'file'     => $base_url . 'asset/gallery8.png',
+        'file'     => $base_url . 'frontend/assets/images/gallery/gallery8.png',
         'caption'  => 'Connect MyUni students together on campus',
         'category' => 'campus',
         'label'    => 'Campus Life',
     ],
 ];
+
+// ── DB-driven: prefer published gallery_images when present ──
+$galleryLabelMap = [
+    'campus'     => 'Campus Life',
+    'airport'    => 'Departure',
+    'graduation' => 'Graduation',
+    'events'     => 'Events & Team',
+];
+
+$dbGallery = [];
+try {
+    foreach ((new \ConnectMyUni\Repositories\GalleryRepository())->getActive(60) as $row) {
+        $resolved = \ConnectMyUni\Helpers\MediaResolver::url($row['image_path'] ?? '');
+        if ($resolved === '') {
+            continue;
+        }
+        $dbGallery[] = [
+            'file'     => $resolved,
+            'caption'  => $row['alt_text'] ?? $row['title'] ?? '',
+            'category' => $row['category'] ?? 'general',
+            'label'    => $galleryLabelMap[$row['category'] ?? ''] ?? ucfirst($row['category'] ?? 'General'),
+        ];
+    }
+} catch (\Throwable $e) {
+    $dbGallery = [];
+}
+// Prefer DB rows; keep the static set below as a safe fallback that preserves the layout.
+if (!empty($dbGallery)) {
+    $gallery_items = $dbGallery;
+}
 
 $categories = [
     'all'        => 'All',
@@ -67,12 +97,12 @@ $categories = [
 ?>
 
 <!-- ── Gallery Hero Section ──────────────────────────────── -->
-<section class="gallery-hero">
+<section class="gallery-hero cmi-section-enter">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10 text-center">
-                <h1 class="gallery-hero__title">Gallery</h1>
-                <p class="gallery-hero__subtitle">
+                <h1 class="gallery-hero__title cmi-fade-up">Gallery</h1>
+                <p class="gallery-hero__subtitle cmi-fade-up">
                     Explore inspiring moments from our students' journeys around the world
                 </p>
             </div>
@@ -81,7 +111,7 @@ $categories = [
 </section>
 
 <!-- ── Filter Bar ─────────────────────────────────────────── -->
-<section class="filter-bar">
+<section class="filter-bar cmi-fade-up">
     <div class="container">
         <div class="filter-bar__inner">
             <?php foreach ($categories as $key => $label): ?>

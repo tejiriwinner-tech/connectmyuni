@@ -88,7 +88,7 @@ $featured_partners = [
 <!-- ── Page Hero ──────────────────────────────────────────── -->
 <section class="page-hero">
     <div class="container">
-        <h1 class="page-hero__title">Partner Universities</h1>
+        <h1 class="page-hero__title cmi-fade-up">Partner Universities</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
@@ -115,13 +115,13 @@ $featured_partners = [
 </section> -->
 
 <!-- ── Featured Partners ──────────────────────────────────── -->
-<section class="featured-partners py-5 bg-light">
+<section class="featured-partners py-5 bg-light cmi-section-enter">
     <div class="container">
-        <h2 class="section-heading mb-4">Featured Partners</h2>
+        <h2 class="section-heading mb-4 cmi-fade-up">Featured Partners</h2>
         <div class="row g-4">
             <?php foreach ($featured_partners as $fp): ?>
                 <div class="col-md-4">
-                    <div class="fp-card h-100">
+                    <div class="fp-card h-100 cmi-fade-up">
                         <div class="fp-card__number">
                             <?php echo htmlspecialchars($fp['number']); ?>
                         </div>
@@ -140,7 +140,7 @@ $featured_partners = [
         </div>
 
         <!-- Quote strip -->
-        <div class="quote-strip mt-5">
+        <div class="quote-strip mt-5 cmi-fade-up">
             <i class="fas fa-quote-left quote-strip__icon"></i>
             <p class="quote-strip__text">
                 Diverse student body enriches the educational experience and prepares
@@ -151,9 +151,9 @@ $featured_partners = [
 </section>
 
 <!-- ── Full University Table ──────────────────────────────── -->
-<section class="university-table-section py-5">
+<section class="university-table-section py-5 cmi-section-enter">
     <div class="container">
-        <h2 class="section-heading mb-4">All Partner Universities</h2>
+        <h2 class="section-heading mb-4 cmi-fade-up">All Partner Universities</h2>
 
         <!-- Country filter tabs -->
         <ul class="nav nav-tabs uni-tabs mb-4" id="countryTabs" role="tablist">
@@ -213,10 +213,10 @@ $featured_partners = [
 </section>
 
 <!-- ── CTA Section ────────────────────────────────────────── -->
-<section class="partner-cta py-5">
+<section class="partner-cta py-5 cmi-section-enter">
     <div class="container text-center">
-        <h2 class="partner-cta__title">Ready to Study Abroad?</h2>
-        <p class="partner-cta__sub text-muted">
+        <h2 class="partner-cta__title cmi-fade-up">Ready to Study Abroad?</h2>
+        <p class="partner-cta__sub text-muted cmi-fade-up">
             Our counsellors will match you with the best-fit university from our partner network.
         </p>
         <a href="<?php echo $base_url; ?>registration.php" class="btn btn-primary btn-lg me-2">

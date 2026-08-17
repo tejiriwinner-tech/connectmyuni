@@ -2,12 +2,17 @@
 
 <?php
 // Include cache manager
-require_once __DIR__ . '/../../backend/helpers/CacheManager.php';
+use ConnectMyUni\Services\EventService;
 
 use ConnectMyUni\CacheManager;
 
 // Load events using cache
-$events = CacheManager::getEvents();
+$eventService = new EventService();
+try {
+    $events = $eventService->getAllForPublic();
+} catch (\Throwable $e) {
+    $events = [];
+}
 
 // Sort by date (newest first)
 usort($events, function ($a, $b) {
@@ -16,12 +21,12 @@ usort($events, function ($a, $b) {
 ?>
 
 <!-- Updates Content -->
-<section class="updates-page-section">
+<section class="updates-page-section cmi-section-enter">
     <div class="container">
         <div class="row">
             <!-- Filter Buttons -->
             <div class="col-12 mb-5">
-                <div class="updates-filters">
+                <div class="updates-filters cmi-fade-up">
                     <button class="filter-btn active" data-filter="all">All Updates</button>
                     <button class="filter-btn" data-filter="webinar">Webinars</button>
                     <button class="filter-btn" data-filter="workshop">Workshops</button>
@@ -40,7 +45,7 @@ usort($events, function ($a, $b) {
                     } else {
                         foreach ($events as $event):
                     ?>
-                            <div class="update-card" data-category="<?php echo htmlspecialchars($event['category']); ?>">
+                            <div class="update-card cmi-fade-up" data-category="<?php echo htmlspecialchars($event['category']); ?>">
                                 <div class="update-card-image">
                                     <!-- Lazy loading image -->
                                     <img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3C/svg%3E"

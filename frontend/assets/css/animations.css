@@ -1,0 +1,362 @@
+/* =============================================
+   Connect MyUni — Animation System Foundation
+   v1.0  |  Lightweight CSS-only animation utilities
+   ----------------------------------------------
+   Usage:
+     HTML: <div class="cmi-fade-up">…</div>
+     JS:   Add .is-animated when element enters viewport
+           (handled by frontend/assets/js/animations.js)
+   ============================================= */
+
+/* ── Design tokens (extending :root from style.css) ──────────── */
+:root {
+    --radius:        10px;
+    --radius-sm:      4px;
+    --radius-lg:     24px;
+    --radius-full:  999px;
+
+    --muted:         var(--text-muted);
+    --radius-card:   10px;
+
+    --anim-duration-fast:  0.3s;
+    --anim-duration-base:  0.6s;
+    --anim-duration-slow:  0.8s;
+    --anim-ease:           cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --anim-ease-out:       ease-out;
+    --anim-stagger-step:   0.1s;
+}
+
+/* =============================================
+   1. Fade-up reveal
+   ============================================= */
+@keyframes cmiFadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.cmi-fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+}
+.cmi-fade-up.is-animated {
+    opacity: 1;
+    animation: cmiFadeUp var(--anim-duration-base) var(--anim-ease-out) forwards;
+}
+
+/* =============================================
+   2. Fade-in reveal
+   ============================================= */
+@keyframes cmiFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.cmi-fade-in {
+    opacity: 0;
+}
+.cmi-fade-in.is-animated {
+    opacity: 1;
+    animation: cmiFadeIn var(--anim-duration-fast) var(--anim-ease-out) forwards;
+}
+
+/* =============================================
+   3. Slide-in reveal (left)
+   ============================================= */
+@keyframes cmiSlideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.cmi-slide-in-left {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+.cmi-slide-in-left.is-animated {
+    opacity: 1;
+    animation: cmiSlideInLeft var(--anim-duration-base) var(--anim-ease) forwards;
+}
+
+/* =============================================
+   3b. Slide-in reveal (right)
+   ============================================= */
+@keyframes cmiSlideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.cmi-slide-in-right {
+    opacity: 0;
+    transform: translateX(30px);
+}
+.cmi-slide-in-right.is-animated {
+    opacity: 1;
+    animation: cmiSlideInRight var(--anim-duration-base) var(--anim-ease) forwards;
+}
+
+/* =============================================
+   6. Subtle scale reveal
+   ============================================= */
+@keyframes cmiScaleReveal {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.cmi-scale {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.cmi-scale.is-animated {
+    opacity: 1;
+    animation: cmiScaleReveal var(--anim-duration-fast) var(--anim-ease-out) forwards;
+}
+
+/* =============================================
+   4. Staggered card reveal
+   ============================================= */
+.cmi-stagger-children {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.cmi-stagger-children > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+        opacity var(--anim-duration-base) var(--anim-ease-out),
+        transform var(--anim-duration-base) var(--anim-ease-out);
+}
+
+.cmi-stagger-children.is-animated > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* CSS-only stagger via nth-child (covers up to 10 children) */
+.cmi-stagger-children.is-animated > *:nth-child(1)  { transition-delay: 0.0s; }
+.cmi-stagger-children.is-animated > *:nth-child(2)  { transition-delay: 0.1s; }
+.cmi-stagger-children.is-animated > *:nth-child(3)  { transition-delay: 0.2s; }
+.cmi-stagger-children.is-animated > *:nth-child(4)  { transition-delay: 0.3s; }
+.cmi-stagger-children.is-animated > *:nth-child(5)  { transition-delay: 0.4s; }
+.cmi-stagger-children.is-animated > *:nth-child(6)  { transition-delay: 0.5s; }
+.cmi-stagger-children.is-animated > *:nth-child(7)  { transition-delay: 0.6s; }
+.cmi-stagger-children.is-animated > *:nth-child(8)  { transition-delay: 0.7s; }
+.cmi-stagger-children.is-animated > *:nth-child(9)  { transition-delay: 0.8s; }
+.cmi-stagger-children.is-animated > *:nth-child(10) { transition-delay: 0.9s; }
+
+/* Flex-direction row variant for stagger */
+.cmi-stagger-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+.cmi-stagger-row > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+        opacity var(--anim-duration-base) var(--anim-ease-out),
+        transform var(--anim-duration-base) var(--anim-ease-out);
+}
+.cmi-stagger-row.is-animated > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+.cmi-stagger-row.is-animated > *:nth-child(1)  { transition-delay: 0.0s; }
+.cmi-stagger-row.is-animated > *:nth-child(2)  { transition-delay: 0.1s; }
+.cmi-stagger-row.is-animated > *:nth-child(3)  { transition-delay: 0.2s; }
+.cmi-stagger-row.is-animated > *:nth-child(4)  { transition-delay: 0.3s; }
+.cmi-stagger-row.is-animated > *:nth-child(5)  { transition-delay: 0.4s; }
+
+/* =============================================
+   5. Image reveal
+   ============================================= */
+@keyframes cmiImgReveal {
+    from { opacity: 0; transform: scale(1.05); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.cmi-image {
+    opacity: 0;
+    transform: scale(1.05);
+}
+.cmi-image.is-animated {
+    opacity: 1;
+    animation: cmiImgReveal var(--anim-duration-base) var(--anim-ease-out) forwards;
+}
+
+/* =================================================
+   7. Hover lift (micro-interaction)
+   ================================================= */
+.cmi-hover-lift {
+    transition:
+        transform 0.3s var(--anim-ease),
+        box-shadow 0.3s var(--anim-ease);
+}
+.cmi-hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* =================================================
+   8. Subtle 3D tilt / depth
+   ================================================= */
+.cmi-3d {
+    perspective: 1200px;
+}
+
+.cmi-3d-card {
+    transform-style: preserve-3d;
+    transition: transform 0.4s var(--anim-ease);
+}
+.cmi-3d-card:hover {
+    transform: rotateX(2deg) rotateY(2deg) scale(1.02);
+}
+
+/* Gentle floating for decorative elements */
+.cmi-float {
+    transform-origin: center bottom;
+    animation: cmiFloat 5s ease-in-out infinite;
+}
+@keyframes cmiFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    33%      { transform: translateY(-12px) rotate(1deg); }
+    66%      { transform: translateY(-6px) rotate(-1deg); }
+}
+
+/* =================================================
+   9. Parallax movement (CSS-only on scroll)
+   ================================================= */
+.cmi-parallax {
+    will-change: transform;
+}
+
+/* =================================================
+   10. Button micro-interactions
+   ================================================= */
+.cmi-btn {
+    display: inline-block;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition:
+        transform 0.2s var(--anim-ease-out),
+        box-shadow 0.2s var(--anim-ease-out);
+    position: relative;
+    overflow: hidden;
+}
+.cmi-btn:hover {
+    transform: translateY(-2px);
+}
+.cmi-btn:active {
+    transform: translateY(0);
+}
+
+/* Ripple effect on click (optional micro-interaction) */
+.cmi-btn-ripple {
+    position: relative;
+    overflow: hidden;
+}
+.cmi-btn-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.5s, height 0.5s;
+}
+.cmi-btn-ripple:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+/* =================================================
+   11. Counter / stat animation
+   ================================================= */
+.cmi-counter {
+    font-variant-numeric: tabular-nums;
+}
+
+/* =================================================
+   12. Section transitions
+   ================================================= */
+.cmi-section-enter {
+    opacity: 0;
+}
+.cmi-section-enter.is-animated {
+    opacity: 1;
+    animation: cmiFadeIn var(--anim-duration-base) var(--anim-ease-out) forwards;
+}
+
+/* =================================================
+   13. Navigation transitions (hover underline)
+   ================================================= */
+.cmi-nav-link {
+    position: relative;
+    overflow: hidden;
+}
+.cmi-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width 0.3s var(--anim-ease);
+}
+.cmi-nav-link:hover::after,
+.cmi-nav-link.active::after {
+    width: 100%;
+}
+
+/* =================================================
+   Reduced motion — disable transforms & animations
+   ================================================= */
+@media (prefers-reduced-motion: reduce) {
+    .cmi-fade-up,
+    .cmi-fade-in,
+    .cmi-slide-in-left,
+    .cmi-slide-in-right,
+    .cmi-scale,
+    .cmi-image,
+    .cmi-section-enter {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+    }
+
+    .cmi-stagger-children > *,
+    .cmi-stagger-row > * {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .cmi-hover-lift:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    .cmi-3d-card:hover {
+        transform: none !important;
+    }
+
+    .cmi-float {
+        animation: none !important;
+    }
+
+    .cmi-btn:hover,
+    .cmi-btn:active {
+        transform: none !important;
+    }
+
+    .cmi-nav-link::after {
+        display: none;
+    }
+}
+
+

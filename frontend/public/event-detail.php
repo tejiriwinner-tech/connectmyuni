@@ -1,24 +1,34 @@
 <?php include __DIR__ . '/../components/header.php'; ?>
 
 <?php
-// Include cache manager
-require_once __DIR__ . '/../../backend/helpers/CacheManager.php';
+use ConnectMyUni\Services\EventService;
 
-use ConnectMyUni\CacheManager;
+$eventService = new EventService();
 
 // Get event ID from URL
 $eventId = $_GET['id'] ?? null;
 $event = null;
 
-// Load event using cache
+// All published events (used for related events).
+try {
+    $events = $eventService->getAllForPublic();
+} catch (\Throwable $e) {
+    $events = [];
+}
+
+// Load event from the database.
 if ($eventId) {
-    $event = CacheManager::getEventById($eventId);
+    try {
+        $event = $eventService->getForPublic((string) $eventId);
+    } catch (\Throwable $e) {
+        $event = null;
+    }
 }
 
 // If event not found, show error
 if (!$event) {
 ?>
-    <section class="event-detail-section">
+    <section class="event-detail-section cmi-section-enter">
         <div class="container">
             <div class="text-center py-5">
                 <h2>Event Not Found</h2>
@@ -34,11 +44,11 @@ if (!$event) {
 ?>
 
 <!-- Event Detail Content -->
-<section class="event-detail-section">
+<section class="event-detail-section cmi-section-enter">
     <div class="container">
         <div class="event-detail-wrapper">
             <!-- Main Content -->
-            <div class="event-detail-main">
+            <div class="event-detail-main cmi-fade-up">
                 <!-- Featured Image -->
                 <div class="event-detail-image">
                     <img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3C/svg%3E"
@@ -191,7 +201,7 @@ if (!empty($relatedEvents)):
             <h2>Related Events</h2>
             <div class="related-events-grid">
                 <?php foreach ($relatedEvents as $relatedEvent): ?>
-                    <div class="related-event-card">
+                    <div class="related-event-card cmi-fade-up">
                         <div class="related-event-image">
                             <img src="<?php echo htmlspecialchars($relatedEvent['image']); ?>" alt="<?php echo htmlspecialchars($relatedEvent['title']); ?>">
                         </div>

@@ -1,9 +1,9 @@
 <?php include __DIR__ . '/../components/header.php'; ?>
 
-<section class="page-header">
+<section class="page-header cmi-section-enter">
     <div class="container page-header-content">
         <div>
-            <h1 class="page-title">About Us</h1>
+            <h1 class="page-title cmi-fade-up">About Us</h1>
         </div>
         <nav class="breadcrumb-nav" aria-label="breadcrumb">
             <a href="<?php echo $base_url; ?>index.php">Home</a>
@@ -14,48 +14,48 @@
 </section>
 
 <!-- About Section with Full Width Blue Background -->
-<section class="about-page-section" id="about">
+<section class="about-page-section cmi-section-enter" id="about">
     <div class="about-container">
         <div class="about-content-wrapper">
             <!-- Left Content -->
             <div class="about-left">
-                <h2 class="about-page-title">Your Trusted Partner in<br>Global Education</h2>
+                <h2 class="about-page-title cmi-fade-up">Your Trusted Partner in<br>Global Education</h2>
 
-                <p class="about-page-text">
+                <p class="about-page-text cmi-fade-up">
                     Connect MyUni is a leading provider of education consulting services, proudly registered in Nigeria with the Corporate Affairs Commission. With over 21 years of dedicated service, Connect MyUni has established itself as a trusted name in the international education landscape. Our mission is to provide high-quality, personalized education consulting to students and institutions, ensuring that both find the perfect fit for their academic and professional aspirations.
                 </p>
 
-                <p class="about-page-text">
+                <p class="about-page-text cmi-fade-up">
                     At Connect MyUni, we offer a wide range of services tailored to meet the unique needs of each student and institution. These services include language training, student placements, admission assistance, and career counseling. We also collaborate with universities and colleges worldwide to facilitate international student placements, ensuring a smooth transition for students seeking education abroad.
                 </p>
             </div>
 
             <!-- Right Image Collage -->
             <div class="about-right">
-                <div class="about-page-collage">
+                <div class="about-page-collage cmi-slide-in-right">
                     <div class="collage-item collage-item-1">
-                        <img src="<?php echo $base_url; ?>frontend/assets/image1.png" alt="Team Photo 1">
+                        <img src="<?php echo $base_url; ?>frontend/assets/images/image1.png" alt="Team Photo 1">
                     </div>
                     <div class="collage-item collage-item-2">
-                        <img src="<?php echo $base_url; ?>frontend/assets/image2.png" alt="Team Photo 2">
+                        <img src="<?php echo $base_url; ?>frontend/assets/images/image2.png" alt="Team Photo 2">
                     </div>
                     <div class="collage-item collage-item-3">
-                        <img src="<?php echo $base_url; ?>frontend/assets/image3.png" alt="Team Photo 3">
+                        <img src="<?php echo $base_url; ?>frontend/assets/images/image3.png" alt="Team Photo 3">
                     </div>
                     <div class="collage-item collage-item-4">
-                        <img src="<?php echo $base_url; ?>frontend/assets/image4.png" alt="Team Photo 4">
+                        <img src="<?php echo $base_url; ?>frontend/assets/images/image4.png" alt="Team Photo 4">
                     </div>
                     <div class="collage-item collage-item-5">
-                        <img src="<?php echo $base_url; ?>frontend/assets/image5.png" alt="Team Photo 5">
+                        <img src="<?php echo $base_url; ?>frontend/assets/images/image5.png" alt="Team Photo 5">
                     </div>
                     <div class="collage-item collage-item-6">
-                        <img src="<?php echo $base_url; ?>frontend/assets/image1.png" alt="Team Photo 6">
+                        <img src="<?php echo $base_url; ?>frontend/assets/images/image1.png" alt="Team Photo 6">
                     </div>
                     <div class="collage-item collage-item-7">
-                        <img src="<?php echo $base_url; ?>frontend/assets/image2.png" alt="Team Photo 7">
+                        <img src="<?php echo $base_url; ?>frontend/assets/images/image2.png" alt="Team Photo 7">
                     </div>
                     <div class="collage-item collage-item-8">
-                        <img src="<?php echo $base_url; ?>frontend/assets/image3.png" alt="Team Photo 8">
+                        <img src="<?php echo $base_url; ?>frontend/assets/images/image3.png" alt="Team Photo 8">
                     </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@
 <section class="about-content-section" id="profile">
     <div class="container">
         <div class="section-header">
-            <h2 class="content-section-title">Company's Profile</h2>
+            <h2 class="content-section-title cmi-fade-up">Company's Profile</h2>
             <div class="title-underline"></div>
         </div>
         <div class="content-text">
@@ -88,7 +88,7 @@
 <section class="about-content-section bg-light" id="services">
     <div class="container">
         <div class="section-header">
-            <h2 class="content-section-title">Our Services</h2>
+            <h2 class="content-section-title cmi-fade-up">Our Services</h2>
             <div class="title-underline"></div>
         </div>
         <div class="services-list">
@@ -116,7 +116,7 @@
 <section class="about-content-section" id="partners">
     <div class="container">
         <div class="section-header">
-            <h2 class="content-section-title">Partner Universities</h2>
+            <h2 class="content-section-title cmi-fade-up">Partner Universities</h2>
             <div class="title-underline"></div>
         </div>
         <div class="content-text">
@@ -145,31 +145,31 @@
 <section class="about-content-section bg-light" id="why">
     <div class="container">
         <div class="section-header">
-            <h2 class="content-section-title">Why Choose Connect MyUni?</h2>
+            <h2 class="content-section-title cmi-fade-up">Why Choose Connect MyUni?</h2>
             <div class="title-underline"></div>
         </div>
         <div class="why-list">
-            <div class="why-item-content">
+            <div class="why-item-content cmi-fade-up">
                 <h4><i class="fas fa-check-circle"></i> Comprehensive Support</h4>
                 <p>We offer a comprehensive suite of services, from university applications to visa assistance and accommodation arrangements, simplifying your journey into higher education.</p>
             </div>
-            <div class="why-item-content">
+            <div class="why-item-content cmi-fade-up">
                 <h4><i class="fas fa-check-circle"></i> Proven Track Record</h4>
                 <p>With a proven track record of success and numerous satisfied students, Connect MyUni is a trusted partner in education. Our dedication to excellence makes us ideal for your academic aspirations.</p>
             </div>
-            <div class="why-item-content">
+            <div class="why-item-content cmi-fade-up">
                 <h4><i class="fas fa-check-circle"></i> Personalized Guidance</h4>
                 <p>Our seasoned professionals offer personalized guidance tailored to your academic goals. With in-depth knowledge of higher education, we ensure informed decisions every step of the way.</p>
             </div>
-            <div class="why-item-content">
+            <div class="why-item-content cmi-fade-up">
                 <h4><i class="fas fa-check-circle"></i> Seamless Transition</h4>
                 <p>Our expertise ensures a seamless transition with services from academic guidance to visa assistance, fostering student success with a proven track record of excellence.</p>
             </div>
-            <div class="why-item-content">
+            <div class="why-item-content cmi-fade-up">
                 <h4><i class="fas fa-check-circle"></i> Global Network</h4>
                 <p>We have established partnerships with diverse universities worldwide, providing students access to leading educational institutions across Africa, Europe, Asia, and beyond.</p>
             </div>
-            <div class="why-item-content">
+            <div class="why-item-content cmi-fade-up">
                 <h4><i class="fas fa-check-circle"></i> Student-Centered Approach</h4>
                 <p>We simplify studying abroad, empowering students to achieve academic goals confidently. Your success is our mission and commitment.</p>
             </div>
@@ -178,13 +178,13 @@
 </section>
 
 <!-- Embark on Journey Section -->
-<section class="embark-section">
+<section class="embark-section cmi-section-enter">
     <div class="container">
         <div class="section-header">
-            <h2 class="content-section-title">Embark on Your Journey with Connect MyUni</h2>
+            <h2 class="content-section-title cmi-fade-up">Embark on Your Journey with Connect MyUni</h2>
             <div class="title-underline white-underline"></div>
         </div>
-        <div class="embark-content">
+        <div class="embark-content cmi-fade-up">
             <p>
                 Whether you're a high school student dreaming of studying abroad, a professional seeking further education, or an institution looking to attract international talent, Connect MyUni is here to guide you every step of the way.
             </p>
@@ -197,13 +197,13 @@
 </section>
 
 <!-- Contact Us Section -->
-<section class="about-content-section bg-light" id="contact">
+<section class="about-content-section bg-light cmi-section-enter" id="contact">
     <div class="container">
         <div class="section-header">
-            <h2 class="content-section-title">Contact Us</h2>
+            <h2 class="content-section-title cmi-fade-up">Contact Us</h2>
             <div class="title-underline"></div>
         </div>
-        <div class="contact-info-box">
+        <div class="contact-info-box cmi-fade-up">
             <p><strong><i class="fas fa-envelope"></i> Email:</strong> info@connectmyuni.org</p>
             <p><strong><i class="fas fa-instagram"></i> Follow Us:</strong> connect_myuni_edu</p>
             <p><strong><i class="fas fa-globe"></i> Visit Our Website:</strong> www.connectmyuni.org</p>
@@ -212,14 +212,14 @@
 </section>
 
 <!-- Stay Updated Section -->
-<section class="stay-updated-section">
+<section class="stay-updated-section cmi-section-enter">
     <div class="container">
         <div class="section-header">
-            <h2 class="content-section-title">Stay Updated</h2>
+            <h2 class="content-section-title cmi-fade-up">Stay Updated</h2>
             <div class="title-underline white-underline"></div>
         </div>
         <p class="stay-updated-text">Subscribe to our newsletter to receive the latest updates on education opportunities, partnerships, and student success stories from Connect MyUni.</p>
-        <form class="newsletter-form">
+        <form class="newsletter-form cmi-fade-up">
             <input type="email" placeholder="Enter your email" required>
             <button type="submit" class="btn btn-subscribe">Subscribe</button>
         </form>

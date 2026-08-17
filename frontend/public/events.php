@@ -1,10 +1,14 @@
 <?php include __DIR__ . '/../components/header.php'; ?>
 
 <?php
-require_once __DIR__ . '/../../backend/helpers/CacheManager.php';
-use ConnectMyUni\CacheManager;
+use ConnectMyUni\Services\EventService;
 
-$events = CacheManager::getEvents();
+$eventService = new EventService();
+try {
+    $events = $eventService->getAllForPublic();
+} catch (\Throwable $e) {
+    $events = [];
+}
 usort($events, function ($a, $b) {
     return strtotime($b['date']) - strtotime($a['date']);
 });
@@ -15,11 +19,11 @@ $categories = array_unique(array_map(function($e) {
 sort($categories);
 ?>
 
-<section class="events-page-section">
+<section class="events-page-section cmi-section-enter">
     <div class="container">
         <div class="row">
             <div class="col-12 mb-5">
-                <div class="events-filters">
+                <div class="events-filters cmi-fade-up">
                     <button class="filter-btn active" data-filter="all">All Events</button>
                     <?php foreach ($categories as $cat): ?>
                         <button class="filter-btn" data-filter="<?php echo htmlspecialchars($cat); ?>">
@@ -40,9 +44,9 @@ sort($categories);
                             $eventId = $event['id'] ?? $event['eventId'] ?? uniqid();
                             $badge = strtoupper($event['category'] ?? 'EVENT');
                         ?>
-                            <div class="event-page-card" data-category="<?php echo htmlspecialchars($event['category'] ?? ''); ?>">
+                            <div class="event-page-card cmi-fade-up" data-category="<?php echo htmlspecialchars($event['category'] ?? ''); ?>">
                                 <div class="event-page-image">
-                                    <img src="<?php echo htmlspecialchars($event['image'] ?? 'asset/image1.png'); ?>" 
+                                    <img src="<?php echo htmlspecialchars($event['image'] ?: $base_url . 'frontend/assets/images/image1.png'); ?>"
                                          alt="<?php echo htmlspecialchars($event['title']); ?>"
                                          loading="lazy">
                                     <span class="event-page-badge"><?php echo $badge; ?></span>

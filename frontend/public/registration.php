@@ -1,19 +1,20 @@
 <?php include __DIR__ . '/../components/header.php'; ?>
 
 <?php
-// Include cache manager
-require_once __DIR__ . '/../../backend/helpers/CacheManager.php';
-
-use ConnectMyUni\CacheManager;
+use ConnectMyUni\Services\EventService;
 
 // Get event ID from URL
 $eventId = $_GET['event_id'] ?? null;
 $event = null;
 $eventTitle = 'Connect MyUni Event';
 
-// Load event details from cache if ID provided
+// Load event details from the database if an ID is provided
 if ($eventId) {
-    $event = CacheManager::getEventById($eventId);
+    try {
+        $event = (new EventService())->getForPublic((string) $eventId);
+    } catch (\Throwable $e) {
+        $event = null;
+    }
     if ($event) {
         $eventTitle = $event['title'];
     }
@@ -93,10 +94,10 @@ $eventLocations = [
 ?>
 
 <!-- Registration Page Hero Section -->
-<section class="registration-page-hero">
+<section class="registration-page-hero cmi-section-enter">
     <div class="container">
-        <h1 class="registration-page-title"><?php echo htmlspecialchars($eventTitle); ?></h1>
-        <p class="registration-page-subtitle">Join us for an enriching educational experience</p>
+        <h1 class="registration-page-title cmi-fade-up"><?php echo htmlspecialchars($eventTitle); ?></h1>
+        <p class="registration-page-subtitle cmi-fade-up">Join us for an enriching educational experience</p>
     </div>
 </section>
 

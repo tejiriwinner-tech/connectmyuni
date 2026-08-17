@@ -23,7 +23,7 @@ $currentUser = AuthMiddleware::user();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' – Admin' : 'Admin · Connect MyUni'; ?></title>
+    <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' â€“ Admin' : 'Admin Â· Connect MyUni'; ?></title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,9 +33,9 @@ $currentUser = AuthMiddleware::user();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        TOKENS
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         :root {
             --sidebar-w: 240px;
             --topbar-h: 60px;
@@ -72,9 +72,9 @@ $currentUser = AuthMiddleware::user();
             overflow-x: hidden;
         }
 
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        SIDEBAR
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         .admin-sidebar {
             width: var(--sidebar-w);
             background: var(--surface);
@@ -233,9 +233,9 @@ $currentUser = AuthMiddleware::user();
             color: var(--txt-muted);
         }
 
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        TOPBAR
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         .admin-topbar {
             position: fixed;
             top: 0;
@@ -343,9 +343,9 @@ $currentUser = AuthMiddleware::user();
             font-size: 1rem;
         }
 
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        MAIN CONTENT WRAPPER
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         .admin-main {
             margin-left: var(--sidebar-w);
             margin-top: var(--topbar-h);
@@ -373,9 +373,9 @@ $currentUser = AuthMiddleware::user();
             margin-top: 4px;
         }
 
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        CARDS / SURFACES
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         .card {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -383,9 +383,9 @@ $currentUser = AuthMiddleware::user();
             padding: 24px;
         }
 
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        FORM ELEMENTS
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         .form-group {
             margin-bottom: 20px;
         }
@@ -443,9 +443,9 @@ $currentUser = AuthMiddleware::user();
             margin-top: 5px;
         }
 
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        BUTTONS
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -483,9 +483,9 @@ $currentUser = AuthMiddleware::user();
             color: var(--txt);
         }
 
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        ALERTS
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         .alert {
             display: flex;
             align-items: flex-start;
@@ -515,18 +515,18 @@ $currentUser = AuthMiddleware::user();
             color: #f87171;
         }
 
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        DIVIDER
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         .divider {
             height: 1px;
             background: var(--border);
             margin: 28px 0;
         }
 
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        STAT CARDS (dashboard)
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -589,9 +589,9 @@ $currentUser = AuthMiddleware::user();
             color: var(--txt-muted);
         }
 
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        ACTION BOXES (dashboard)
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         .action-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -661,9 +661,9 @@ $currentUser = AuthMiddleware::user();
             border-color: var(--border);
         }
 
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        SECTION LABEL
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         .section-label {
             font-size: 0.72rem;
             font-weight: 700;
@@ -683,9 +683,9 @@ $currentUser = AuthMiddleware::user();
             background: var(--border);
         }
 
-        /* ═══════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        RESPONSIVE
-    ═══════════════════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         @media (max-width: 768px) {
             .admin-sidebar {
                 transform: translateX(-100%);
@@ -722,12 +722,37 @@ $currentUser = AuthMiddleware::user();
                 grid-template-columns: 1fr;
             }
         }
+
+        /* â”€â”€ Admin tables (used by CRUD modules) â”€â”€ */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        .admin-table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--txt-muted);
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid var(--border);
+        }
+        .admin-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        .admin-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- ── Sidebar ── -->
+    <!-- â”€â”€ Sidebar â”€â”€ -->
     <aside class="admin-sidebar" id="sidebar">
         <div class="sidebar-logo">
             <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
@@ -761,6 +786,9 @@ $currentUser = AuthMiddleware::user();
             <a class="nav-item <?php echo strpos($_SERVER['REQUEST_URI'], 'hero-slides') !== false ? 'active' : ''; ?>" href="<?php echo $admin_url; ?>hero-slides/">
                 <i class="fas fa-images fa-fw"></i> Hero Slides
             </a>
+            <a class="nav-item <?php echo strpos($_SERVER['REQUEST_URI'], 'gallery') !== false ? 'active' : ''; ?>" href="<?php echo $admin_url; ?>gallery/">
+                <i class="fas fa-photo-film fa-fw"></i> Gallery
+            </a>
             <a class="nav-item <?php echo $current_page === 'contact-messages.php' ? 'active' : ''; ?>" href="<?php echo $admin_url; ?>contact-messages.php">
                 <i class="fas fa-envelope fa-fw"></i> Messages
                 <?php
@@ -773,7 +801,12 @@ $currentUser = AuthMiddleware::user();
         </div>
 
         <div class="nav-group">
-            <div class="nav-label">Account</div>
+<div class="nav-group">
+<div class="nav-label">AI</div>
+<a class="nav-item <?php echo ($current_page === 'ai/' || strpos($_SERVER['REQUEST_URI'], '/ai/') !== false) ? 'active' : ''; ?>" href="<?php echo $admin_url; ?>ai/">
+<i class="fas fa-wand-magic-sparkles fa-fw"></i> AI Generator
+</a>
+</div>            <div class="nav-label">Account</div>
             <a class="nav-item <?php echo $current_page === 'change-password.php' ? 'active' : ''; ?>" href="<?php echo $admin_url; ?>change-password.php">
                 <i class="fas fa-key fa-fw"></i> Change Password
             </a>
@@ -801,7 +834,7 @@ $currentUser = AuthMiddleware::user();
         </div>
     </aside>
 
-    <!-- ── Topbar ── -->
+    <!-- â”€â”€ Topbar â”€â”€ -->
     <div class="admin-topbar">
         <div class="topbar-left">
             <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">

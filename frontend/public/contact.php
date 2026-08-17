@@ -55,13 +55,13 @@ include __DIR__ . '/../components/header.php';
 <!-- =============================================
      CONTACT PAGE
      ============================================= -->
-<section id="contact" class="contact-section">
+<section id="contact" class="contact-section cmi-section-enter">
     <div class="container">
         <div class="row">
             <!-- Contact Info -->
             <div class="col-lg-5 mb-4 mb-lg-0">
-                <div class="contact-info-card">
-                    <h2 class="section-title">Get In Touch</h2>
+                <div class="contact-info-card cmi-slide-in-left">
+                    <h2 class="section-title cmi-fade-up">Get In Touch</h2>
                     <p class="section-subtitle">Have questions? We would love to hear from you. Send us a message and we will respond as soon as possible.</p>
 
                     <div class="contact-details">
@@ -100,7 +100,7 @@ include __DIR__ . '/../components/header.php';
 
             <!-- Contact Form -->
             <div class="col-lg-7">
-                <div class="contact-form-card">
+                <div class="contact-form-card cmi-slide-in-right">
                     <h3 class="form-title">Send Us a Message</h3>
 
                     <?php if ($success): ?>

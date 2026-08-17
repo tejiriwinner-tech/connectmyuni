@@ -1,0 +1,11 @@
+-- ==========================================================
+-- Connect MyUni — Migration 002
+-- Remove the legacy broken default from events.image_path.
+--
+-- The previous default ('asset/image1.png') pointed at a path that no longer
+-- exists. New events now start with a NULL image and are populated by the
+-- admin upload pipeline, which stores a storage-relative key
+-- (e.g. events/2026/08/event-<token>.webp).
+-- No existing rows are modified here.
+-- ==========================================================
+ALTER TABLE IF EXISTS events ALTER COLUMN image_path DROP DEFAULT;

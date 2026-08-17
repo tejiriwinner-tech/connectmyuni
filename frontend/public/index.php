@@ -14,18 +14,21 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10 text-center text-white position-relative">
-                    <h1 class="hero-title fw-bold mb-3">
+                    <h1 class="hero-title fw-bold mb-3 cmi-fade-up">
                         Unite Your Passion with Purpose at<br>
                         <span class="text-highlight">CONNECT MYUNI</span>
                     </h1>
-                    <p class="hero-subtitle mb-4">
+                    <p class="hero-subtitle mb-4 cmi-fade-up" style="animation-delay:0.15s">
                         Explore world-class education with a team dedicated to your global success.
                     </p>
-                    <a href="#contact" class="btn btn-hero-cta">GET IN TOUCH</a>
+                    <a href="#contact" class="btn btn-hero-cta cmi-fade-up" style="animation-delay:0.3s">GET IN TOUCH</a>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Scroll indicator -->
+    <div class="cmi-scroll-indicator" aria-hidden="true"></div>
 
 </section>
 
@@ -35,8 +38,8 @@
         <div class="container">
             <div class="row g-4">
 
-                <div class="col-lg-4 col-md-6">
-                    <div class="service-card-item text-center">
+                <div class="col-lg-4 col-md-6 cmi-fade-up" style="animation-delay:0.00s">
+                    <div class="service-card-item text-center cmi-tilt">
                         <div class="service-icon-circle mx-auto mb-4">
                             <i class="fas fa-user-graduate fa-2x"></i>
                         </div>
@@ -45,8 +48,8 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-6">
-                    <div class="service-card-item text-center">
+                <div class="col-lg-4 col-md-6 cmi-fade-up" style="animation-delay:0.12s">
+                    <div class="service-card-item text-center cmi-tilt">
                         <div class="service-icon-circle mx-auto mb-4">
                             <i class="fas fa-globe fa-2x"></i>
                         </div>
@@ -55,8 +58,8 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-6">
-                    <div class="service-card-item text-center">
+                <div class="col-lg-4 col-md-6 cmi-fade-up" style="animation-delay:0.24s">
+                    <div class="service-card-item text-center cmi-tilt">
                         <div class="service-icon-circle mx-auto mb-4">
                             <i class="fas fa-shield-alt fa-2x"></i>
                         </div>
@@ -74,28 +77,28 @@
 <!-- =============================================
      ABOUT SECTION
      ============================================= -->
-<section id="about" class="about-section">
+<section id="about" class="about-section cmi-section-enter">
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <h2 class="about-title">Your Trusted Partner in<br>Global Education</h2>
-                <p class="about-text">
+                <h2 class="about-title cmi-fade-up">Your Trusted Partner in<br>Global Education</h2>
+                <p class="about-text cmi-fade-up" style="animation-delay:0.1s">
                     Connect MyUni is a leading provider of education consulting services, proudly registered in Nigeria with the Corporate Affairs Commission. With over 21 years of dedicated service, Connect MyUni has established itself as a trusted name in the international education landscape. Our mission is to provide high-quality, personalized education consulting to students and institutions, ensuring that both find the perfect fit for their academic and professional aspirations.
                 </p>
-                <p class="about-text">
+                <p class="about-text cmi-fade-up" style="animation-delay:0.2s">
                     At Connect MyUni, we offer a wide range of services tailored to meet the unique needs of each student and institution. These services include language training, student placements, admission assistance, and career counseling. We also collaborate with universities and colleges worldwide to facilitate international student placements, ensuring a smooth transition for students seeking education abroad.
                 </p>
-                <a href="#" class="btn btn-about">Read More</a>
+                <a href="#" class="btn btn-about cmi-fade-up" style="animation-delay:0.3s">Read More</a>
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-6 cmi-slide-in-right">
                 <div class="about-image-collage">
-                    <div class="collage-image" style="background-image: url('asset/image1.png');"></div>
-                    <div class="collage-image" style="background-image: url('asset/image2.png');"></div>
-                    <div class="collage-image" style="background-image: url('asset/image3.png');"></div>
-                    <div class="collage-image" style="background-image: url('asset/image1.png');"></div>
-                    <div class="collage-image" style="background-image: url('asset/image2.png');"></div>
-                    <div class="collage-image" style="background-image: url('asset/image3.png');"></div>
+                    <div class="collage-image" style="background-image: url('frontend/assets/images/image1.png');"></div>
+                    <div class="collage-image" style="background-image: url('frontend/assets/images/image2.png');"></div>
+                    <div class="collage-image" style="background-image: url('frontend/assets/images/image3.png');"></div>
+                    <div class="collage-image" style="background-image: url('frontend/assets/images/image1.png');"></div>
+                    <div class="collage-image" style="background-image: url('frontend/assets/images/image2.png');"></div>
+                    <div class="collage-image" style="background-image: url('frontend/assets/images/image3.png');"></div>
                 </div>
             </div>
         </div>
@@ -106,12 +109,12 @@
 <!-- =============================================
      SERVICES SECTION
      ============================================= -->
-<section id="services" class="services-section">
+<section id="services" class="services-section cmi-section-enter">
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <h2 class="services-title">OUR SERVICES</h2>
-                <div class="accordion accordion-services" id="servicesAccordion">
+                <h2 class="services-title cmi-fade-up">OUR SERVICES</h2>
+                <div class="accordion accordion-services cmi-fade-up" id="servicesAccordion" style="animation-delay:0.12s">
 
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne">
@@ -207,9 +210,9 @@
                 </div>
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-6 cmi-slide-in-right">
                 <div class="services-image-box">
-                    <img src="<?php echo $base_url; ?>asset/image2.png" alt="Graduates" class="services-image">
+                    <img src="<?php echo $base_url; ?>frontend/assets/images/image2.png" alt="Graduates" class="services-image">
                 </div>
             </div>
         </div>
@@ -220,25 +223,25 @@
 <!-- =============================================
      APPROACH SECTION WITH RED HERO BACKGROUND
      ============================================= -->
-<section class="approach-hero-section">
+<section class="approach-hero-section cmi-section-enter">
     <div class="approach-hero-overlay"></div>
     <div class="approach-hero-content">
         <div class="container">
             <div class="row align-items-center g-5">
                 <div class="col-lg-6">
-                    <h2 class="approach-hero-title text-white">OUR APPROACH</h2>
-                    <p class="approach-hero-text text-white">
+                    <h2 class="approach-hero-title text-white cmi-fade-up">OUR APPROACH</h2>
+                    <p class="approach-hero-text text-white cmi-fade-up" style="animation-delay:0.1s">
                         At Connect MyUni, we believe in a personalized, student-centered approach to education consulting. We take the time to understand your unique goals, strengths, and challenges, tailoring our services to meet your individual needs. Whether you're navigating the complexities of studying abroad or seeking professional development, we are with you every step of the way, offering expert guidance and practical support.
                     </p>
-                    <p class="approach-hero-text text-white">
+                    <p class="approach-hero-text text-white cmi-fade-up" style="animation-delay:0.2s">
                         Our holistic approach combines academic counseling, training, and consulting with a commitment to empowering students and professionals to reach their full potential. By fostering strong partnerships with universities, businesses, and organizations worldwide, we ensure that our clients have access to the best opportunities available. At Connect MyUni, your success is our mission.
                     </p>
-                    <a href="#contact" class="btn btn-approach-hero">TALK TO OUR CONSULTANTS</a>
+                    <a href="#contact" class="btn btn-approach-hero cmi-fade-up" style="animation-delay:0.3s">TALK TO OUR CONSULTANTS</a>
                 </div>
 
-                <div class="col-lg-6">
+                <div class="col-lg-6 cmi-slide-in-right">
                     <div class="approach-image-wrapper">
-                        <img src="<?php echo $base_url; ?>asset/image3.png" alt="Our Consultants Team" class="approach-image">
+                        <img src="<?php echo $base_url; ?>frontend/assets/images/image3.png" alt="Our Consultants Team" class="approach-image">
                     </div>
                 </div>
             </div>
@@ -250,9 +253,9 @@
 <!-- =============================================
      NEWS & EVENTS SECTION
      ============================================= -->
-<section id="events" class="events-section">
+<section id="events" class="events-section cmi-section-enter">
     <div class="container">
-        <h2 class="events-section-title">LATEST NEWS &amp; EVENTS</h2>
+        <h2 class="events-section-title cmi-fade-up">LATEST NEWS &amp; EVENTS</h2>
 
         <div class="events-carousel-wrapper">
             <div id="eventsCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -262,9 +265,9 @@
                     <div class="carousel-item active">
                         <div class="carousel-cards-row">
                             <div class="carousel-card-wrapper">
-                                <div class="event-card">
+                                <div class="event-card cmi-tilt">
                                     <div class="event-image">
-                                        <img src="<?php echo $base_url; ?>asset/image1.png" alt="Navigating Global Education">
+                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image1.png" alt="Navigating Global Education">
                                         <span class="event-badge">WEBINAR</span>
                                     </div>
                                     <div class="event-content">
@@ -277,9 +280,9 @@
                             </div>
 
                             <div class="carousel-card-wrapper">
-                                <div class="event-card">
+                                <div class="event-card cmi-tilt">
                                     <div class="event-image">
-                                        <img src="<?php echo $base_url; ?>asset/image2.png" alt="IELTS Preparation Masterclass">
+                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image2.png" alt="IELTS Preparation Masterclass">
                                         <span class="event-badge">WORKSHOP</span>
                                     </div>
                                     <div class="event-content">
@@ -292,9 +295,9 @@
                             </div>
 
                             <div class="carousel-card-wrapper">
-                                <div class="event-card">
+                                <div class="event-card cmi-tilt">
                                     <div class="event-image">
-                                        <img src="<?php echo $base_url; ?>asset/image3.png" alt="Study Abroad Success Stories">
+                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image3.png" alt="Study Abroad Success Stories">
                                         <span class="event-badge">VIDEO</span>
                                     </div>
                                     <div class="event-content">
@@ -312,9 +315,9 @@
                     <div class="carousel-item">
                         <div class="carousel-cards-row">
                             <div class="carousel-card-wrapper">
-                                <div class="event-card">
+                                <div class="event-card cmi-tilt">
                                     <div class="event-image">
-                                        <img src="<?php echo $base_url; ?>asset/image1.png" alt="Scholarship Opportunities">
+                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image1.png" alt="Scholarship Opportunities">
                                         <span class="event-badge">WEBINAR</span>
                                     </div>
                                     <div class="event-content">
@@ -327,9 +330,9 @@
                             </div>
 
                             <div class="carousel-card-wrapper">
-                                <div class="event-card">
+                                <div class="event-card cmi-tilt">
                                     <div class="event-image">
-                                        <img src="<?php echo $base_url; ?>asset/image2.png" alt="University Application Workshop">
+                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image2.png" alt="University Application Workshop">
                                         <span class="event-badge">WORKSHOP</span>
                                     </div>
                                     <div class="event-content">
@@ -342,9 +345,9 @@
                             </div>
 
                             <div class="carousel-card-wrapper">
-                                <div class="event-card">
+                                <div class="event-card cmi-tilt">
                                     <div class="event-image">
-                                        <img src="<?php echo $base_url; ?>asset/image3.png" alt="Career Development Series">
+                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image3.png" alt="Career Development Series">
                                         <span class="event-badge">VIDEO</span>
                                     </div>
                                     <div class="event-content">
@@ -381,20 +384,20 @@
 <!-- =============================================
      CONTACT SECTION
      ============================================= -->
-<section id="contact" class="contact-section">
+<section id="contact" class="contact-section cmi-section-enter">
     <div class="container">
         <div class="row align-items-center g-5">
 
-            <div class="col-lg-6">
+            <div class="col-lg-6 cmi-slide-in-left">
                 <div class="contact-map-wrapper">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.4531280450886!2d3.1656!3d9.0765!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x104ba5e78cffffff%3A0x8c8c8c8c8c8c8c8c!2s2%20Michika%20St%2C%20Garki%2C%20Abuja!5e0!3m2!1sen!2sng!4v1234567890" width="100%" height="400" style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-6 cmi-slide-in-right">
                 <div class="contact-info">
                     <div class="contact-logo-wrapper">
-                        <img src="<?php echo $base_url; ?>asset/logo.png" alt="Connect MyUni Logo" class="contact-logo">
+                        <img src="<?php echo $base_url; ?>frontend/assets/images/logo.png" alt="Connect MyUni Logo" class="contact-logo">
                     </div>
                     <h2 class="contact-title">CONTACT US</h2>
 

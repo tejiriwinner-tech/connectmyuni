@@ -21,9 +21,9 @@ $style_version = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time();
     <meta name="author" content="Connect MyUni">
     <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' - Connect MyUni' : 'Connect MyUni'; ?></title>
     <!-- Favicon & Logo -->
-<link rel="icon" type="image/png" href="<?php echo $base_url; ?>frontend/assets/logo.png">
-<link rel="apple-touch-icon" href="<?php echo $base_url; ?>frontend/assets/logo.png">
-<meta property="og:image" content="<?php echo $base_url; ?>frontend/assets/logo.png">
+<link rel="icon" type="image/png" href="<?php echo $base_url; ?>frontend/assets/images/logo.png">
+<link rel="apple-touch-icon" href="<?php echo $base_url; ?>frontend/assets/images/logo.png">
+<meta property="og:image" content="<?php echo $base_url; ?>frontend/assets/images/logo.png">
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -35,7 +35,24 @@ $style_version = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time();
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo $base_url; ?>frontend/assets/css/style.css?v=<?php echo $style_version; ?>">
+        <link rel="stylesheet" href="<?php echo $base_url; ?>frontend/assets/css/style.css?v=<?php echo $style_version; ?>">
+
+    <!-- Animations & Premium UI Layer (Stage 04A / 04B / 04C) — must load AFTER style.css -->
+    <link rel="stylesheet" href="<?php echo $base_url; ?>frontend/assets/css/animations.css?v=<?php echo $style_version; ?>">
+    <link rel="stylesheet" href="<?php echo $base_url; ?>frontend/assets/css/ui-upgrade.css?v=<?php echo $style_version; ?>">
+
+    <!-- No-JS fallback: keep cmi-* reveal content visible if JavaScript is unavailable -->
+    <noscript>
+        <style>
+            .cmi-fade-up, .cmi-fade-in, .cmi-slide-in-left, .cmi-slide-in-right,
+            .cmi-scale, .cmi-image, .cmi-section-enter,
+            .cmi-stagger-children > *, .cmi-stagger-row > * {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+        </style>
+    </noscript>
 </head>
 
 <body>
@@ -48,7 +65,7 @@ $style_version = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time();
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
         <div class="container">
             <a class="navbar-brand" href="<?php echo $base_url; ?>index.php">
-                <img src="<?php echo $base_url; ?>frontend/assets/logo.png" alt="Connect MyUni Logo" class="logo-img">
+                <img src="<?php echo $base_url; ?>frontend/assets/images/logo.png" alt="Connect MyUni Logo" class="logo-img">
                 <span class="logo-text">Connect MyUni</span>
             </a>
 
@@ -72,7 +89,7 @@ $style_version = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time();
                     ];
                     foreach ($pages as $file => $label) {
                         $active = ($current === $file) ? 'active' : '';
-                        echo "<li class='nav-item'><a class='nav-link {$active}' href='{$base_url}{$file}'>{$label}</a></li>";
+                        echo "<li class='nav-item'><a class='nav-link cmi-nav-link {$active}' href='{$base_url}{$file}'>{$label}</a></li>";
                     }
                     ?>
                 </ul>
