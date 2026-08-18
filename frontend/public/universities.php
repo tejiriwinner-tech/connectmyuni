@@ -3,86 +3,59 @@ $page_title = 'Partner Universities';
 require_once __DIR__ . '/../components/header.php';
 
 // ─────────────────────────────────────────────
-// Partner Universities Data
-// Add / remove universities here as needed.
+// Partner Universities — from the CMS database
 // ─────────────────────────────────────────────
-$partner_universities = [
-    'USA' => [
-        'Park University',
-        'Southern Illinois University',
-        'York State University',
-        'North Seattle Community College, Seattle',
-        'Lincoln University',
-        'Arkansas State University',
-        'Lewis University',
-        'American Intercontinental University',
-        'Atlanta University of Boston',
-        'Concordia University, Chicago',
-        'Oregon State University',
-        'California State University',
-        'University of the Cumberlands',
-        'Westcliff University',
-    ],
-    'United Kingdom' => [
-        'Nottingham Trent University (NTU)',
-        'University of Wolverhampton',
-        'University of Sunderland',
-        'Coventry University',
-        'University of East London',
-        'Anglia Ruskin University',
-        'London Metropolitan University',
-        'University of Hertfordshire',
-    ],
-    'Malaysia' => [
-        'Lincoln University College (LUC)',
-        'Asia Pacific University (APU)',
-        'Management and Science University (MSU)',
-        'INTI International University',
-        'Limkokwing University',
-    ],
-    'Philippines' => [
-        'SouthWestern University (SWU) PHINMA Cebu',
-        'University of the Philippines',
-        'De La Salle University',
-    ],
-    'Canada' => [
-        'Lakehead University',
-        'Thompson Rivers University',
-        'University of Fredericton',
-    ],
-    'Australia' => [
-        'Central Queensland University (CQU)',
-        'Federation University',
-        'Charles Sturt University',
-    ],
-];
+use ConnectMyUni\Services\UniversityService;
 
-// ─────────────────────────────────────────────
-// Featured Partner Cards (Image 2 reference)
-// ─────────────────────────────────────────────
-$featured_partners = [
-    [
-        'number'  => '01',
-        'name'    => 'SouthWestern University (SWU) PHINMA',
-        'location' => 'Cebu, Philippines',
-        'desc'    => 'SWU excels in diversity and academic excellence, with nearly 5,000 African students, fostering a global community and empowering future leaders.',
-        'abbr'    => 'SWU',
-    ],
-    [
-        'number'  => '02',
-        'name'    => 'Nottingham Trent University',
-        'location' => 'NTU, United Kingdom',
-        'desc'    => 'Our project at NTU focuses on African students, fostering a global community and empowering leaders through world-class academic programmes.',
-        'abbr'    => 'NTU',
-    ],
-    [
-        'number'  => '03',
-        'name'    => 'Lincoln University College',
-        'location' => 'LUC, Malaysia',
-        'desc'    => 'Lincoln University is a renowned institution attracting over 8,000 students from Malaysia and Nigeria, offering a diverse range of programmes and opportunities.',
-        'abbr'    => 'LUC',
-    ],
-];
+try {
+    $uniService = new UniversityService();
+    $allUniversities       = $uniService->getAll();
+    $featuredUniversities  = $uniService->getFeatured();
+} catch (\Throwable $e) {
+    error_log('Universities load failed: ' . $e->getMessage());
+    $allUniversities      = [];
+    $featuredUniversities = [];
+}
+
+// ISO country code -> flag emoji (regional indicator symbols).
+$isoToFlag = static function (?string $code): string {
+    $code = strtoupper(trim((string) $code));
+    if (strlen($code) !== 2 || !ctype_alpha($code)) {
+        return '🌍';
+    }
+    return mb_chr(0x1F1E6 + ord($code[0]) - 0x41, 'UTF-8')
+         . mb_chr(0x1F1E6 + ord($code[1]) - 0x41, 'UTF-8');
+};
+
+// Group universities by country, preserving the DB sort order.
+$partner_universities = [];
+foreach ($allUniversities as $uni) {
+    $country = (string) ($uni['country_name'] ?? 'Other');
+    if (!isset($partner_universities[$country])) {
+        $partner_universities[$country] = [
+            'flag'         => $isoToFlag((string) ($uni['flag_emoji'] ?? '')),
+            'universities' => [],
+        ];
+    }
+    $partner_universities[$country]['universities'][] = $uni;
+}
+
+// Featured partner cards (driven by is_featured in the CMS).
+$featured_partners = [];
+foreach ($featuredUniversities as $i => $uni) {
+    $abbr = '';
+    // Reuse the official abbreviation from the name, e.g. "Nottingham Trent University (NTU)".
+    if (preg_match('/\(([^)]+)\)/', (string) $uni['name'], $m)) {
+        $abbr = trim($m[1]);
+    }
+    $featured_partners[] = [
+        'number'   => sprintf('%02d', $i + 1),
+        'name'     => (string) $uni['name'],
+        'location' => (string) ($uni['location'] ?? ''),
+        'desc'     => (string) ($uni['description'] ?? ''),
+        'abbr'     => $abbr,
+    ];
+}
 ?>
 
 <!-- ── Page Hero ──────────────────────────────────────────── -->
@@ -115,6 +88,7 @@ $featured_partners = [
 </section> -->
 
 <!-- ── Featured Partners ──────────────────────────────────── -->
+<?php if (!empty($featured_partners)): ?>
 <section class="featured-partners py-5 bg-light cmi-section-enter">
     <div class="container">
         <h2 class="section-heading mb-4 cmi-fade-up">Featured Partners</h2>
@@ -125,15 +99,21 @@ $featured_partners = [
                         <div class="fp-card__number">
                             <?php echo htmlspecialchars($fp['number']); ?>
                         </div>
+                        <?php if ($fp['abbr'] !== ''): ?>
                         <div class="fp-card__abbr">
                             <?php echo htmlspecialchars($fp['abbr']); ?>
                         </div>
+                        <?php endif; ?>
                         <h3 class="fp-card__name"><?php echo htmlspecialchars($fp['name']); ?></h3>
+                        <?php if ($fp['location'] !== ''): ?>
                         <p class="fp-card__location text-muted small">
                             <i class="fas fa-map-marker-alt me-1"></i>
                             <?php echo htmlspecialchars($fp['location']); ?>
                         </p>
+                        <?php endif; ?>
+                        <?php if ($fp['desc'] !== ''): ?>
                         <p class="fp-card__desc"><?php echo htmlspecialchars($fp['desc']); ?></p>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -149,12 +129,18 @@ $featured_partners = [
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- ── Full University Table ──────────────────────────────── -->
 <section class="university-table-section py-5 cmi-section-enter">
     <div class="container">
         <h2 class="section-heading mb-4 cmi-fade-up">All Partner Universities</h2>
 
+        <?php if (empty($partner_universities)): ?>
+            <div class="uni-empty text-center py-5">
+                <p class="mb-0 text-muted">No partner universities are available yet. Please check back soon.</p>
+            </div>
+        <?php else: ?>
         <!-- Country filter tabs -->
         <ul class="nav nav-tabs uni-tabs mb-4" id="countryTabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -179,28 +165,16 @@ $featured_partners = [
                     </tr>
                 </thead>
                 <tbody id="universityTableBody">
-                    <?php foreach ($partner_universities as $country => $universities): ?>
+                    <?php foreach ($partner_universities as $country => $group): ?>
                         <tr class="uni-row" data-country="<?php echo htmlspecialchars($country); ?>">
                             <td class="uni-row__country">
-                                <span class="country-flag me-2">
-                                    <?php
-                                    $flags = [
-                                        'USA'            => '🇺🇸',
-                                        'United Kingdom' => '🇬🇧',
-                                        'Malaysia'       => '🇲🇾',
-                                        'Philippines'    => '🇵🇭',
-                                        'Canada'         => '🇨🇦',
-                                        'Australia'      => '🇦🇺',
-                                    ];
-                                    echo $flags[$country] ?? '🌍';
-                                    ?>
-                                </span>
+                                <span class="country-flag me-2"><?php echo $group['flag']; ?></span>
                                 <?php echo htmlspecialchars($country); ?>
                             </td>
                             <td>
                                 <ul class="uni-list mb-0">
-                                    <?php foreach ($universities as $uni): ?>
-                                        <li><?php echo htmlspecialchars($uni); ?></li>
+                                    <?php foreach ($group['universities'] as $uni): ?>
+                                        <li><?php echo htmlspecialchars((string) $uni['name']); ?></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </td>
@@ -209,6 +183,7 @@ $featured_partners = [
                 </tbody>
             </table>
         </div>
+        <?php endif; ?>
     </div>
 </section>
 
