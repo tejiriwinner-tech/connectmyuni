@@ -1,4 +1,19 @@
-<?php include __DIR__ . '/../components/header.php'; ?>
+<?php
+include __DIR__ . '/../components/header.php';
+
+// ─────────────────────────────────────────────
+// Services — from the CMS database
+// ─────────────────────────────────────────────
+use ConnectMyUni\Services\ServiceService;
+
+$services = [];
+try {
+    $services = (new ServiceService())->getAllActive();
+} catch (\Throwable $e) {
+    error_log('Services load failed: ' . $e->getMessage());
+    $services = [];
+}
+?>
 
 <!-- Services Section -->
 <section class="services-page-section cmi-section-enter">
@@ -8,77 +23,28 @@
             <div class="services-left">
                 <h2 class="services-page-title cmi-fade-up">Our Services</h2>
 
+                <?php if (empty($services)): ?>
+                    <p class="text-muted">Services are currently being updated. Please contact us for assistance.</p>
+                <?php else: ?>
                 <div class="services-accordion">
+                    <?php foreach ($services as $svc): ?>
                     <div class="service-accordion-item">
                         <button class="service-accordion-header" onclick="toggleAccordion(this)">
-                            <span>Student Placement Programs</span>
+                            <span>
+                                <?php if (!empty($svc['icon_class'])): ?>
+                                    <i class="fas <?php echo htmlspecialchars($svc['icon_class']); ?> me-2"></i>
+                                <?php endif; ?>
+                                <?php echo htmlspecialchars($svc['title'] ?? ''); ?>
+                            </span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
                         <div class="service-accordion-body">
-                            <p>We connect qualified students with universities that match their academic aspirations and career goals, ensuring a perfect fit for their educational journey. Our placement experts work closely with students to identify suitable institutions and guide them through the entire admission process.</p>
+                            <p><?php echo htmlspecialchars($svc['description'] ?? ''); ?></p>
                         </div>
                     </div>
-
-                    <div class="service-accordion-item">
-                        <button class="service-accordion-header" onclick="toggleAccordion(this)">
-                            <span>Scholarship and Application Support</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="service-accordion-body">
-                            <p>We provide comprehensive assistance to students in applying for scholarships and financial aid. Our team helps identify suitable scholarship opportunities, guides students through the application process, and provides support in compiling necessary documents to maximize funding prospects.</p>
-                        </div>
-                    </div>
-
-                    <div class="service-accordion-item">
-                        <button class="service-accordion-header" onclick="toggleAccordion(this)">
-                            <span>Test Preparation Services</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="service-accordion-body">
-                            <p>We offer specialized coaching for standardized tests including SAT, ACT, GRE, GMAT, and other required examinations. Our experienced instructors provide comprehensive test preparation strategies, practice materials, and personalized guidance to help students achieve their target scores.</p>
-                        </div>
-                    </div>
-
-                    <div class="service-accordion-item">
-                        <button class="service-accordion-header" onclick="toggleAccordion(this)">
-                            <span>Language Training</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="service-accordion-body">
-                            <p>We provide professional language proficiency training for IELTS, TOEFL, and other language examinations. Our instructors deliver intensive courses with focus on all language skills and test-specific strategies to ensure students meet university entry requirements.</p>
-                        </div>
-                    </div>
-
-                    <div class="service-accordion-item">
-                        <button class="service-accordion-header" onclick="toggleAccordion(this)">
-                            <span>Academic Counseling Services</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="service-accordion-body">
-                            <p>Our expert counselors provide personalized guidance on program selection, university ranking, admission requirements, and academic planning. We help students make informed decisions about their education path and ensure they choose institutions that align with their goals.</p>
-                        </div>
-                    </div>
-
-                    <div class="service-accordion-item">
-                        <button class="service-accordion-header" onclick="toggleAccordion(this)">
-                            <span>Pre-Departure Support</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="service-accordion-body">
-                            <p>We offer comprehensive pre-departure briefings covering visa requirements, cultural adaptation, academic expectations, health and safety tips, airport pick-up arrangements, and accommodation assistance, ensuring a smooth transition to studying abroad.</p>
-                        </div>
-                    </div>
-
-                    <div class="service-accordion-item">
-                        <button class="service-accordion-header" onclick="toggleAccordion(this)">
-                            <span>Visa Assistance and Documentation</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="service-accordion-body">
-                            <p>We provide complete support with visa applications and documentation requirements. Our team guides students through every step of the visa process, helps compile necessary documents, and ensures compliance with international education standards and immigration regulations.</p>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
+                <?php endif; ?>
             </div>
 
             <!-- Right Services Image -->
