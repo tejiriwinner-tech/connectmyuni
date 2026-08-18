@@ -29,6 +29,33 @@ class CountryRepository
     }
 
     /**
+     * Get all countries with a count of universities per country
+     */
+    public function getAllWithUniversityCounts(): array
+    {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->query("
+            SELECT c.*, COUNT(u.id) AS university_count
+            FROM countries c
+            LEFT JOIN universities u ON u.country_id = c.id
+            GROUP BY c.id
+            ORDER BY c.sort_order ASC, c.name ASC
+        ");
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Count universities that reference a country
+     */
+    public function countUniversities(int $countryId): int
+    {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM universities WHERE country_id = ?");
+        $stmt->execute([$countryId]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
      * Get featured countries
      */
     public function getFeatured(): array

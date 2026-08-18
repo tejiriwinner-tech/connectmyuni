@@ -5,6 +5,7 @@ require_once __DIR__ . '/../components/header.php';
 // ─────────────────────────────────────────────
 // Partner Universities — from the CMS database
 // ─────────────────────────────────────────────
+use ConnectMyUni\Services\CountryService;
 use ConnectMyUni\Services\UniversityService;
 
 try {
@@ -17,23 +18,13 @@ try {
     $featuredUniversities = [];
 }
 
-// ISO country code -> flag emoji (regional indicator symbols).
-$isoToFlag = static function (?string $code): string {
-    $code = strtoupper(trim((string) $code));
-    if (strlen($code) !== 2 || !ctype_alpha($code)) {
-        return '🌍';
-    }
-    return mb_chr(0x1F1E6 + ord($code[0]) - 0x41, 'UTF-8')
-         . mb_chr(0x1F1E6 + ord($code[1]) - 0x41, 'UTF-8');
-};
-
 // Group universities by country, preserving the DB sort order.
 $partner_universities = [];
 foreach ($allUniversities as $uni) {
     $country = (string) ($uni['country_name'] ?? 'Other');
     if (!isset($partner_universities[$country])) {
         $partner_universities[$country] = [
-            'flag'         => $isoToFlag((string) ($uni['flag_emoji'] ?? '')),
+            'flag'         => CountryService::flagEmoji((string) ($uni['flag_emoji'] ?? '')),
             'universities' => [],
         ];
     }

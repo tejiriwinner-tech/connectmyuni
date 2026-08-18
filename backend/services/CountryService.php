@@ -33,6 +33,35 @@ class CountryService
     }
 
     /**
+     * Get all countries with a count of universities per country
+     */
+    public function getAllWithUniversityCounts(): array
+    {
+        return $this->countryRepo->getAllWithUniversityCounts();
+    }
+
+    /**
+     * Count universities that reference a country
+     */
+    public function countUniversities(int $countryId): int
+    {
+        return $this->countryRepo->countUniversities($countryId);
+    }
+
+    /**
+     * Convert an ISO 3166-1 alpha-2 country code into a regional-indicator flag emoji.
+     */
+    public static function flagEmoji(?string $code): string
+    {
+        $code = strtoupper(trim((string) $code));
+        if (strlen($code) !== 2 || !ctype_alpha($code)) {
+            return '🌍';
+        }
+        return mb_chr(0x1F1E6 + ord($code[0]) - 0x41, 'UTF-8')
+             . mb_chr(0x1F1E6 + ord($code[1]) - 0x41, 'UTF-8');
+    }
+
+    /**
      * Get featured countries
      */
     public function getFeatured(): array
