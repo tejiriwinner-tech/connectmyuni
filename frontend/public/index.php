@@ -4,12 +4,32 @@
      HERO SECTION — full-width background image
      Cards overlap out of the bottom, like FAB Ed
      ============================================= -->
-<section id="home" class="hero-section">
+<section id="home" class="hero-section cmi-section-gap">
 
     <!-- Dark overlay -->
     <div class="hero-overlay"></div>
 
-    <!-- Hero text — vertically centred in upper portion -->
+    <!-- Stage 05 — layered depth ornaments (decorative, non-interactive).
+         data-depth drives the ONE parallax engine in animations.js.
+         Orbs sit above the overlay but below the content/CTA. -->
+    <div class="cmi-orb cmi-orb--light cmi-motion cmi-orb--hero-bg" data-depth="background" aria-hidden="true"></div>
+    <div class="cmi-orb cmi-orb--accent cmi-motion cmi-orb--hero-a" data-depth="decorative" aria-hidden="true"></div>
+
+    <!-- Floating glass accents — Layer 3 "foreground" (tiny idle float). -->
+    <div class="cmi-hero-stat cmi-hero-stat--a cmi-motion" data-depth="foreground" aria-hidden="true">
+        <div class="cmi-stat cmi-glass cmi-glass--dark cmi-stat--on-dark cmi-slight-float" style="--cmi-float-delay: .6s">
+            <i class="fas fa-university"></i>
+            <span><span class="cmi-stat-value">120+</span><span class="cmi-stat-label">Global University Partners</span></span>
+        </div>
+    </div>
+    <div class="cmi-hero-stat cmi-hero-stat--b cmi-motion" data-depth="foreground" aria-hidden="true">
+        <div class="cmi-stat cmi-glass cmi-glass--dark cmi-stat--on-dark cmi-slight-float" style="--cmi-float-delay: 1.4s">
+            <i class="fas fa-user-graduate"></i>
+            <span><span class="cmi-stat-value">21+</span><span class="cmi-stat-label">Years of Guidance</span></span>
+        </div>
+    </div>
+
+    <!-- Hero text — remains mostly stable (content layer) -->
     <div class="hero-content">
         <div class="container">
             <div class="row justify-content-center">
@@ -33,7 +53,7 @@
 <section class="hero-cards-section">
     <div class="hero-cards-overlap">
         <div class="container">
-            <div class="row g-4">
+            <div class="row g-4 cmi-stagger-group">
 
                 <div class="col-lg-4 col-md-6">
                     <div class="service-card-item text-center">
@@ -89,7 +109,7 @@
             </div>
 
             <div class="col-lg-6">
-                <div class="about-image-collage">
+                <div class="about-image-collage cmi-motion" data-parallax-speed="0.06">
                     <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image1.png');"></div>
                     <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image2.png');"></div>
                     <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image3.png');"></div>
@@ -106,11 +126,20 @@
 <!-- =============================================
      SERVICES SECTION
      ============================================= -->
-<section id="services" class="services-section">
+<section id="services" class="services-section cmi-depth-host">
     <div class="container">
+
+        <!-- Stage 05 layer: background + decorative motion -->
+        <div class="cmi-orb cmi-orb--soft cmi-motion cmi-orb--services-bg" data-depth="background" aria-hidden="true"></div>
+        <div class="cmi-orb cmi-orb--accent cmi-motion cmi-orb--services-a" data-depth="decorative" aria-hidden="true"></div>
+
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <h2 class="services-title">OUR SERVICES</h2>
+                <div class="cmi-section-heading">
+                    <span class="cmi-kicker">What we do</span>
+                    <h2 class="cmi-heading">Our Services</h2>
+                    <span class="cmi-rule"></span>
+                </div>
                 <div class="accordion accordion-services" id="servicesAccordion">
 
                     <div class="accordion-item">
@@ -220,8 +249,13 @@
 <!-- =============================================
      APPROACH SECTION WITH RED HERO BACKGROUND
      ============================================= -->
-<section class="approach-hero-section">
+<section class="approach-hero-section cmi-depth-host">
     <div class="approach-hero-overlay"></div>
+
+    <!-- Stage 05 layer: red hero depth (decorative, above the tint) -->
+    <div class="cmi-orb cmi-orb--light cmi-motion cmi-orb--approach-bg" data-depth="decorative" aria-hidden="true"></div>
+    <div class="cmi-orb cmi-orb--accent cmi-motion cmi-orb--approach-a" data-depth="background" aria-hidden="true"></div>
+
     <div class="approach-hero-content">
         <div class="container">
             <div class="row align-items-center g-5">
@@ -250,9 +284,18 @@
 <!-- =============================================
      NEWS & EVENTS SECTION
      ============================================= -->
-<section id="events" class="events-section">
+<section id="events" class="events-section cmi-depth-host">
     <div class="container">
-        <h2 class="events-section-title">LATEST NEWS &amp; EVENTS</h2>
+
+        <!-- Stage 05 layer: subtle events depth -->
+        <div class="cmi-orb cmi-orb--soft cmi-motion cmi-orb--events-bg-a" data-depth="background" aria-hidden="true"></div>
+        <div class="cmi-orb cmi-orb--accent cmi-motion cmi-orb--events-a" data-depth="decorative" aria-hidden="true"></div>
+
+        <div class="cmi-section-heading cmi-section-heading--center">
+            <span class="cmi-kicker">What's happening</span>
+            <h2 class="cmi-heading">Latest News &amp; Events</h2>
+            <span class="cmi-rule"></span>
+        </div>
 
         <div class="events-carousel-wrapper">
             <div id="eventsCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -381,8 +424,12 @@
 <!-- =============================================
      CONTACT SECTION
      ============================================= -->
-<section id="contact" class="contact-section">
+<section id="contact" class="contact-section cmi-depth-host">
     <div class="container">
+
+        <!-- Stage 05 layer: quiet contact depth -->
+        <div class="cmi-orb cmi-orb--soft cmi-motion cmi-orb--contact-bg" data-depth="background" aria-hidden="true"></div>
+
         <div class="row align-items-center g-5">
 
             <div class="col-lg-6">
