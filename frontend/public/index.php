@@ -109,13 +109,13 @@
             </div>
 
             <div class="col-lg-6">
-                <div class="about-image-collage cmi-motion" data-parallax-speed="0.06">
-                    <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image1.png');"></div>
-                    <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image2.png');"></div>
-                    <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image3.png');"></div>
-                    <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image1.png');"></div>
-                    <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image2.png');"></div>
-                    <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image3.png');"></div>
+                <div class="about-image-collage">
+                    <!-- EXACTLY 3 UNIQUE PROFILE CARDS — no duplicates/clones.
+                         Each card is a real element and drives its own subtle
+                         parallax via data-parallax-speed (animations.js). -->
+                    <div class="collage-profile collage-profile--lead cmi-motion" data-parallax-speed="0.05" role="img" aria-label="Connect MyUni consultant 1" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image1.png');"></div>
+                    <div class="collage-profile collage-profile--mid cmi-motion" data-parallax-speed="0.085" role="img" aria-label="Connect MyUni consultant 2" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image2.png');"></div>
+                    <div class="collage-profile collage-profile--highlight cmi-motion" data-parallax-speed="0.065" role="img" aria-label="Connect MyUni consultant 3" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image3.png');"></div>
                 </div>
             </div>
         </div>
