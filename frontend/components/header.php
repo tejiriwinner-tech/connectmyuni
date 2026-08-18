@@ -46,7 +46,8 @@ $style_version = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time();
         <style>
             .cmi-fade-up, .cmi-fade-in, .cmi-slide-in-left, .cmi-slide-in-right,
             .cmi-scale, .cmi-image, .cmi-section-enter,
-            .cmi-stagger-children > *, .cmi-stagger-row > * {
+            .cmi-stagger-children > *, .cmi-stagger-row > *,
+            .cmi-stagger-group > [class*="col"] {
                 opacity: 1 !important;
                 transform: none !important;
                 animation: none !important;

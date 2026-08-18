@@ -1,37 +1,21 @@
-// Scroll Animation Handler
-document.addEventListener('DOMContentLoaded', function() {
-    // Trigger page load animation
-    document.body.classList.add('page-loaded');
+/**
+ * Connect MyUni — Public UI bootstrap (concise)
+ * ==============================================
+ * This file previously ran a broad, competing `.animate-on-scroll`
+ * observer across every `.container / .row / .col-*`, which conflicted
+ * with the single `cmi-*` motion system in animations.js.
+ *
+ * It is now intentionally minimal:
+ *   - It only flags the page as "loaded" so entry animations fire.
+ *   - All scroll reveals & parallax live in the ONE system:
+ *     animations.js (IntersectionObserver reveal + data-depth engine).
+ *
+ * Keep it small. Do not add competing scroll logic here.
+ * ============================================================= */
+(function () {
+    'use strict';
 
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-on-scroll');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    // Observe all service cards
-    const cards = document.querySelectorAll('.service-card-item');
-    cards.forEach(card => {
-        observer.observe(card);
+    document.addEventListener('DOMContentLoaded', function () {
+        document.body.classList.add('page-loaded');
     });
-
-    // Observe all sections and divs for animation
-    const allSections = document.querySelectorAll('section, .container, .row, .col-lg-4, .col-md-6, .col-12');
-    allSections.forEach(element => {
-        observer.observe(element);
-    });
-
-    // Observe other sections for animation
-    const animateElements = document.querySelectorAll('.about-section, .section-title, .feature-box');
-    animateElements.forEach(element => {
-        observer.observe(element);
-    });
-});
+})();
