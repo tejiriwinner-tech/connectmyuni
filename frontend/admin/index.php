@@ -1,4 +1,4 @@
-<?php include 'components/admin-header.php'; ?>
+<?php include __DIR__ . '/components/admin-header.php'; ?>
 
 <?php
 // Load real database statistics (classes autoloaded via bootstrap.php)
@@ -239,6 +239,6 @@ $latestEventsEvents = array_slice(array_reverse($eventRepo->getAll()), 0, 5);
 </div>
 
 </main>
-<?php include '../components/footer.php'; ?>
+<?php include __DIR__ . '/components/footer.php'; ?>
 </body>
 </html>
