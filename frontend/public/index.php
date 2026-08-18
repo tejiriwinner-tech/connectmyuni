@@ -339,115 +339,62 @@ foreach ($heroSlides as $slide) {
 <!-- =============================================
      NEWS & EVENTS SECTION
      ============================================= -->
-<section id="events" class="events-section cmi-section-enter">
+
+<?php
+// Homepage "Latest News & Events" carousel - database-driven.
+// Uses the same source as the dedicated events/updates pages: EventService
+// (reads published-only events ordered newest-first, mapped to template keys
+// by present(), image paths resolved by MediaResolver). No SQL in templates.
+// Capped to the carousel's existing design capacity. Falls back to an empty
+// state on failure instead of hard-coded sample data.
+$homeEventService = new \ConnectMyUni\Services\EventService();
+try {
+    $homeEvents = array_slice($homeEventService->getAllForPublic(), 0, 6);
+} catch (\Throwable $e) {
+    error_log('Homepage events load failed: ' . $e->getMessage());
+    $homeEvents = [];
+}
+?><section id="events" class="events-section cmi-section-enter">
     <div class="container">
         <h2 class="events-section-title cmi-fade-up">LATEST NEWS &amp; EVENTS</h2>
 
         <div class="events-carousel-wrapper">
             <div id="eventsCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-
-                    <!-- Slide 1 -->
-                    <div class="carousel-item active">
-                        <div class="carousel-cards-row">
-                            <div class="carousel-card-wrapper">
-                                <div class="event-card cmi-tilt">
-                                    <div class="event-image">
-                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image1.png" alt="Navigating Global Education">
-                                        <span class="event-badge">WEBINAR</span>
-                                    </div>
-                                    <div class="event-content">
-                                        <h3 class="event-title">Navigating Global Education</h3>
-                                        <p class="event-date"><i class="fas fa-calendar"></i> June 15, 2024</p>
-                                        <p class="event-description">Join us for an exclusive webinar on how to choose the right university abroad and prepare for your journey.</p>
-                                        <a href="events.php" class="btn btn-event-link">View More</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="carousel-card-wrapper">
-                                <div class="event-card cmi-tilt">
-                                    <div class="event-image">
-                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image2.png" alt="IELTS Preparation Masterclass">
-                                        <span class="event-badge">WORKSHOP</span>
-                                    </div>
-                                    <div class="event-content">
-                                        <h3 class="event-title">IELTS Preparation Masterclass</h3>
-                                        <p class="event-date"><i class="fas fa-calendar"></i> July 10, 2024</p>
-                                        <p class="event-description">Intensive workshop covering all aspects of IELTS exam preparation with expert trainers and proven strategies.</p>
-                                        <a href="events.php" class="btn btn-event-link">View More</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="carousel-card-wrapper">
-                                <div class="event-card cmi-tilt">
-                                    <div class="event-image">
-                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image3.png" alt="Study Abroad Success Stories">
-                                        <span class="event-badge">VIDEO</span>
-                                    </div>
-                                    <div class="event-content">
-                                        <h3 class="event-title">Study Abroad Success Stories</h3>
-                                        <p class="event-date"><i class="fas fa-calendar"></i> July 20, 2024</p>
-                                        <p class="event-description">Watch inspiring stories from our successful students studying abroad and their transformational experiences.</p>
-                                        <a href="events.php" class="btn btn-event-link">View More</a>
-                                    </div>
-                                </div>
+                    <?php if (empty($homeEvents)): ?>
+                        <div class="carousel-item active">
+                            <div class="text-center py-5">
+                                <p class="text-muted">No upcoming events at the moment. Please check back soon.</p>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Slide 2 -->
-                    <div class="carousel-item">
-                        <div class="carousel-cards-row">
-                            <div class="carousel-card-wrapper">
-                                <div class="event-card cmi-tilt">
-                                    <div class="event-image">
-                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image1.png" alt="Scholarship Opportunities">
-                                        <span class="event-badge">WEBINAR</span>
-                                    </div>
-                                    <div class="event-content">
-                                        <h3 class="event-title">Scholarship Opportunities</h3>
-                                        <p class="event-date"><i class="fas fa-calendar"></i> August 5, 2024</p>
-                                        <p class="event-description">Discover the best scholarship opportunities available for international students and how to apply effectively.</p>
-                                        <a href="events.php" class="btn btn-event-link">View More</a>
-                                    </div>
+                    <?php else: ?>
+                        <?php foreach (array_chunk($homeEvents, 3) as $slideIndex => $slideEvents): ?>
+                            <div class="carousel-item<?php echo $slideIndex === 0 ? ' active' : ''; ?>">
+                                <div class="carousel-cards-row">
+                                    <?php foreach ($slideEvents as $event):
+                                        $eventImg  = !empty($event['image']) ? $event['image'] : $base_url . 'frontend/assets/images/image1.png';
+                                        $eventDate = (string) ($event['date'] ?? '');
+                                    ?>
+                                        <div class="carousel-card-wrapper">
+                                            <div class="event-card cmi-tilt">
+                                                <div class="event-image">
+                                                    <img src="<?php echo htmlspecialchars($eventImg); ?>" alt="<?php echo htmlspecialchars($event['title'] ?? 'Event image'); ?>">
+                                                    <span class="event-badge"><?php echo strtoupper(htmlspecialchars((string) ($event['category'] ?? 'event'))); ?></span>
+                                                </div>
+                                                <div class="event-content">
+                                                    <h3 class="event-title"><?php echo htmlspecialchars($event['title'] ?? ''); ?></h3>
+                                                    <p class="event-date"><i class="fas fa-calendar"></i> <?php echo $eventDate !== '' ? date('F d, Y', strtotime($eventDate)) : ''; ?></p>
+                                                    <?php $desc = (string) ($event['description'] ?? ''); ?>
+                                                    <p class="event-description"><?php echo htmlspecialchars(substr($desc, 0, 150)); ?><?php echo strlen($desc) > 150 ? '...' : ''; ?></p>
+                                                    <a href="event-detail.php?id=<?php echo urlencode((string) ($event['id'])); ?>" class="btn btn-event-link">View More</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
                                 </div>
                             </div>
-
-                            <div class="carousel-card-wrapper">
-                                <div class="event-card cmi-tilt">
-                                    <div class="event-image">
-                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image2.png" alt="University Application Workshop">
-                                        <span class="event-badge">WORKSHOP</span>
-                                    </div>
-                                    <div class="event-content">
-                                        <h3 class="event-title">University Application Workshop</h3>
-                                        <p class="event-date"><i class="fas fa-calendar"></i> August 15, 2024</p>
-                                        <p class="event-description">Complete guide to university applications, essays, interviews, and success strategies from experienced mentors.</p>
-                                        <a href="events.php" class="btn btn-event-link">View More</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="carousel-card-wrapper">
-                                <div class="event-card cmi-tilt">
-                                    <div class="event-image">
-                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image3.png" alt="Career Development Series">
-                                        <span class="event-badge">VIDEO</span>
-                                    </div>
-                                    <div class="event-content">
-                                        <h3 class="event-title">Career Development Series</h3>
-                                        <p class="event-date"><i class="fas fa-calendar"></i> August 25, 2024</p>
-                                        <p class="event-description">Video series on career planning, professional development, and networking strategies for global professionals.</p>
-                                        <a href="events.php" class="btn btn-event-link">View More</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?></div>
 
                 <button class="carousel-control-prev" type="button" data-bs-target="#eventsCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
