@@ -177,6 +177,51 @@ body {
     transform: scale(0.95);
 }
 
+
+  /* ==============================================
+     Floating Enquire Button
+     ============================================== */
+
+  .enquire-btn {
+      position: fixed;
+      bottom: 105px;
+      right: 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      background-color: #1a56db;
+      color: white;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 6px 20px rgba(26, 86, 219, 0.35);
+      z-index: 998;
+      transition: all 0.2s ease;
+  }
+
+  .enquire-btn:hover {
+      background-color: #1340a8;
+      color: white;
+      text-decoration: none;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(26, 86, 219, 0.45);
+  }
+
+  .enquire-btn:active {
+      transform: scale(0.95);
+  }
+
+  @media (max-width: 768px) {
+      .enquire-btn {
+          bottom: 100px;
+          right: 20px;
+          padding: 11px 18px;
+          font-size: 13px;
+      }
+  }
+
 /* ==============================================
    Navigation Bar
    ============================================== */

@@ -56,9 +56,15 @@ $style_version = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time();
 </head>
 
 <body>
-    <!-- WhatsApp Button -->
+    <!-- Floating WhatsApp Button -->
     <a href="https://wa.me/+639176923263" class="whatsapp-btn" target="_blank" aria-label="Contact us on WhatsApp">
         <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Floating Enquire Now Button -->
+    <a href="<?php echo $base_url; ?>frontend/public/contact.php" class="enquire-btn" aria-label="Enquire Now">
+        <i class="fas fa-envelope"></i>
+        <span>Enquire</span>
     </a>
 
     <!-- Navigation Bar -->

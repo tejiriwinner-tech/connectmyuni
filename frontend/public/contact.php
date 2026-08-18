@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../../backend/bootstrap.php';
 
 use ConnectMyUni\Config\Security;
-use ConnectMyUni\Repositories\ContactMessageRepository;
+use ConnectMyUni\Services\ContactMessageService;
 
 $page_title = 'Contact Us';
 $success = '';
@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Please enter a valid email address.';
         } else {
             try {
-                $repo = new ContactMessageRepository();
-                $repo->create([
+                $service = new ContactMessageService();
+                $service->create([
                     'name' => $name,
                     'email' => $email,
                     'phone' => $phone,
