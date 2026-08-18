@@ -5,6 +5,14 @@ require_once __DIR__ . '/../../backend/bootstrap.php';
 use ConnectMyUni\Config\Security;
 use ConnectMyUni\Repositories\AdminUserRepository;
 
+// Ensure the session is active before reading $_SESSION below. bootstrap.php
+// does not start sessions, so without this the "already logged in" redirect
+// never fires — an authenticated admin visiting this page would see the login
+// form again instead of being sent to the dashboard.
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (isset($_SESSION['admin_user_id'])) {
     header('Location: ' . CONNECTMYUNI_BASE_URL . 'frontend/admin/index.php');
     exit;
