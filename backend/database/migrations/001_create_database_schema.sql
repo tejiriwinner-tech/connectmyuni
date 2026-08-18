@@ -178,6 +178,8 @@ CREATE TABLE IF NOT EXISTS ai_content_requests (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     admin_user_id INT UNSIGNED NULL,
     content_type VARCHAR(50) NOT NULL,
+    provider VARCHAR(50) NULL,
+    model VARCHAR(100) NULL,
     prompt TEXT NOT NULL,
     generated_content LONGTEXT NULL,
     approved_content LONGTEXT NULL,
