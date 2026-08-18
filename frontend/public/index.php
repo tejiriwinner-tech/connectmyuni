@@ -4,117 +4,28 @@
      HERO SECTION — full-width background image
      Cards overlap out of the bottom, like FAB Ed
      ============================================= -->
-<?php
-// ─────────────────────────────────────────────────────────────
-// HERO CMS → HOMEPAGE
-// Active hero slides are fetched through the existing service /
-// repository layer (Supabase) and rendered as a Bootstrap carousel.
-// If there are no active slides (or the query fails) we fall back to
-// the safe static hero below, so the homepage never breaks.
-// ─────────────────────────────────────────────────────────────
-use ConnectMyUni\Services\HeroSlideService;
-use ConnectMyUni\Helpers\MediaResolver;
-
-$heroItems = [];
-try {
-    $heroSlides = (new HeroSlideService())->getActiveSlides();
-} catch (\Throwable $e) {
-    error_log('Hero slides load failed: ' . $e->getMessage());
-    $heroSlides = [];
-}
-
-foreach ($heroSlides as $slide) {
-    $desktop = MediaResolver::url((string) ($slide['image_path'] ?? ''));
-    if ($desktop === '') {
-        continue; // a hero slide must have a displayable desktop image
-    }
-    $heroItems[] = [
-        'title'      => htmlspecialchars((string) ($slide['title'] ?? '')),
-        'subtitle'   => htmlspecialchars((string) ($slide['subtitle'] ?? '')),
-        'cta_text'   => htmlspecialchars((string) ($slide['cta_text'] ?? '')),
-        'cta_url'    => htmlspecialchars((string) ($slide['cta_url'] ?? '')),
-        'image_url'  => $desktop,
-        'mobile_url' => MediaResolver::url((string) ($slide['mobile_image_path'] ?? '')),
-    ];
-}
-?>
 <section id="home" class="hero-section">
 
-    <?php if (!empty($heroItems)): $heroIsCarousel = count($heroItems) > 1; ?>
-    <div id="homeHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
-        <div class="carousel-inner">
-            <?php foreach ($heroItems as $i => $slide): ?>
-            <div class="carousel-item<?php echo $i === 0 ? ' active' : ''; ?>">
-                <div class="hero-slide-bg">
-                    <picture>
-                        <?php if ($slide['mobile_url'] !== ''): ?>
-                            <source media="(max-width: 767px)" srcset="<?php echo $slide['mobile_url']; ?>">
-                        <?php endif; ?>
-                        <img src="<?php echo $slide['image_url']; ?>" alt="<?php echo $slide['title']; ?>"<?php echo $i === 0 ? '' : ' loading="lazy"'; ?>>
-                    </picture>
-                </div>
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-8 col-md-10 text-center text-white position-relative">
-                                <h1 class="hero-title fw-bold mb-3"><?php echo $slide['title']; ?></h1>
-                                <?php if ($slide['subtitle'] !== ''): ?>
-                                    <p class="hero-subtitle mb-4"><?php echo $slide['subtitle']; ?></p>
-                                <?php endif; ?>
-                                <?php if ($slide['cta_text'] !== '' && $slide['cta_url'] !== ''): ?>
-                                    <a href="<?php echo $slide['cta_url']; ?>" class="btn btn-hero-cta"><?php echo $slide['cta_text']; ?></a>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <?php if ($heroIsCarousel): ?>
-            <button class="carousel-control-prev" type="button" data-bs-target="#homeHeroCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous slide</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#homeHeroCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next slide</span>
-            </button>
-        <?php endif; ?>
-    </div>
-    <?php else: ?>
-    <!-- Fallback hero — shown only when there are no active hero slides -->
+    <!-- Dark overlay -->
     <div class="hero-overlay"></div>
+
+    <!-- Hero text — vertically centred in upper portion -->
     <div class="hero-content">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10 text-center text-white position-relative">
-                    <h1 class="hero-title fw-bold mb-3 cmi-fade-up">
+                    <h1 class="hero-title fw-bold mb-3">
                         Unite Your Passion with Purpose at<br>
                         <span class="text-highlight">CONNECT MYUNI</span>
                     </h1>
-                    <p class="hero-subtitle mb-4 cmi-fade-up" style="animation-delay:0.15s">
+                    <p class="hero-subtitle mb-4">
                         Explore world-class education with a team dedicated to your global success.
                     </p>
-                    <a href="#contact" class="btn btn-hero-cta cmi-fade-up" style="animation-delay:0.3s">GET IN TOUCH</a>
+                    <a href="#contact" class="btn btn-hero-cta">GET IN TOUCH</a>
                 </div>
             </div>
         </div>
     </div>
-    <?php endif; ?>
-
-    <script>
-        (function () {
-            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                var el = document.getElementById('homeHeroCarousel');
-                if (el) { el.setAttribute('data-bs-ride', 'false'); }
-            }
-        })();
-    </script>
-
-    <!-- Scroll indicator -->
-    <div class="cmi-scroll-indicator" aria-hidden="true"></div>
 
 </section>
 
@@ -124,8 +35,8 @@ foreach ($heroSlides as $slide) {
         <div class="container">
             <div class="row g-4">
 
-                <div class="col-lg-4 col-md-6 cmi-fade-up" style="animation-delay:0.00s">
-                    <div class="service-card-item text-center cmi-tilt">
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card-item text-center">
                         <div class="service-icon-circle mx-auto mb-4">
                             <i class="fas fa-user-graduate fa-2x"></i>
                         </div>
@@ -134,8 +45,8 @@ foreach ($heroSlides as $slide) {
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-6 cmi-fade-up" style="animation-delay:0.12s">
-                    <div class="service-card-item text-center cmi-tilt">
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card-item text-center">
                         <div class="service-icon-circle mx-auto mb-4">
                             <i class="fas fa-globe fa-2x"></i>
                         </div>
@@ -144,8 +55,8 @@ foreach ($heroSlides as $slide) {
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-6 cmi-fade-up" style="animation-delay:0.24s">
-                    <div class="service-card-item text-center cmi-tilt">
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card-item text-center">
                         <div class="service-icon-circle mx-auto mb-4">
                             <i class="fas fa-shield-alt fa-2x"></i>
                         </div>
@@ -163,28 +74,28 @@ foreach ($heroSlides as $slide) {
 <!-- =============================================
      ABOUT SECTION
      ============================================= -->
-<section id="about" class="about-section cmi-section-enter">
+<section id="about" class="about-section">
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <h2 class="about-title cmi-fade-up">Your Trusted Partner in<br>Global Education</h2>
-                <p class="about-text cmi-fade-up" style="animation-delay:0.1s">
+                <h2 class="about-title">Your Trusted Partner in<br>Global Education</h2>
+                <p class="about-text">
                     Connect MyUni is a leading provider of education consulting services, proudly registered in Nigeria with the Corporate Affairs Commission. With over 21 years of dedicated service, Connect MyUni has established itself as a trusted name in the international education landscape. Our mission is to provide high-quality, personalized education consulting to students and institutions, ensuring that both find the perfect fit for their academic and professional aspirations.
                 </p>
-                <p class="about-text cmi-fade-up" style="animation-delay:0.2s">
+                <p class="about-text">
                     At Connect MyUni, we offer a wide range of services tailored to meet the unique needs of each student and institution. These services include language training, student placements, admission assistance, and career counseling. We also collaborate with universities and colleges worldwide to facilitate international student placements, ensuring a smooth transition for students seeking education abroad.
                 </p>
-                <a href="#" class="btn btn-about cmi-fade-up" style="animation-delay:0.3s">Read More</a>
+                <a href="#" class="btn btn-about">Read More</a>
             </div>
 
-            <div class="col-lg-6 cmi-slide-in-right">
+            <div class="col-lg-6">
                 <div class="about-image-collage">
-                    <div class="collage-image" style="background-image: url('frontend/assets/images/image1.png');"></div>
-                    <div class="collage-image" style="background-image: url('frontend/assets/images/image2.png');"></div>
-                    <div class="collage-image" style="background-image: url('frontend/assets/images/image3.png');"></div>
-                    <div class="collage-image" style="background-image: url('frontend/assets/images/image1.png');"></div>
-                    <div class="collage-image" style="background-image: url('frontend/assets/images/image2.png');"></div>
-                    <div class="collage-image" style="background-image: url('frontend/assets/images/image3.png');"></div>
+                    <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image1.png');"></div>
+                    <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image2.png');"></div>
+                    <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image3.png');"></div>
+                    <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image1.png');"></div>
+                    <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image2.png');"></div>
+                    <div class="collage-image" style="background-image: url('<?php echo $base_url; ?>frontend/assets/images/image3.png');"></div>
                 </div>
             </div>
         </div>
@@ -195,12 +106,12 @@ foreach ($heroSlides as $slide) {
 <!-- =============================================
      SERVICES SECTION
      ============================================= -->
-<section id="services" class="services-section cmi-section-enter">
+<section id="services" class="services-section">
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <h2 class="services-title cmi-fade-up">OUR SERVICES</h2>
-                <div class="accordion accordion-services cmi-fade-up" id="servicesAccordion" style="animation-delay:0.12s">
+                <h2 class="services-title">OUR SERVICES</h2>
+                <div class="accordion accordion-services" id="servicesAccordion">
 
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne">
@@ -296,7 +207,7 @@ foreach ($heroSlides as $slide) {
                 </div>
             </div>
 
-            <div class="col-lg-6 cmi-slide-in-right">
+            <div class="col-lg-6">
                 <div class="services-image-box">
                     <img src="<?php echo $base_url; ?>frontend/assets/images/image2.png" alt="Graduates" class="services-image">
                 </div>
@@ -309,23 +220,23 @@ foreach ($heroSlides as $slide) {
 <!-- =============================================
      APPROACH SECTION WITH RED HERO BACKGROUND
      ============================================= -->
-<section class="approach-hero-section cmi-section-enter">
+<section class="approach-hero-section">
     <div class="approach-hero-overlay"></div>
     <div class="approach-hero-content">
         <div class="container">
             <div class="row align-items-center g-5">
                 <div class="col-lg-6">
-                    <h2 class="approach-hero-title text-white cmi-fade-up">OUR APPROACH</h2>
-                    <p class="approach-hero-text text-white cmi-fade-up" style="animation-delay:0.1s">
+                    <h2 class="approach-hero-title text-white">OUR APPROACH</h2>
+                    <p class="approach-hero-text text-white">
                         At Connect MyUni, we believe in a personalized, student-centered approach to education consulting. We take the time to understand your unique goals, strengths, and challenges, tailoring our services to meet your individual needs. Whether you're navigating the complexities of studying abroad or seeking professional development, we are with you every step of the way, offering expert guidance and practical support.
                     </p>
-                    <p class="approach-hero-text text-white cmi-fade-up" style="animation-delay:0.2s">
+                    <p class="approach-hero-text text-white">
                         Our holistic approach combines academic counseling, training, and consulting with a commitment to empowering students and professionals to reach their full potential. By fostering strong partnerships with universities, businesses, and organizations worldwide, we ensure that our clients have access to the best opportunities available. At Connect MyUni, your success is our mission.
                     </p>
-                    <a href="#contact" class="btn btn-approach-hero cmi-fade-up" style="animation-delay:0.3s">TALK TO OUR CONSULTANTS</a>
+                    <a href="#contact" class="btn btn-approach-hero">TALK TO OUR CONSULTANTS</a>
                 </div>
 
-                <div class="col-lg-6 cmi-slide-in-right">
+                <div class="col-lg-6">
                     <div class="approach-image-wrapper">
                         <img src="<?php echo $base_url; ?>frontend/assets/images/image3.png" alt="Our Consultants Team" class="approach-image">
                     </div>
@@ -339,62 +250,115 @@ foreach ($heroSlides as $slide) {
 <!-- =============================================
      NEWS & EVENTS SECTION
      ============================================= -->
-
-<?php
-// Homepage "Latest News & Events" carousel - database-driven.
-// Uses the same source as the dedicated events/updates pages: EventService
-// (reads published-only events ordered newest-first, mapped to template keys
-// by present(), image paths resolved by MediaResolver). No SQL in templates.
-// Capped to the carousel's existing design capacity. Falls back to an empty
-// state on failure instead of hard-coded sample data.
-$homeEventService = new \ConnectMyUni\Services\EventService();
-try {
-    $homeEvents = array_slice($homeEventService->getAllForPublic(), 0, 6);
-} catch (\Throwable $e) {
-    error_log('Homepage events load failed: ' . $e->getMessage());
-    $homeEvents = [];
-}
-?><section id="events" class="events-section cmi-section-enter">
+<section id="events" class="events-section">
     <div class="container">
-        <h2 class="events-section-title cmi-fade-up">LATEST NEWS &amp; EVENTS</h2>
+        <h2 class="events-section-title">LATEST NEWS &amp; EVENTS</h2>
 
         <div class="events-carousel-wrapper">
             <div id="eventsCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <?php if (empty($homeEvents)): ?>
-                        <div class="carousel-item active">
-                            <div class="text-center py-5">
-                                <p class="text-muted">No upcoming events at the moment. Please check back soon.</p>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <?php foreach (array_chunk($homeEvents, 3) as $slideIndex => $slideEvents): ?>
-                            <div class="carousel-item<?php echo $slideIndex === 0 ? ' active' : ''; ?>">
-                                <div class="carousel-cards-row">
-                                    <?php foreach ($slideEvents as $event):
-                                        $eventImg  = !empty($event['image']) ? $event['image'] : $base_url . 'frontend/assets/images/image1.png';
-                                        $eventDate = (string) ($event['date'] ?? '');
-                                    ?>
-                                        <div class="carousel-card-wrapper">
-                                            <div class="event-card cmi-tilt">
-                                                <div class="event-image">
-                                                    <img src="<?php echo htmlspecialchars($eventImg); ?>" alt="<?php echo htmlspecialchars($event['title'] ?? 'Event image'); ?>">
-                                                    <span class="event-badge"><?php echo strtoupper(htmlspecialchars((string) ($event['category'] ?? 'event'))); ?></span>
-                                                </div>
-                                                <div class="event-content">
-                                                    <h3 class="event-title"><?php echo htmlspecialchars($event['title'] ?? ''); ?></h3>
-                                                    <p class="event-date"><i class="fas fa-calendar"></i> <?php echo $eventDate !== '' ? date('F d, Y', strtotime($eventDate)) : ''; ?></p>
-                                                    <?php $desc = (string) ($event['description'] ?? ''); ?>
-                                                    <p class="event-description"><?php echo htmlspecialchars(substr($desc, 0, 150)); ?><?php echo strlen($desc) > 150 ? '...' : ''; ?></p>
-                                                    <a href="event-detail.php?id=<?php echo urlencode((string) ($event['id'])); ?>" class="btn btn-event-link">View More</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
+
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active">
+                        <div class="carousel-cards-row">
+                            <div class="carousel-card-wrapper">
+                                <div class="event-card">
+                                    <div class="event-image">
+                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image1.png" alt="Navigating Global Education">
+                                        <span class="event-badge">WEBINAR</span>
+                                    </div>
+                                    <div class="event-content">
+                                        <h3 class="event-title">Navigating Global Education</h3>
+                                        <p class="event-date"><i class="fas fa-calendar"></i> June 15, 2024</p>
+                                        <p class="event-description">Join us for an exclusive webinar on how to choose the right university abroad and prepare for your journey.</p>
+                                        <a href="events.php" class="btn btn-event-link">View More</a>
+                                    </div>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?></div>
+
+                            <div class="carousel-card-wrapper">
+                                <div class="event-card">
+                                    <div class="event-image">
+                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image2.png" alt="IELTS Preparation Masterclass">
+                                        <span class="event-badge">WORKSHOP</span>
+                                    </div>
+                                    <div class="event-content">
+                                        <h3 class="event-title">IELTS Preparation Masterclass</h3>
+                                        <p class="event-date"><i class="fas fa-calendar"></i> July 10, 2024</p>
+                                        <p class="event-description">Intensive workshop covering all aspects of IELTS exam preparation with expert trainers and proven strategies.</p>
+                                        <a href="events.php" class="btn btn-event-link">View More</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="carousel-card-wrapper">
+                                <div class="event-card">
+                                    <div class="event-image">
+                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image3.png" alt="Study Abroad Success Stories">
+                                        <span class="event-badge">VIDEO</span>
+                                    </div>
+                                    <div class="event-content">
+                                        <h3 class="event-title">Study Abroad Success Stories</h3>
+                                        <p class="event-date"><i class="fas fa-calendar"></i> July 20, 2024</p>
+                                        <p class="event-description">Watch inspiring stories from our successful students studying abroad and their transformational experiences.</p>
+                                        <a href="events.php" class="btn btn-event-link">View More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <div class="carousel-cards-row">
+                            <div class="carousel-card-wrapper">
+                                <div class="event-card">
+                                    <div class="event-image">
+                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image1.png" alt="Scholarship Opportunities">
+                                        <span class="event-badge">WEBINAR</span>
+                                    </div>
+                                    <div class="event-content">
+                                        <h3 class="event-title">Scholarship Opportunities</h3>
+                                        <p class="event-date"><i class="fas fa-calendar"></i> August 5, 2024</p>
+                                        <p class="event-description">Discover the best scholarship opportunities available for international students and how to apply effectively.</p>
+                                        <a href="events.php" class="btn btn-event-link">View More</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="carousel-card-wrapper">
+                                <div class="event-card">
+                                    <div class="event-image">
+                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image2.png" alt="University Application Workshop">
+                                        <span class="event-badge">WORKSHOP</span>
+                                    </div>
+                                    <div class="event-content">
+                                        <h3 class="event-title">University Application Workshop</h3>
+                                        <p class="event-date"><i class="fas fa-calendar"></i> August 15, 2024</p>
+                                        <p class="event-description">Complete guide to university applications, essays, interviews, and success strategies from experienced mentors.</p>
+                                        <a href="events.php" class="btn btn-event-link">View More</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="carousel-card-wrapper">
+                                <div class="event-card">
+                                    <div class="event-image">
+                                        <img src="<?php echo $base_url; ?>frontend/assets/images/image3.png" alt="Career Development Series">
+                                        <span class="event-badge">VIDEO</span>
+                                    </div>
+                                    <div class="event-content">
+                                        <h3 class="event-title">Career Development Series</h3>
+                                        <p class="event-date"><i class="fas fa-calendar"></i> August 25, 2024</p>
+                                        <p class="event-description">Video series on career planning, professional development, and networking strategies for global professionals.</p>
+                                        <a href="events.php" class="btn btn-event-link">View More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
 
                 <button class="carousel-control-prev" type="button" data-bs-target="#eventsCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -417,17 +381,17 @@ try {
 <!-- =============================================
      CONTACT SECTION
      ============================================= -->
-<section id="contact" class="contact-section cmi-section-enter">
+<section id="contact" class="contact-section">
     <div class="container">
         <div class="row align-items-center g-5">
 
-            <div class="col-lg-6 cmi-slide-in-left">
+            <div class="col-lg-6">
                 <div class="contact-map-wrapper">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.4531280450886!2d3.1656!3d9.0765!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x104ba5e78cffffff%3A0x8c8c8c8c8c8c8c8c!2s2%20Michika%20St%2C%20Garki%2C%20Abuja!5e0!3m2!1sen!2sng!4v1234567890" width="100%" height="400" style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
 
-            <div class="col-lg-6 cmi-slide-in-right">
+            <div class="col-lg-6">
                 <div class="contact-info">
                     <div class="contact-logo-wrapper">
                         <img src="<?php echo $base_url; ?>frontend/assets/images/logo.png" alt="Connect MyUni Logo" class="contact-logo">

@@ -64,8 +64,8 @@ return [
     'name'    => 'Connect MyUni',
     'env'     => env('APP_ENV', 'local'),
     'debug'   => filter_var(env('APP_DEBUG', 'true'), FILTER_VALIDATE_BOOLEAN),
-    'url'     => 'http://localhost/ConnectMyUni',
-    'base_url' => env('APP_BASE_URL', '/ConnectMyUni/'),
+    'url'     => 'http://localhost',
+    'base_url' => env('APP_BASE_URL', '/'),
 
     // Session
     'session' => [

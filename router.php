@@ -25,8 +25,10 @@ $uri      = $_SERVER['REQUEST_URI'] ?? '/';
 $path     = parse_url($uri, PHP_URL_PATH) ?: '/';
 $rootDir  = __DIR__;
 
-// Normalise: strip the leading "/ConnectMyUni" prefix when present so the
-// same APP_BASE_URL works on both the built-in server and Apache.
+// Historical compatibility: strip a leading "/ConnectMyUni" prefix when
+// present (e.g. a prior XAMPP deployment at http://localhost/ConnectMyUni/).
+// When running at the project root (http://127.0.0.1:8000/) no prefix is
+// present and the path is used unchanged.
 $basePrefix = '/ConnectMyUni';
 if ($path === $basePrefix || str_starts_with($path, $basePrefix . '/')) {
     $path = substr($path, strlen($basePrefix));

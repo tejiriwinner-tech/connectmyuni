@@ -57,7 +57,7 @@ class MediaResolver
             return $key;
         }
 
-        // Root-relative URL already (e.g. /ConnectMyUni/frontend/...).
+        // Root-relative URL already (e.g. /frontend/assets/...).
         if ($key[0] === '/') {
             return $key;
         }

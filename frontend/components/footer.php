@@ -32,7 +32,7 @@
     <!-- Custom JavaScript (Deferred) -->
     <?php
         $js_version = @filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
-    $base_url = isset($base_url) ? $base_url : '/myuni/';
+        $base_url = isset($base_url) ? $base_url : (defined('CONNECTMYUNI_BASE_URL') ? CONNECTMYUNI_BASE_URL : '/');
     ?>
                 <!-- Animations: cmi-* scroll-reveal system (Stage 04A). Loaded before main.js so reveal states initialize correctly. -->
         <script defer src="<?php echo $base_url; ?>frontend/assets/js/animations.js?v=<?php echo $js_version; ?>"></script>

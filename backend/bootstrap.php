@@ -33,8 +33,9 @@ if (!is_array($appConfig)) {
 
 // 2. Canonical base URL (single source of truth for path-aware output).
 if (!defined('CONNECTMYUNI_BASE_URL')) {
-    $baseUrl = $appConfig['base_url'] ?? '/ConnectMyUni/';
-    $baseUrl = '/' . trim($baseUrl, '/') . '/';
+    $baseUrl = $appConfig['base_url'] ?? '/';
+    $trimmed = trim($baseUrl, '/');
+    $baseUrl = $trimmed !== '' ? '/' . $trimmed . '/' : '/';
     define('CONNECTMYUNI_BASE_URL', $baseUrl);
 }
 

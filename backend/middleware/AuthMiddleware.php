@@ -46,7 +46,7 @@ class AuthMiddleware
 
             $loginUrl = defined('CONNECTMYUNI_BASE_URL')
                 ? CONNECTMYUNI_BASE_URL . 'frontend/admin/login.php'
-                : '/ConnectMyUni/frontend/admin/login.php';
+                : '/frontend/admin/login.php';
 
             header('Location: ' . $loginUrl);
             exit;

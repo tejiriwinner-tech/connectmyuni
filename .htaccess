@@ -1,7 +1,7 @@
 # Enable Rewrite Engine
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /ConnectMyUni/
+    RewriteBase /
 
     # Remove trailing slash (except for root)
     RewriteCond %{REQUEST_FILENAME} !-d
