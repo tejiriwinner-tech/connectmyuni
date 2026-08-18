@@ -1,64 +1,80 @@
 <?php
 require_once __DIR__ . '/../../../backend/bootstrap.php';
-
-use ConnectMyUni\Middleware\AuthMiddleware;
 use ConnectMyUni\Config\Security;
-use ConnectMyUni\Repositories\GalleryRepository;
-use ConnectMyUni\Helpers\MediaResolver;
+use ConnectMyUni\Middleware\AuthMiddleware;
 
 AuthMiddleware::requireAuth();
-$page_title = 'Gallery';
-include __DIR__ . '/../components/admin-header.php';
 
-$repo    = new GalleryRepository();
-$gallery = [];
-$dbError = null;
-try {
-    $gallery = $repo->getAll();
-} catch (\Throwable $e) {
-    $dbError = $e->getMessage();
-}
+$service = new \ConnectMyUni\Services\GalleryService();
+$images = $service->getAll();
+$activeCount = $service->countActive();
+$totalCount = $service->countAll();
+$categories = $service->countCategories();
 ?>
+<?php include __DIR__ . '/components/admin-header.php'; ?>
+
 <div class="page-heading">
-    <h1>Gallery</h1>
-    <p>Manage gallery images. Images are stored under storage/uploads/gallery/ with a storage-relative key in image_path.</p>
-    <a class="btn btn-primary" href="<?php echo $admin_url; ?>gallery/create.php">+ Add Image</a>
+    <h1>Gallery Management</h1>
+    <p>Manage gallery images for the ConnectMyUni website.</p>
 </div>
 
-<?php if ($dbError): ?>
-    <div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($dbError); ?></div>
-<?php elseif (empty($gallery)): ?>
-    <div class="card"><p class="form-hint" style="padding:18px">No gallery images yet.</p></div>
-<?php else: ?>
-    <div class="card">
-        <table class="admin-table">
-            <thead><tr><th></th><th>Title</th><th>Category</th><th>Order</th><th>Active</th><th style="width:150px"></th></tr></thead>
-            <tbody>
-            <?php foreach ($gallery as $g): ?>
-                <tr>
-                    <td>
-                        <?php $img = MediaResolver::url($g['image_path'] ?? ''); ?>
-                        <?php if ($img !== ''): ?>
-                            <img src="<?php echo htmlspecialchars($img); ?>" alt="" style="width:64px;height:48px;object-fit:cover;border-radius:6px;display:block">
-                        <?php else: ?>—<?php endif; ?>
-                    </td>
-                    <td><?php echo htmlspecialchars($g['title'] ?? ''); ?></td>
-                    <td><?php echo htmlspecialchars($g['category'] ?? ''); ?></td>
-                    <td><?php echo htmlspecialchars((string) ($g['sort_order'] ?? '')); ?></td>
-                    <td><?php echo !empty($g['is_active']) ? 'Yes' : 'No'; ?></td>
-                    <td>
-                        <a class="btn btn-ghost" href="<?php echo $admin_url; ?>gallery/edit.php?id=<?php echo (int) ($g['id'] ?? 0); ?>">Edit</a>
-                        <form method="POST" action="<?php echo $admin_url; ?>gallery/delete.php" style="display:inline" onsubmit="return confirm('Delete this image?');">
-                            <?php echo Security::csrfInput(); ?>
-                            <input type="hidden" name="id" value="<?php echo (int) ($g['id'] ?? 0); ?>">
-                            <button type="submit" class="btn btn-ghost" style="color:var(--danger)">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
+<div class="card">
+    <div class="card-header">
+        <h3>Gallery Overview</h3>
     </div>
-<?php endif; ?>
+    <div class="card-body">
+        <p>Total images: <strong><?php echo $totalCount; ?></strong> | Active: <strong><?php echo $activeCount; ?></strong> | Inactive: <strong><?php echo $totalCount - $activeCount; ?></strong></p>
 
-<?php include __DIR__ . '/../components/footer.php'; ?>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Sort Order</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($images as $i => $image): ?>
+                    <tr>
+                        <td><?php echo ($i + 1); ?></td>
+                        <td>
+                            <input type="text" class="form-control form-control-sm" value="<?php echo htmlspecialchars($image['title'] ?? ''); ?>" readonly>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary"><?php echo htmlspecialchars($image['category'] ?? 'general'); ?></span>
+                        </td>
+                        <td>
+                            <span class="badge bg-<?php echo $image['is_active'] ? 'success' : 'danger'; ?>">
+                                <?php echo $image['is_active'] ? 'Active' : 'Inactive'; ?>
+                            </span>
+                        </td>
+                        <td><?php echo (int)($image['sort_order'] ?? 0); ?></td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="edit.php?id=<?php echo $image['id']; ?>" class="btn btn-outline-primary">Edit</a>
+                                <a href="delete.php?id=<?php echo $image['id']; ?>" class="btn btn-outline-danger">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h3>Toggle Active/Inactive</h3>
+    </div>
+    <div class="card-body">
+        <p>Change the active status of images to show/hide them on the public gallery.</p>
+        <p class="text-muted small">Note: Inactive images are hidden from the public gallery but remain in the database.</p>
+    </div>
+</div>
+
+<?php include __DIR__ . '/components/footer.php'; ?>
