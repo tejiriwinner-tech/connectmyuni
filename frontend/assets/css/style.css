@@ -327,13 +327,7 @@ body {
     min-height: 92vh;
     display: flex;
     flex-direction: column;        /* stack: text flex-grows, cards at bottom */
-    overflow: visible;             /* let cards bleed out of the bottom */
-
-    background-image: url('../images/hero_image.png');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    overflow: hidden;              /* Changed to hidden to contain child layers */
 }
 
 /* --- Dark overlay --- */
