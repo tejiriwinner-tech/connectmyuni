@@ -5,6 +5,9 @@ require_once __DIR__ . '/../../backend/bootstrap.php';
 // Define base URL for consistent navigation across all pages
 $base_url = CONNECTMYUNI_BASE_URL;
 
+// Landing-page detection: only the homepage loads the cinematic Three.js layer.
+$is_homepage = (basename($_SERVER['PHP_SELF'] ?? '') === 'index.php');
+
 // Get cache buster version based on file modification time
 $style_version = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time();
 ?>
@@ -57,6 +60,13 @@ $style_version = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time();
 </head>
 
 <body>
+    <?php if (!empty($is_homepage)): ?>
+    <!-- Cinematic Three.js background layer (homepage only).
+         Fixed, behind content, pointer-events: none, aria-hidden.
+         Rendered by frontend/assets/js/landing-three.js -->
+    <canvas id="cmi-three-canvas" aria-hidden="true" tabindex="-1"></canvas>
+    <?php endif; ?>
+
     <!-- Floating WhatsApp Button -->
     <a href="https://wa.me/+639176923263" class="whatsapp-btn" target="_blank" aria-label="Contact us on WhatsApp">
         <i class="fab fa-whatsapp"></i>

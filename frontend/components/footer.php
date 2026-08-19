@@ -37,6 +37,14 @@
                 <!-- Animations: cmi-* scroll-reveal system (Stage 04A). Loaded before main.js so reveal states initialize correctly. -->
         <script defer src="<?php echo $base_url; ?>frontend/assets/js/animations.js?v=<?php echo $js_version; ?>"></script>
         <script defer src="<?php echo $base_url; ?>frontend/assets/js/main.js?v=<?php echo $js_version; ?>"></script>
+
+        <?php if (!empty($is_homepage)): ?>
+            <?php $three_version = @filemtime(__DIR__ . '/../assets/js/landing-three.js') ?: time(); ?>
+            <!-- Cinematic landing layer: single Three.js scene, homepage only.
+                 defer preserves order: three.min.js loads before landing-three.js. -->
+            <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+            <script defer src="<?php echo $base_url; ?>frontend/assets/js/landing-three.js?v=<?php echo $three_version; ?>"></script>
+        <?php endif; ?>
     </body>
 
     </html>

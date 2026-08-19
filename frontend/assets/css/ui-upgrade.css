@@ -967,6 +967,39 @@ textarea.form-input {
 }
 
 /* =============================================================
+   15. STAGE 06 — CINEMATIC THREE.JS LANDING BACKGROUND
+   The canvas is a FIXED atmospheric layer behind ALL content.
+   Sections sit above it (z-index 1) so text stays fully readable;
+   the grid shows through the translucent hero scrim and any
+   transparent seams. Canvas is non-interactive + aria-hidden.
+   ============================================================= */
+#cmi-three-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    display: block;
+    pointer-events: none;
+}
+
+/* Keep all page content above the fixed atmosphere layer */
+body > section,
+body > footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* WebGL unavailable → drop the canvas, hero falls back to CSS grid pattern */
+body.cmi-no-webgl #cmi-three-canvas { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    /* JS renders a single static frame; keep it gentle */
+    #cmi-three-canvas { opacity: 0.55; }
+}
+
+/* =============================================================
    14. STAGE 05 — ABOUT PROFILE COLLAGE (exactly 3 unique cards)
    Editorial pyramid: Person 2 anchors on top-centre; Persons 1 & 3
    sit below-left / below-right. Rows are vertically separated so NO
