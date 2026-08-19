@@ -4,90 +4,43 @@
      HERO SECTION — full-width background image
      Cards overlap out of the bottom, like FAB Ed
      ============================================= -->
-<section id="home" class="hero-section cmi-section-gap cmi-hero-cinematic">
+<section id="home" class="hero-section cmi-hero-cinematic cmi-hero-fullbleed">
 
-    <!-- Navy cinematic scrim — translucent so the Three.js grid shows through -->
-    <div class="hero-overlay"></div>
+    <!-- Layer 2: Full-bleed Hero Image background -->
+    <div class="hero-bg-wrapper cmi-motion" data-depth="background">
+        <img src="<?php echo $base_url; ?>frontend/assets/images/hero_image.png" alt="Students exploring global education opportunities" class="hero-bg-img">
+    </div>
 
-    <!-- Stage 05 — layered atmosphere (decorative, non-interactive) -->
-    <div class="cmi-orb cmi-orb--light cmi-motion cmi-orb--hero-bg" data-depth="background" aria-hidden="true"></div>
-    <div class="cmi-orb cmi-orb--accent cmi-motion cmi-orb--hero-a" data-depth="decorative" aria-hidden="true"></div>
+    <!-- Layer 3 & 4: Atmospheric gradients overlay -->
+    <div class="hero-overlay-gradient"></div>
+    <div class="cmi-orb cmi-orb--light cmi-motion cmi-orb--hero-bg" data-depth="decorative" aria-hidden="true"></div>
+    <div class="cmi-orb cmi-orb--accent cmi-motion cmi-orb--hero-a" data-depth="foreground" aria-hidden="true"></div>
 
     <div class="hero-content">
-        <div class="container">
-            <div class="row align-items-center g-5">
-
-                <div class="col-lg-6">
-                    <p class="cmi-hero-kicker">International Education Consultancy</p>
-                    <h1 class="hero-title fw-bold mb-3">
-                        Unite Your Passion with Purpose<br>
-                        <span class="text-highlight">CONNECT MYUNI</span>
+        <div class="container h-100">
+            <div class="row align-items-center h-100">
+                <div class="col-lg-8 col-xl-7">
+                    <p class="cmi-hero-kicker cmi-fade-up">International Education Consultancy</p>
+                    <h1 class="hero-title fw-bold mb-3 cmi-fade-up" style="animation-delay: 0.1s;">
+                        YOUR FUTURE<br>
+                        STARTS<br>
+                        <span class="text-highlight">BEYOND BORDERS</span>
                     </h1>
-                    <p class="hero-subtitle mb-4">
+                    <p class="hero-subtitle mb-4 cmi-fade-up" style="animation-delay: 0.2s;">
                         Explore world-class education with a team dedicated to your global success.
                     </p>
-                    <div class="d-flex flex-wrap gap-3 align-items-center">
+                    <div class="d-flex flex-wrap gap-3 align-items-center cmi-fade-up" style="animation-delay: 0.3s;">
                         <a href="<?php echo $base_url; ?>universities.php" class="btn btn-hero-cta">EXPLORE UNIVERSITIES</a>
                         <a href="#contact" class="btn btn-hero-ghost">TALK TO A CONSULTANT</a>
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="cmi-hero-visual cmi-motion" data-depth="foreground">
-                        <img src="<?php echo $base_url; ?>frontend/assets/images/hero_image.png" alt="Students exploring global education opportunities" class="cmi-hero-visual__img">
-                        <span class="cmi-hero-visual__badge cmi-glass cmi-glass--dark">
+                        <span class="cmi-hero-visual__badge cmi-glass cmi-glass--dark ms-md-3">
                             <i class="fas fa-graduation-cap"></i>
                             <span>Study Abroad Guidance</span>
                         </span>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
-
-</section>
-
-<!-- Cards now sit inside a blue block below the hero and overlap up into the hero -->
-<section class="hero-cards-section cmi-hero-cards-cinematic">
-    <div class="hero-cards-overlap">
-        <div class="container">
-            <div class="row g-4 cmi-stagger-group">
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="service-card-item text-center">
-                        <div class="service-icon-circle mx-auto mb-4">
-                            <i class="fas fa-user-graduate fa-2x"></i>
-                        </div>
-                        <h3 class="service-card-title mb-3">Student-Centered Approach</h3>
-                        <p class="service-card-text">We are dedicated to understanding the unique goals and needs of each student, providing personalized guidance to help them achieve academic success and navigate the complexities of international education.</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="service-card-item text-center">
-                        <div class="service-icon-circle mx-auto mb-4">
-                            <i class="fas fa-globe fa-2x"></i>
-                        </div>
-                        <h3 class="service-card-title mb-3">Tailored Placement Services</h3>
-                        <p class="service-card-text">Our team connects students with institutions that best align with their academic and professional aspirations, ensuring they receive the best possible education opportunities around the world.</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="service-card-item text-center">
-                        <div class="service-icon-circle mx-auto mb-4">
-                            <i class="fas fa-shield-alt fa-2x"></i>
-                        </div>
-                        <h3 class="service-card-title mb-3">Compliance &amp; Global Standards</h3>
-                        <p class="service-card-text">We adhere strictly to international education and visa regulations, ensuring our students meet all requirements while enjoying a seamless and compliant study experience in their chosen destination.</p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
 
 
 <!-- =============================================

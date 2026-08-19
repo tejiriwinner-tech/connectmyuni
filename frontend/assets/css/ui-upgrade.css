@@ -113,32 +113,62 @@ body {
    3. HERO SYSTEM
    ============================================================= */
 .hero-section {
-    background-attachment: fixed;   /* existing parallax — preserved */
+    background-attachment: fixed;
+    min-height: 90vh; /* default min height */
+    position: relative;
+    overflow: hidden;
 }
-/* Layered depth: strengthen the cinematic overlay + add inner glow */
-.hero-section::before {
-    content: '';
+/* Full bleed hero specific styling */
+.cmi-hero-fullbleed {
+    display: flex;
+    align-items: center;
+}
+
+/* Layer 2: Image background */
+.hero-bg-wrapper {
     position: absolute;
     inset: 0;
     z-index: 1;
-    background:
-        radial-gradient(1200px 500px at 85% -10%, rgba(255, 255, 255, 0.10), transparent 60%),
-        linear-gradient(180deg, rgba(11, 31, 63, 0.30) 0%, rgba(11, 31, 63, 0.72) 100%);
+    width: 100%;
+    height: 100%;
+    /* Translucent edges so it blends into the Three.js atmosphere */
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+}
+.hero-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center; /* Adjust based on image content */
+    display: block;
+}
+
+/* Layer 3 & 4: Gradients and Atmosphere */
+.hero-overlay-gradient {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: 
+        linear-gradient(90deg, rgba(11, 31, 63, 0.9) 0%, rgba(11, 31, 63, 0.6) 40%, transparent 100%), /* Left-to-right readable gradient */
+        linear-gradient(0deg, rgba(11, 31, 63, 0.8) 0%, transparent 40%), /* Bottom dark edge */
+        radial-gradient(circle at 30% 50%, rgba(26, 86, 219, 0.15) 0%, transparent 60%); /* Subtle brand tint */
     pointer-events: none;
 }
-/* Decorative floating ring (layered depth) */
+
+/* Keep the decorative floating ring (layered depth) */
 .hero-section::after {
     content: '';
     position: absolute;
-    z-index: 1;
+    z-index: 3;
     right: -140px;
     top: -140px;
     width: 420px;
     height: 420px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.10);
+    border: 2px solid rgba(255, 255, 255, 0.08);
     pointer-events: none;
 }
+
 
 /* ── DB-driven Hero Carousel (fills .hero-section) ── */
 .hero-section .carousel,
@@ -164,11 +194,12 @@ body {
     object-fit: cover;
     display: block;
 }
-/* Layer order within a slide: image → overlay → content */
+/* Layer order within a slide/hero: image → overlay → content */
 .hero-section .carousel-item .hero-overlay { z-index: 1; }
+.hero-section .hero-content,
 .hero-section .carousel-item .hero-content {
     position: relative;
-    z-index: 2;
+    z-index: 4;
     height: 100%;
     display: flex;
     align-items: center;
@@ -1177,8 +1208,18 @@ body.cmi-no-webgl #cmi-three-canvas { display: none; }
 /* ── Anchor card (Person 2) — centred, slightly larger, firmer shadow ── */
 .collage-profile--center {
     width: 230px;
+    height: 288px;                 /* ~4:5 portrait */
+    left: calc(50% - 115px);
+    top: 28px;
+    z-index: 3;
+    box-shadow:
+        0 26px 56px rgba(15, 23, 42, 0.20),
+        0 6px 16px rgba(15, 23, 42, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
 /* =============================================================
-   17. STAGE 06 — SECTION VISUAL IDENTITY (homepage)
+   17. STAGE 06 — SECTION VISUAL IDENTITY (homepage & pages)
    Each section gets its own pattern language so the page reads as
    connected scenes, not repeated flat blocks. All patterns are
    CSS-only pseudo-elements (no extra DOM) and GPU-friendly.
@@ -1223,17 +1264,17 @@ body.cmi-no-webgl #cmi-three-canvas { display: none; }
     pointer-events: none;
 }
 
-/* ── Services — light technical line field + slow gradient drift ── */
+/* ── Services — light technical line field + soft radial light ── */
 .cmi-services-cinematic {
-    background: linear-gradient(180deg, #f6f8fc 0%, #eef2fb 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #eef2fb 100%);
 }
 .cmi-services-cinematic::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image:
-        repeating-linear-gradient(90deg, rgba(26, 86, 219, 0.05) 0 1px, transparent 1px 44px),
-        repeating-linear-gradient(0deg, rgba(26, 86, 219, 0.05) 0 1px, transparent 1px 44px);
+        repeating-linear-gradient(90deg, rgba(26, 86, 219, 0.04) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(0deg, rgba(26, 86, 219, 0.04) 0 1px, transparent 1px 44px);
     pointer-events: none;
 }
 .cmi-services-cinematic::after {
@@ -1248,49 +1289,103 @@ body.cmi-no-webgl #cmi-three-canvas { display: none; }
     pointer-events: none;
     animation: cmiDrift 20s ease-in-out infinite alternate;
 }
-@keyframes cmiDrift {
-    from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(70px, -36px) scale(1.12); }
+
+/* ── Universities — deep blue/indigo, global geometry, subtle map arcs ── */
+.cmi-universities-cinematic {
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    position: relative;
+    overflow: hidden;
+}
+.cmi-universities-cinematic::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                      repeating-radial-gradient(circle at 50% 120%, rgba(255, 255, 255, 0.02) 0, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 40px);
+    pointer-events: none;
 }
 
-/* ── Events — light background, subtle diagonal rhythm ── */
+/* ── Countries — blue/teal/indigo gradient, flowing arcs ── */
+.cmi-countries-cinematic {
+    background: linear-gradient(120deg, #1d4ed8 0%, #0369a1 50%, #0f766e 100%);
+    position: relative;
+    overflow: hidden;
+}
+.cmi-countries-cinematic::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 120%;
+    height: 150%;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, transparent 60%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* ── Events — warm neutral base with blue/orange accents, diagonal rhythm ── */
 .cmi-events-cinematic {
-    background: linear-gradient(180deg, #f7f9fc 0%, #eef2fb 100%);
+    background: linear-gradient(180deg, #fafafa 0%, #f4f6f9 100%);
 }
 .cmi-events-cinematic::before {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: repeating-linear-gradient(115deg, rgba(26, 86, 219, 0.04) 0 1px, transparent 1px 44px);
+    background-image: repeating-linear-gradient(115deg, rgba(249, 115, 22, 0.03) 0 1px, transparent 1px 44px),
+                      repeating-linear-gradient(-65deg, rgba(26, 86, 219, 0.03) 0 1px, transparent 1px 44px);
     pointer-events: none;
 }
 
-/* ── Contact / Enquiry — focused light field, conversion focus ── */
+/* ── Gallery — dark navy/charcoal, minimal geometry ── */
+.cmi-gallery-cinematic {
+    background: linear-gradient(180deg, #111827 0%, #1e293b 100%);
+}
+.cmi-gallery-cinematic::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+}
+
+/* ── Testimonials — soft white, pale blue, subtle violet ── */
+.cmi-testimonials-cinematic {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e2e8f0 100%);
+    position: relative;
+}
+.cmi-testimonials-cinematic::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* ── Contact / Enquiry — strong navy gradient, central light field ── */
+.cmi-contact-cinematic {
+    background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%);
+}
 .cmi-contact-cinematic::before {
     content: '';
     position: absolute;
     width: 720px;
     height: 720px;
     left: 50%;
-    top: -360px;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: radial-gradient(closest-side, rgba(26, 86, 219, 0.12), transparent 70%);
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.08), transparent 70%);
     pointer-events: none;
+}
+
+@keyframes cmiDrift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(70px, -36px) scale(1.12); }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .cmi-services-cinematic::after { animation: none !important; }
-}
-
-    height: 288px;                 /* ~4:5 portrait */
-    left: calc(50% - 115px);
-    top: 28px;
-    z-index: 3;
-    box-shadow:
-        0 26px 56px rgba(15, 23, 42, 0.20),
-        0 6px 16px rgba(15, 23, 42, 0.10),
-        inset 0 1px 0 rgba(255, 255, 255, 0.65);
 }
 
 /* ── Supporting cards (Persons 1 & 3) — same frame, softer shadow ── */

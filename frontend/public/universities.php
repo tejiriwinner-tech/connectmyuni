@@ -123,7 +123,7 @@ foreach ($featuredUniversities as $i => $uni) {
 <?php endif; ?>
 
 <!-- ── Full University Table ──────────────────────────────── -->
-<section class="university-table-section py-5 cmi-section-enter">
+<section class="university-table-section cmi-universities-cinematic py-5 cmi-section-enter">
     <div class="container">
         <h2 class="section-heading mb-4 cmi-fade-up">All Partner Universities</h2>
 

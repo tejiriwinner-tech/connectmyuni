@@ -126,7 +126,7 @@ $categories = [
 </section>
 
 <!-- ── Masonry Gallery ────────────────────────────────────── -->
-<section class="gallery-section">
+<section class="gallery-section cmi-gallery-cinematic">
     <div class="container-fluid gallery-container">
         <div class="masonry-grid" id="galleryGrid">
             <?php foreach ($gallery_items as $i => $item): ?>

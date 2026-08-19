@@ -147,8 +147,8 @@
                 var px = (e.clientX - rect.left) / rect.width;   /* 0..1 */
                 var py = (e.clientY - rect.top) / rect.height;   /* 0..1 */
 
-                var rotateY = (px - 0.5) * 8;   /* -4..4 deg */
-                var rotateX = (0.5 - py) * 8;   /* -4..4 deg */
+                var rotateY = (px - 0.5) * 6;   /* -3..3 deg */
+                var rotateX = (0.5 - py) * 6;   /* -3..3 deg */
 
                 card.style.setProperty('--cmi-tilt-x', rotateX.toFixed(2) + 'deg');
                 card.style.setProperty('--cmi-tilt-y', rotateY.toFixed(2) + 'deg');
@@ -188,11 +188,11 @@
     );
     var depthItems = [];
     var depthLayers = {
-        'background': { travel: 8,   fade: 0,     scale: true  },
-        'decorative': { travel: 16,  fade: 0.20,  scale: false },
-        'content':    { travel: 4,   fade: 0,     scale: false },
-        'foreground': { travel: 26,  fade: 0,     scale: false },
-        'float':      { travel: 12,  fade: 0.30,  scale: false }
+        'background': { travel: 3,   fade: 0,     scale: true  },
+        'decorative': { travel: 10,  fade: 0.15,  scale: false },
+        'content':    { travel: 2,   fade: 0,     scale: false },
+        'foreground': { travel: 18,  fade: 0,     scale: false },
+        'float':      { travel: 8,   fade: 0.20,  scale: false }
     };
 
     var coarsePointer = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
