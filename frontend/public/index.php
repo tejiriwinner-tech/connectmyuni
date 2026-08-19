@@ -49,7 +49,7 @@
 </section>
 
 <!-- Cards now sit inside a blue block below the hero and overlap up into the hero -->
-<section class="hero-cards-section">
+<section class="hero-cards-section cmi-hero-cards-cinematic">
     <div class="hero-cards-overlap">
         <div class="container">
             <div class="row g-4 cmi-stagger-group">
@@ -93,22 +93,22 @@
 <!-- =============================================
      ABOUT SECTION
      ============================================= -->
-<section id="about" class="about-section">
+<section id="about" class="about-section cmi-about-cinematic cmi-section-gap">
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <h2 class="about-title">Your Trusted Partner in<br>Global Education</h2>
-                <p class="about-text">
+                <h2 class="about-title cmi-fade-up">Your Trusted Partner in<br>Global Education</h2>
+                <p class="about-text cmi-fade-up">
                     Connect MyUni is a leading provider of education consulting services, proudly registered in Nigeria with the Corporate Affairs Commission. With over 21 years of dedicated service, Connect MyUni has established itself as a trusted name in the international education landscape. Our mission is to provide high-quality, personalized education consulting to students and institutions, ensuring that both find the perfect fit for their academic and professional aspirations.
                 </p>
-                <p class="about-text">
+                <p class="about-text cmi-fade-up">
                     At Connect MyUni, we offer a wide range of services tailored to meet the unique needs of each student and institution. These services include language training, student placements, admission assistance, and career counseling. We also collaborate with universities and colleges worldwide to facilitate international student placements, ensuring a smooth transition for students seeking education abroad.
                 </p>
-                <a href="#" class="btn btn-about">Read More</a>
+                <a href="#" class="btn btn-about cmi-fade-up">Read More</a>
             </div>
 
             <div class="col-lg-6">
-                <div class="about-image-collage">
+                <div class="about-image-collage cmi-scale">
                     <!-- EXACTLY 3 UNIQUE PROFILE CARDS — no duplicates/clones.
                          Pyramid: Person 2 (centre) anchors on top, Persons 1 & 3
                          below-left / below-right. Each real card drives its own
@@ -126,7 +126,7 @@
 <!-- =============================================
      SERVICES SECTION
      ============================================= -->
-<section id="services" class="services-section cmi-depth-host">
+<section id="services" class="services-section cmi-depth-host cmi-services-cinematic">
     <div class="container">
 
         <!-- Stage 05 layer: background + decorative motion -->
@@ -135,12 +135,12 @@
 
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <div class="cmi-section-heading">
+                <div class="cmi-section-heading cmi-fade-up">
                     <span class="cmi-kicker">What we do</span>
                     <h2 class="cmi-heading">Our Services</h2>
                     <span class="cmi-rule"></span>
                 </div>
-                <div class="accordion accordion-services" id="servicesAccordion">
+                <div class="accordion accordion-services cmi-fade-up" id="servicesAccordion">
 
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne">
@@ -237,7 +237,7 @@
             </div>
 
             <div class="col-lg-6">
-                <div class="services-image-box">
+                <div class="services-image-box cmi-fade-up">
                     <img src="<?php echo $base_url; ?>frontend/assets/images/image2.png" alt="Graduates" class="services-image">
                 </div>
             </div>
@@ -284,20 +284,20 @@
 <!-- =============================================
      NEWS & EVENTS SECTION
      ============================================= -->
-<section id="events" class="events-section cmi-depth-host">
+<section id="events" class="events-section cmi-depth-host cmi-events-cinematic">
     <div class="container">
 
         <!-- Stage 05 layer: subtle events depth -->
         <div class="cmi-orb cmi-orb--soft cmi-motion cmi-orb--events-bg-a" data-depth="background" aria-hidden="true"></div>
         <div class="cmi-orb cmi-orb--accent cmi-motion cmi-orb--events-a" data-depth="decorative" aria-hidden="true"></div>
 
-        <div class="cmi-section-heading cmi-section-heading--center">
+        <div class="cmi-section-heading cmi-section-heading--center cmi-fade-up">
             <span class="cmi-kicker">What's happening</span>
             <h2 class="cmi-heading">Latest News &amp; Events</h2>
             <span class="cmi-rule"></span>
         </div>
 
-        <div class="events-carousel-wrapper">
+        <div class="events-carousel-wrapper cmi-fade-up">
             <div id="eventsCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
 
@@ -424,7 +424,7 @@
 <!-- =============================================
      CONTACT SECTION
      ============================================= -->
-<section id="contact" class="contact-section cmi-depth-host">
+<section id="contact" class="contact-section cmi-depth-host cmi-contact-cinematic">
     <div class="container">
 
         <!-- Stage 05 layer: quiet contact depth -->
@@ -433,13 +433,13 @@
         <div class="row align-items-center g-5">
 
             <div class="col-lg-6">
-                <div class="contact-map-wrapper">
+                <div class="contact-map-wrapper cmi-slide-in-left">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.4531280450886!2d3.1656!3d9.0765!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x104ba5e78cffffff%3A0x8c8c8c8c8c8c8c8c!2s2%20Michika%20St%2C%20Garki%2C%20Abuja!5e0!3m2!1sen!2sng!4v1234567890" width="100%" height="400" style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
 
             <div class="col-lg-6">
-                <div class="contact-info">
+                <div class="contact-info cmi-slide-in-right">
                     <div class="contact-logo-wrapper">
                         <img src="<?php echo $base_url; ?>frontend/assets/images/logo.png" alt="Connect MyUni Logo" class="contact-logo">
                     </div>

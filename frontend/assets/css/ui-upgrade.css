@@ -1177,6 +1177,112 @@ body.cmi-no-webgl #cmi-three-canvas { display: none; }
 /* ── Anchor card (Person 2) — centred, slightly larger, firmer shadow ── */
 .collage-profile--center {
     width: 230px;
+/* =============================================================
+   17. STAGE 06 — SECTION VISUAL IDENTITY (homepage)
+   Each section gets its own pattern language so the page reads as
+   connected scenes, not repeated flat blocks. All patterns are
+   CSS-only pseudo-elements (no extra DOM) and GPU-friendly.
+   ============================================================= */
+
+/* ── Hero cards (blue) — fine light grid echo of the 3D layer ── */
+.cmi-hero-cards-cinematic {
+    position: relative;
+    overflow: hidden;
+}
+.cmi-hero-cards-cinematic::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 64px),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 64px);
+    background-size: 64px 64px;
+    pointer-events: none;
+}
+
+/* ── About — editorial navy + soft arcs ── */
+.cmi-about-cinematic {
+    background:
+        radial-gradient(1200px 480px at 85% -10%, rgba(155, 185, 255, 0.10), transparent 60%),
+        linear-gradient(155deg, #0b1f3f 0%, #123a74 55%, #0d2a55 100%);
+    border-radius: 64px 64px 0 0;
+    padding: 96px 0 100px;
+}
+.cmi-about-cinematic::before {
+    content: '';
+    position: absolute;
+    top: -240px;
+    right: -180px;
+    width: 620px;
+    height: 620px;
+    border: 1.5px solid rgba(155, 185, 255, 0.13);
+    border-radius: 50%;
+    box-shadow:
+        0 0 0 52px rgba(155, 185, 255, 0.035),
+        0 0 0 104px rgba(155, 185, 255, 0.025);
+    pointer-events: none;
+}
+
+/* ── Services — light technical line field + slow gradient drift ── */
+.cmi-services-cinematic {
+    background: linear-gradient(180deg, #f6f8fc 0%, #eef2fb 100%);
+}
+.cmi-services-cinematic::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(90deg, rgba(26, 86, 219, 0.05) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(0deg, rgba(26, 86, 219, 0.05) 0 1px, transparent 1px 44px);
+    pointer-events: none;
+}
+.cmi-services-cinematic::after {
+    content: '';
+    position: absolute;
+    width: 540px;
+    height: 540px;
+    left: -160px;
+    bottom: -200px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(26, 86, 219, 0.09), transparent 72%);
+    pointer-events: none;
+    animation: cmiDrift 20s ease-in-out infinite alternate;
+}
+@keyframes cmiDrift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(70px, -36px) scale(1.12); }
+}
+
+/* ── Events — light background, subtle diagonal rhythm ── */
+.cmi-events-cinematic {
+    background: linear-gradient(180deg, #f7f9fc 0%, #eef2fb 100%);
+}
+.cmi-events-cinematic::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(115deg, rgba(26, 86, 219, 0.04) 0 1px, transparent 1px 44px);
+    pointer-events: none;
+}
+
+/* ── Contact / Enquiry — focused light field, conversion focus ── */
+.cmi-contact-cinematic::before {
+    content: '';
+    position: absolute;
+    width: 720px;
+    height: 720px;
+    left: 50%;
+    top: -360px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(26, 86, 219, 0.12), transparent 70%);
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cmi-services-cinematic::after { animation: none !important; }
+}
+
     height: 288px;                 /* ~4:5 portrait */
     left: calc(50% - 115px);
     top: 28px;
