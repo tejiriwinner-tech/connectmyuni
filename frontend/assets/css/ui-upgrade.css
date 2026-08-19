@@ -833,18 +833,6 @@ textarea.form-input {
 .cmi-stagger-group.is-animated > *:nth-child(5) { transition-delay: 0.40s; }
 .cmi-stagger-group.is-animated > *:nth-child(6) { transition-delay: 0.50s; }
 
-/* ── Homepage hero layered floating stats (desktop/tablet only) ── */
-.cmi-hero-stat {
-    position: absolute;
-    z-index: 2;
-    pointer-events: none;          /* decorative — never blocks the CTA */
-}
-.cmi-hero-stat--a { top: 24%; right: 6%; }
-.cmi-hero-stat--b { top: 60%; left: 7%; }
-@media (max-width: 991.98px) {
-    .cmi-hero-stat { display: none; }
-}
-
 /* ── Homepage hero orbs ── */
 .hero-section .cmi-orb { z-index: 1; }
 .cmi-orb--hero-bg { width: 460px; height: 460px; top: -110px; left: -130px; }
@@ -997,6 +985,158 @@ body.cmi-no-webgl #cmi-three-canvas { display: none; }
 @media (prefers-reduced-motion: reduce) {
     /* JS renders a single static frame; keep it gentle */
     #cmi-three-canvas { opacity: 0.55; }
+}
+
+/* =============================================================
+   16. STAGE 06 — CINEMATIC HERO (Two-column, no floating stats)
+   The translucent navy scrim lets the fixed Three.js grid read
+   through; the existing hero imagery becomes an art-directed
+   visual card on the right. Content stays fully readable.
+   ============================================================= */
+.cmi-hero-cinematic {
+    background: transparent !important;   /* grid canvas shows through */
+}
+.cmi-hero-cinematic .hero-overlay {
+    background:
+        linear-gradient(180deg,
+            rgba(11, 31, 63, 0.80) 0%,
+            rgba(11, 31, 63, 0.40) 42%,
+            rgba(11, 31, 63, 0.68) 100%);
+}
+.cmi-hero-cinematic .hero-content {
+    padding: 96px 0 44px;
+}
+
+.cmi-hero-kicker {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    background: rgba(249, 115, 22, 0.12);
+    border: 1px solid rgba(249, 115, 22, 0.38);
+    border-radius: 999px;
+    padding: 0.45rem 1.05rem;
+    margin-bottom: 1.3rem;
+}
+
+.cmi-hero-cinematic .hero-title {
+    font-size: clamp(2rem, 4.6vw, 3.4rem);
+    line-height: 1.12;
+    text-shadow: 0 4px 26px rgba(11, 31, 63, 0.55);
+}
+.cmi-hero-cinematic .text-highlight {
+    background: linear-gradient(92deg, #eaf1ff 0%, #9db9ff 55%, var(--accent-color) 130%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+/* Secondary ghost CTA (glass) */
+.btn-hero-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.9rem;
+    border-radius: 50px;
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.06);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+}
+.btn-hero-ghost:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.92);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(11, 31, 63, 0.35);
+}
+.btn-hero-ghost:focus-visible {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 3px;
+}
+
+/* Hero visual — existing hero imagery, art-directed */
+.cmi-hero-visual {
+    position: relative;
+    max-width: 480px;
+    margin-inline: auto;
+    animation: cmiHeroFade 1s ease-out 0.2s both;
+}
+.cmi-hero-visual__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow:
+        0 40px 80px rgba(11, 31, 63, 0.45),
+        0 10px 24px rgba(11, 31, 63, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.cmi-hero-visual::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(11, 31, 63, 0) 55%, rgba(11, 31, 63, 0.48) 100%);
+    pointer-events: none;
+}
+.cmi-hero-visual__badge {
+    position: absolute;
+    left: 18px;
+    bottom: 18px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.05rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+.cmi-hero-visual__badge i { color: var(--accent-color); font-size: 1rem; }
+
+@keyframes cmiHeroFade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Hero entrance (content only — never touches parallax transforms) */
+.cmi-hero-cinematic .hero-content .row {
+    animation: cmiHeroRise 0.9s var(--anim-ease-out) 0.1s both;
+}
+@keyframes cmiHeroRise {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 991.98px) {
+    .cmi-hero-cinematic .hero-content { padding: 84px 0 30px; }
+    .cmi-hero-visual { margin-top: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cmi-hero-cinematic .hero-content .row,
+    .cmi-hero-visual {
+        animation: none !important;
+        opacity: 1 !important;
+    }
+    .btn-hero-ghost {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
 }
 
 /* =============================================================

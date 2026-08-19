@@ -4,45 +4,44 @@
      HERO SECTION — full-width background image
      Cards overlap out of the bottom, like FAB Ed
      ============================================= -->
-<section id="home" class="hero-section cmi-section-gap">
+<section id="home" class="hero-section cmi-section-gap cmi-hero-cinematic">
 
-    <!-- Dark overlay -->
+    <!-- Navy cinematic scrim — translucent so the Three.js grid shows through -->
     <div class="hero-overlay"></div>
 
-    <!-- Stage 05 — layered depth ornaments (decorative, non-interactive).
-         data-depth drives the ONE parallax engine in animations.js.
-         Orbs sit above the overlay but below the content/CTA. -->
+    <!-- Stage 05 — layered atmosphere (decorative, non-interactive) -->
     <div class="cmi-orb cmi-orb--light cmi-motion cmi-orb--hero-bg" data-depth="background" aria-hidden="true"></div>
     <div class="cmi-orb cmi-orb--accent cmi-motion cmi-orb--hero-a" data-depth="decorative" aria-hidden="true"></div>
 
-    <!-- Floating glass accents — Layer 3 "foreground" (tiny idle float). -->
-    <div class="cmi-hero-stat cmi-hero-stat--a cmi-motion" data-depth="foreground" aria-hidden="true">
-        <div class="cmi-stat cmi-glass cmi-glass--dark cmi-stat--on-dark cmi-slight-float" style="--cmi-float-delay: .6s">
-            <i class="fas fa-university"></i>
-            <span><span class="cmi-stat-value">120+</span><span class="cmi-stat-label">Global University Partners</span></span>
-        </div>
-    </div>
-    <div class="cmi-hero-stat cmi-hero-stat--b cmi-motion" data-depth="foreground" aria-hidden="true">
-        <div class="cmi-stat cmi-glass cmi-glass--dark cmi-stat--on-dark cmi-slight-float" style="--cmi-float-delay: 1.4s">
-            <i class="fas fa-user-graduate"></i>
-            <span><span class="cmi-stat-value">21+</span><span class="cmi-stat-label">Years of Guidance</span></span>
-        </div>
-    </div>
-
-    <!-- Hero text — remains mostly stable (content layer) -->
     <div class="hero-content">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 col-md-10 text-center text-white position-relative">
+            <div class="row align-items-center g-5">
+
+                <div class="col-lg-6">
+                    <p class="cmi-hero-kicker">International Education Consultancy</p>
                     <h1 class="hero-title fw-bold mb-3">
-                        Unite Your Passion with Purpose at<br>
+                        Unite Your Passion with Purpose<br>
                         <span class="text-highlight">CONNECT MYUNI</span>
                     </h1>
                     <p class="hero-subtitle mb-4">
                         Explore world-class education with a team dedicated to your global success.
                     </p>
-                    <a href="#contact" class="btn btn-hero-cta">GET IN TOUCH</a>
+                    <div class="d-flex flex-wrap gap-3 align-items-center">
+                        <a href="<?php echo $base_url; ?>universities.php" class="btn btn-hero-cta">EXPLORE UNIVERSITIES</a>
+                        <a href="#contact" class="btn btn-hero-ghost">TALK TO A CONSULTANT</a>
+                    </div>
                 </div>
+
+                <div class="col-lg-6">
+                    <div class="cmi-hero-visual cmi-motion" data-depth="foreground">
+                        <img src="<?php echo $base_url; ?>frontend/assets/images/hero_image.png" alt="Students exploring global education opportunities" class="cmi-hero-visual__img">
+                        <span class="cmi-hero-visual__badge cmi-glass cmi-glass--dark">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Study Abroad Guidance</span>
+                        </span>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
