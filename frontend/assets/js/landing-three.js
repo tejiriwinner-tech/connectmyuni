@@ -37,7 +37,8 @@
         renderer = new THREE.WebGLRenderer({
             canvas: canvas,
             alpha: true,
-            antialias: true
+            antialias: true,
+            powerPreference: 'low-power'
         });
     } catch (err) {
         canvas.parentNode.removeChild(canvas);
@@ -50,7 +51,8 @@
     var mobile = width < 768;
 
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    /* Cap DPR — desktop 1.5, mobile 1.0 (big GPU savings, visually equal) */
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobile ? 1 : 1.5));
 
     scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0x0b1f3f, 44, 92); /* soft depth fade, hides grid edges */
@@ -109,6 +111,8 @@
         window.requestAnimationFrame(function () {
             width = window.innerWidth;
             height = window.innerHeight;
+            mobile = width < 768;
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobile ? 1 : 1.5));
             renderer.setSize(width, height);
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
