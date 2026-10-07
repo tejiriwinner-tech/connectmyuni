@@ -67,7 +67,7 @@
                     </ul>
                 </div>
                 <div class="footer-bottom">
-                    <p class="footer-text">Copyright <?php echo date('Y'); ?> — Connect MyUni. All rights reserved. | Website by: <span class="website-credit">Hexz-Hub</span></p>
+                    <p class="footer-text">Copyright <?php echo date('Y'); ?> — Connect MyUni. All rights reserved. | Website by: <a href="https://teejay-graphix-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" class="website-credit" style="color:var(--accent,#4C8EF7);text-decoration:none;font-weight:700;">TEEJAY GRAPHIX</a></p>
                 </div>
             </div>
         </div>
