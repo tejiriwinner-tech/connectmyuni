@@ -11,11 +11,8 @@ storage/logs/*.pid
 storage/logs/*.ps1
 !storage/logs/.gitkeep
 
-# Uploaded media (runtime files, not source code)
-storage/uploads/*
-!storage/uploads/.gitkeep
-storage/uploads/*/*
-!storage/uploads/*/.gitkeep
+# Uploaded media (allow repository storage for Vercel static serving)
+# storage/uploads/*
 
 # Backup
 backup_stage02/
