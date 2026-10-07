@@ -126,20 +126,47 @@ class OpenAiProvider implements AiProviderInterface
             ];
         }
 
-        $jsonContent = json_decode($content, true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            error_log("[AI Provider Error] Malformed JSON in output: " . json_last_error_msg());
+        // Strip markdown code fences if present
+        $clean = trim((string) $content);
+        if (preg_match('/^```(?:json)?\s*([\s\S]*?)\s*```$/i', $clean, $matches)) {
+            $clean = trim($matches[1]);
+        }
+
+        $jsonContent = json_decode($clean, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($jsonContent)) {
             return [
-                'success' => false,
-                'data'    => ['raw_text' => $content],
-                'error'   => 'Received malformed JSON from AI provider.'
+                'success' => true,
+                'data'    => $jsonContent,
+                'error'   => null
             ];
         }
 
+        // Try extracting any embedded JSON block {...}
+        if (preg_match('/\{[\s\S]*\}/', $clean, $m)) {
+            $extracted = json_decode($m[0], true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($extracted)) {
+                return [
+                    'success' => true,
+                    'data'    => $extracted,
+                    'error'   => null
+                ];
+            }
+        }
+
+        // If the model produced plain text content (e.g. during improvement/rewriting), wrap it gracefully
+        if ($clean !== '') {
+            return [
+                'success' => true,
+                'data'    => ['improved' => $clean, 'raw_text' => $clean],
+                'error'   => null
+            ];
+        }
+
+        error_log("[AI Provider Error] Malformed JSON in output: " . json_last_error_msg());
         return [
-            'success' => true,
-            'data'    => $jsonContent,
-            'error'   => null
+            'success' => false,
+            'data'    => ['raw_text' => $content],
+            'error'   => 'Received malformed JSON from AI provider.'
         ];
     }
 }

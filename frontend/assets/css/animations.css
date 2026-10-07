@@ -27,20 +27,49 @@
 }
 
 /* =============================================
-   1. Fade-up reveal
+   1. Fade-up reveal & Automatic Scroll Reveal
    ============================================= */
 @keyframes cmiFadeUp {
-    from { opacity: 0; transform: translateY(30px); }
+    from { opacity: 0; transform: translateY(32px); }
     to   { opacity: 1; transform: translateY(0); }
 }
 
 .cmi-fade-up {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(32px);
 }
 .cmi-fade-up.is-animated {
     opacity: 1;
     animation: cmiFadeUp var(--anim-duration-base) var(--anim-ease-out) forwards;
+}
+
+/* Comprehensive auto-reveal item */
+.cmi-reveal-item {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.cmi-reveal-item.is-animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes cmiFadeUpward {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cmi-scroll-up-fade.is-animated {
+    animation: cmiFadeUpward 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* =============================================

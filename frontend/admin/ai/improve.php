@@ -7,10 +7,12 @@ use ConnectMyUni\Middleware\AuthMiddleware;
 use ConnectMyUni\Services\Ai\AiContentService;
 
 
+ob_start();
 header('Content-Type: application/json');
 
 // Authentication: AI endpoints require an authenticated admin session.
 if (!AuthMiddleware::check()) {
+    if (ob_get_length()) ob_clean();
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Unauthorized']);
     exit;
@@ -19,6 +21,7 @@ if (!AuthMiddleware::check()) {
 // Parse + size-limit the JSON body.
 $raw = (string) (file_get_contents('php://input') ?: '');
 if (strlen($raw) > 200000) {
+    if (ob_get_length()) ob_clean();
     http_response_code(413);
     echo json_encode(['success' => false, 'error' => 'Request payload too large.']);
     exit;
@@ -33,6 +36,7 @@ if ($csrfToken === '') {
     $csrfToken = (string) ($payload['csrf_token'] ?? '');
 }
 if ($csrfToken === '' || !Security::verifyCsrfToken($csrfToken)) {
+    if (ob_get_length()) ob_clean();
     http_response_code(415);
     echo json_encode(['success' => false, 'error' => 'Invalid CSRF token.']);
     exit;
@@ -40,9 +44,13 @@ if ($csrfToken === '' || !Security::verifyCsrfToken($csrfToken)) {
 
 // The UI posts the text to improve under `existing_content` (see
 // improve() in ai-generator-core.php); accept `existing` as an alias.
-$existing = isset($payload['existing_content'])
-    ? (string) $payload['existing_content']
-    : (isset($payload['existing']) ? (string) $payload['existing'] : '');
+// It can be a string or a JSON object/array.
+$existingRaw = $payload['existing_content'] ?? ($payload['existing'] ?? '');
+if (is_array($existingRaw)) {
+    $existing = (string) json_encode($existingRaw, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+} else {
+    $existing = (string) $existingRaw;
+}
 $instruction = isset($payload['instruction']) ? (string) $payload['instruction'] : '';
 
 // Context may arrive as a plain string or as an object carrying content_type
@@ -62,12 +70,14 @@ if (isset($payload['context'])) {
     }
 }
 if ($contentType !== '' && !in_array($contentType, AiContentService::allowedContentTypes(), true)) {
+    if (ob_get_length()) ob_clean();
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Unsupported content type: ' . $contentType]);
     exit;
 }
 
 if ($existing === '' || $instruction === '') {
+    if (ob_get_length()) ob_clean();
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'existing and instruction are required']);
     exit;
@@ -78,9 +88,11 @@ try {
     $result  = $service->improveContent($existing, $instruction, $context);
 } catch (\Throwable $e) {
     error_log('[AI improve] Unhandled error: ' . $e->getMessage());
+    if (ob_get_length()) ob_clean();
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Improvement failed. Please try again later.']);
     exit;
 }
 
+if (ob_get_length()) ob_clean();
 echo json_encode($result);

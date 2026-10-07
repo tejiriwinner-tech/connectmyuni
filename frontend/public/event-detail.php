@@ -1,7 +1,7 @@
-<?php include __DIR__ . '/../components/header.php'; ?>
-
 <?php
+require_once __DIR__ . '/../../backend/bootstrap.php';
 use ConnectMyUni\Services\EventService;
+use ConnectMyUni\Helpers\MediaResolver;
 
 $eventService = new EventService();
 
@@ -20,20 +20,88 @@ try {
 if ($eventId) {
     try {
         $event = $eventService->getForPublic((string) $eventId);
+        if ($event && !empty($event['id'])) {
+            $eventService->recordView((int) $event['id']);
+        }
     } catch (\Throwable $e) {
         $event = null;
     }
 }
 
+$origin = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'connectmyuni.com');
+
+if ($event) {
+    $rawDesc = strip_tags($event['description'] ?? '');
+    $cleanDesc = mb_substr($rawDesc, 0, 160);
+    $page_title = htmlspecialchars($event['title']) . ' | Connect MyUni Event';
+    $meta_description = !empty($cleanDesc) ? $cleanDesc : "Join {$event['title']} organized by Connect MyUni.";
+    $og_type = 'article';
+    $og_title = $event['title'];
+    $og_description = $meta_description;
+    
+    // Resolve flyer image
+    $flyerPath = $event['image_path'] ?? $event['image_url'] ?? '';
+    if (!empty($flyerPath)) {
+        $og_image = MediaResolver::url($flyerPath);
+    }
+
+    // Event Schema.org JSON-LD
+    $eventDate = $event['date'] ?? date('Y-m-d');
+    $eventTime = $event['time'] ?? '10:00:00';
+    $startIso = date('c', strtotime("{$eventDate} {$eventTime}"));
+    $locationType = (!empty($event['is_virtual']) || stripos($event['location'] ?? '', 'online') !== false || stripos($event['location'] ?? '', 'zoom') !== false) 
+        ? 'VirtualLocation' 
+        : 'Place';
+
+    $schema_json_ld = [
+        '@context' => 'https://schema.org',
+        '@type'    => 'Event',
+        'name'     => $event['title'],
+        'startDate' => $startIso,
+        'eventStatus' => 'https://schema.org/EventScheduled',
+        'eventAttendanceMode' => ($locationType === 'VirtualLocation') 
+            ? 'https://schema.org/OnlineEventAttendanceMode' 
+            : 'https://schema.org/OfflineEventAttendanceMode',
+        'description' => $meta_description,
+        'image' => !empty($og_image) ? [$origin . $og_image] : [],
+        'organizer' => [
+            '@type' => 'EducationalOrganization',
+            'name' => 'Connect MyUni',
+            'url' => $origin . '/'
+        ]
+    ];
+    if ($locationType === 'VirtualLocation') {
+        $schema_json_ld['location'] = [
+            '@type' => 'VirtualLocation',
+            'url' => $origin . '/event-detail.php?id=' . urlencode((string)$eventId)
+        ];
+    } else {
+        $schema_json_ld['location'] = [
+            '@type' => 'Place',
+            'name' => $event['location'] ?? 'Connect MyUni Admissions Centre',
+            'address' => [
+                '@type' => 'PostalAddress',
+                'addressLocality' => $event['location'] ?? 'Nigeria',
+                'addressCountry' => 'NG'
+            ]
+        ];
+    }
+} else {
+    $page_title = 'Event Not Found | Connect MyUni';
+    $meta_robots = 'noindex, nofollow';
+}
+
+include __DIR__ . '/../components/header.php';
+
 // If event not found, show error
 if (!$event) {
 ?>
-    <section class="event-detail-section cmi-section-enter">
-        <div class="container">
-            <div class="text-center py-5">
-                <h2>Event Not Found</h2>
-                <p class="text-muted">The event you're looking for doesn't exist.</p>
-                <a href="updates.php" class="btn btn-primary mt-3">Back to Updates</a>
+    <section class="page-hero cmi-section-enter">
+        <div class="container text-center">
+            <h1 class="page-hero__title">Event Not Found</h1>
+            <p class="hero-subtitle">The requested event could not be found or has concluded.</p>
+            <div class="mt-3">
+                <a href="<?php echo $base_url; ?>events.php" class="btn btn-hero-cta">Browse All Events</a>
             </div>
         </div>
     </section>
@@ -42,6 +110,29 @@ if (!$event) {
     exit;
 }
 ?>
+
+<!-- Page Hero -->
+<section class="page-hero cmi-section-enter">
+    <div class="container">
+        <div class="hero-content text-center">
+            <div class="hero-badge">
+                <i class="fas fa-calendar-check"></i>
+                <span><?php echo strtoupper(htmlspecialchars($event['category'] ?? 'EVENT')); ?></span>
+            </div>
+            <h1 class="page-hero__title cmi-fade-up"><?php echo htmlspecialchars($event['title']); ?></h1>
+            <p class="hero-subtitle cmi-fade-up">
+                <?php echo date('l, F j, Y', strtotime($event['date'])); ?> &bull; <?php echo htmlspecialchars($event['location'] ?? 'Online / Campus'); ?>
+            </p>
+            <div class="hero-breadcrumb">
+                <a href="<?php echo $base_url; ?>index.php">Home</a>
+                <span class="mx-2">/</span>
+                <a href="<?php echo $base_url; ?>events.php">Events</a>
+                <span class="mx-2">/</span>
+                <span><?php echo htmlspecialchars(mb_strimwidth($event['title'], 0, 30, '...')); ?></span>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- Event Detail Content -->
 <section class="event-detail-section cmi-section-enter">

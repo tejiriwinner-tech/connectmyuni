@@ -1,0 +1,72 @@
+/**
+ * Connect MyUni — Flight Animation Layer (GSAP ScrollTrigger)
+ *
+ * Creates a 3D-feeling scroll animation with an airplane gliding down the page
+ * behind foreground content using GSAP and ScrollTrigger.
+ */
+
+/* Flight Animation Container - Fixed background layer (placed in header.php) */
+#flight-animation-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    min-height: 100%;
+    z-index: 0; /* Behind content but above background */
+    pointer-events: none; /* Allow clicks to pass through */
+    overflow: visible;
+    perspective: 1000px; /* Enable 3D perspective */
+}
+
+/* Airplane Element */
+#flight-airplane {
+    position: absolute;
+    top: -150px; /* Start above viewport */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 60px;
+    will-change: transform;
+    opacity: 0.9;
+    z-index: 1; /* Inside container, above background */
+}
+
+/* Airplane SVG Styling */
+#flight-airplane svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+}
+
+/* Flight Trail Effect */
+.flight-trail {
+    position: absolute;
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), transparent);
+    opacity: 0;
+    transform-origin: top center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #flight-airplane {
+        width: 80px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    #flight-airplane {
+        width: 60px;
+        height: 30px;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    #flight-animation-container {
+        display: none;
+    }
+}

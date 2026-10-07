@@ -90,33 +90,101 @@ $csrfToken = Security::generateCsrfToken();
                         </td>
                         <td>
                             <span class="badge bg-secondary"><?php echo htmlspecialchars($t['student_university'] ?? ''); ?></span>
-                        </td>
-                        <td>
-                            <span class="badge bg-secondary"><?php echo htmlspecialchars($t['student_country'] ?? ''); ?></span>
-                        </td>
-                        <td>
-                            <?php $r = ($t['rating'] ?? 5); ?>
-                            <span class="badge bg-<?php echo ($r >= 4) ? 'success' : (($r <= 2) ? 'danger' : 'warning'); ?>">
-                                <?php echo number_format((float)$r, 1, '.', ''); ?>
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge bg-<?php echo ($t['is_featured'] ?? false) ? 'success' : 'secondary'; ?>">
-                                <?php echo ($t['is_featured'] ?? false) ? 'Yes' : 'No'; ?>
-                            </span>
-                        </td>
-                        <td><?php echo (int)($t['sort_order'] ?? 0); ?></td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <a href="edit.php?id=<?php echo $t['id']; ?>" class="btn btn-outline-primary">Edit</a>
-                                <a href="delete.php?id=<?php echo $t['id']; ?>" class="btn btn-outline-danger">Delete</a>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-value"><?php echo $totalCount; ?></div>
+                    <div class="stat-label">Total Testimonials</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-value"><?php echo $activeCount; ?></div>
+                    <div class="stat-label">Active Testimonials</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-value"><?php echo $totalCount - $activeCount; ?></div>
+                    <div class="stat-label">Inactive Testimonials</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-value"><?php echo $ratingCounts[5] ?? 0; ?></div>
+                    <div class="stat-label">5-Star Testimonials</div>
+                </div>
+            </div>
         </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3>All Testimonials</h3>
+        <a href="create.php" class="btn btn-primary btn-sm">Add New Testimonial</a>
+    </div>
+    <div class="card-body">
+        <?php if (empty($testimonials)): ?>
+            <div class="alert alert-info">No testimonials found. <a href="create.php">Create your first testimonial</a>.</div>
+        <?php else: ?>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>University</th>
+                            <th>Rating</th>
+                            <th>Status</th>
+                            <th>Featured</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($testimonials as $testimonial): ?>
+                            <tr>
+                                <td>
+                                    <div class="fw-bold"><?php echo htmlspecialchars($testimonial['student_name'] ?? ''); ?></div>
+                                    <small class="text-muted"><?php echo htmlspecialchars($testimonial['student_title'] ?? ''); ?></small>
+                                </td>
+                                <td><?php echo htmlspecialchars($testimonial['university_name'] ?? ''); ?></td>
+                                <td>
+                                    <?php
+                                    $rating = (int) ($testimonial['rating'] ?? 5);
+                                    for ($i = 1; $i <= 5; $i++) {
+                                        echo $i <= $rating ? '<i class="fas fa-star text-warning"></i>' : '<i class="far fa-star text-muted"></i>';
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php if (!empty($testimonial['is_active'])): ?>
+                                        <span class="badge bg-success">Active</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if (!empty($testimonial['is_featured'])): ?>
+                                        <span class="badge bg-warning">Featured</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-light text-dark">Standard</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="edit.php?id=<?php echo $testimonial['id']; ?>" class="btn btn-outline-primary" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="delete.php?id=<?php echo $testimonial['id']; ?>" class="btn btn-outline-danger" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -130,4 +198,4 @@ $csrfToken = Security::generateCsrfToken();
     </div>
 </div>
 
-<?php include __DIR__ . '/components/footer.php'; ?>
+<?php include __DIR__ . '/../components/footer.php'; ?>

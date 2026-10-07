@@ -1,0 +1,344 @@
+/* ==========================================================================
+   THEME COMPONENTS - ConnectMyUni Custom Component Library
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. BUTTON SYSTEM
+   -------------------------------------------------------------------------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+    border: 1px solid transparent;
+    outline: none;
+    text-decoration: none;
+    line-height: 1.4;
+}
+
+/* Primary Action Buttons */
+.btn-primary, .btn-hero-cta {
+    background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.32);
+    border: 1px solid rgba(20, 184, 166, 0.4) !important;
+    border-radius: var(--radius-pill);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:hover, .btn-hero-cta:hover {
+    background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%) !important;
+    color: #FFFFFF !important;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 25px -4px rgba(13, 148, 136, 0.45), var(--shadow-glow);
+}
+
+.btn-primary:active, .btn-hero-cta:active {
+    transform: translateY(-1px) scale(0.99);
+    box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
+}
+
+/* Secondary / Ghost / Outline Buttons */
+.btn-outline, .btn-hero-ghost, .btn-about-link {
+    background: rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    color: #FFFFFF !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.6) !important;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.btn-outline:hover, .btn-hero-ghost:hover, .btn-about-link:hover {
+    background: rgba(255, 255, 255, 0.22) !important;
+    border-color: #FFFFFF !important;
+    color: #FFFFFF !important;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Action Link Buttons */
+.btn-view-all, .btn-event-view {
+    background-color: var(--bg-surface-alt) !important;
+    color: var(--color-primary) !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+}
+
+.btn-view-all:hover, .btn-event-view:hover {
+    background: var(--gradient-brand) !important;
+    color: #FFFFFF !important;
+    border-color: transparent !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   2. FLOATING ACTION CONTROLS (WhatsApp & Enquire)
+   -------------------------------------------------------------------------- */
+
+/* Floating WhatsApp Control (Bottom-Right Circle Pill) */
+.whatsapp-btn {
+    position: fixed !important;
+    bottom: 24px !important;
+    right: 24px !important;
+    left: auto !important;
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    background-color: #25D366 !important;
+    color: #FFFFFF !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.5rem !important;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.4) !important;
+    z-index: 999 !important;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal) !important;
+}
+
+.whatsapp-btn:hover {
+    transform: scale(1.08) !important;
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5) !important;
+    color: #FFFFFF !important;
+}
+
+/* Floating Enquire Control (Compact Pill Stacked Above WhatsApp) */
+.enquire-btn {
+    position: fixed !important;
+    bottom: 86px !important;
+    right: 24px !important;
+    left: auto !important;
+    width: auto !important;
+    max-width: max-content !important;
+    padding: 0.6rem 1.15rem !important;
+    background-color: var(--color-primary) !important;
+    color: #FFFFFF !important;
+    border-radius: 50px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.45rem !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    box-shadow: var(--shadow-lg) !important;
+    z-index: 999 !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    text-decoration: none !important;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal) !important;
+}
+
+.enquire-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: var(--shadow-xl), var(--shadow-glow) !important;
+    color: #FFFFFF !important;
+}
+
+@media (max-width: 768px) {
+    .whatsapp-btn {
+        bottom: 20px !important;
+        right: 20px !important;
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 1.35rem !important;
+    }
+    .enquire-btn {
+        bottom: 78px !important;
+        right: 20px !important;
+        padding: 0.5rem 1rem !important;
+        font-size: 0.8rem !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   3. CARD SYSTEM & MEDIA WRAPPERS
+   -------------------------------------------------------------------------- */
+.service-card-item, .event-card, .cmi-contact-tile, .card, .cmi-metric-card, .university-card {
+    background: var(--bg-surface) !important;
+    border-radius: var(--radius-xl) !important;
+    border: 1px solid rgba(226, 232, 240, 0.75) !important;
+    box-shadow: var(--shadow-card) !important;
+    transition: transform var(--transition-spring), box-shadow var(--transition-normal), border-color var(--transition-normal) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card-item:hover, .event-card:hover, .cmi-contact-tile:hover, .university-card:hover {
+    transform: translateY(-6px) !important;
+    box-shadow: var(--shadow-card-hover) !important;
+    border-color: rgba(13, 148, 136, 0.35) !important;
+}
+
+/* Service Card Specific Styling */
+.service-card-item {
+    padding: 2.25rem 1.75rem !important;
+}
+
+.service-icon-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(13, 148, 136, 0.12) 0%, rgba(30, 27, 75, 0.08) 100%);
+    color: var(--color-secondary) !important;
+    border: 1.5px solid rgba(13, 148, 136, 0.22);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.1);
+    transition: transform var(--transition-spring), background var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.service-card-item:hover .service-icon-circle {
+    transform: scale(1.12) rotate(6deg);
+    background: linear-gradient(135deg, rgba(13, 148, 136, 0.22) 0%, rgba(30, 27, 75, 0.14) 100%);
+    box-shadow: 0 8px 20px rgba(13, 148, 136, 0.25);
+    color: var(--color-secondary-hover) !important;
+}
+
+.service-card-title {
+    font-family: var(--font-heading) !important;
+    font-size: 1.25rem !important;
+    font-weight: 800 !important;
+    color: var(--color-primary) !important;
+    letter-spacing: -0.015em;
+}
+
+.service-card-text {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: 0;
+}
+
+/* Media Wrappers with Subtle Hover Zoom */
+.event-image-wrapper, .card-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-top-left-radius: var(--radius-xl);
+    border-top-right-radius: var(--radius-xl);
+    aspect-ratio: 16 / 9;
+}
+
+.event-image-wrapper img, .card-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+}
+
+.event-card:hover .event-image-wrapper img, .card:hover .card-image-wrapper img {
+    transform: scale(1.05);
+}
+
+/* --------------------------------------------------------------------------
+   4. ACCORDIONS
+   -------------------------------------------------------------------------- */
+.accordion-item {
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    margin-bottom: 0.85rem !important;
+    border-radius: var(--radius-md) !important;
+    overflow: hidden !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.accordion-button {
+    font-family: var(--font-heading) !important;
+    font-size: var(--font-size-base) !important;
+    font-weight: 700 !important;
+    background-color: var(--bg-surface) !important;
+    color: var(--color-primary) !important;
+    padding: 1.1rem 1.35rem !important;
+    box-shadow: none !important;
+    transition: background-color var(--transition-fast), color var(--transition-fast) !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--bg-surface-alt) !important;
+    color: var(--color-secondary) !important;
+    border-left: 4px solid var(--color-secondary) !important;
+}
+
+.accordion-body {
+    padding: 1.15rem 1.35rem !important;
+    color: var(--text-secondary) !important;
+    line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   5. FORM ELEMENTS
+   -------------------------------------------------------------------------- */
+.form-control, .form-select {
+    border-radius: var(--radius-md) !important;
+    border: 1px solid #CBD5E1 !important;
+    padding: 0.7rem 0.95rem !important;
+    font-family: var(--font-body) !important;
+    font-size: var(--font-size-sm) !important;
+    color: var(--text-primary) !important;
+    background-color: var(--bg-surface) !important;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast) !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--color-secondary) !important;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2) !important;
+    outline: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. BADGES & CHIPS
+   -------------------------------------------------------------------------- */
+.event-badge, .badge {
+    padding: 0.3rem 0.65rem;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border-radius: var(--radius-pill);
+    text-transform: uppercase;
+}
+
+.event-badge.webinar { background-color: rgba(59, 130, 246, 0.12); color: #2563EB; }
+.event-badge.workshop { background-color: rgba(245, 158, 11, 0.12); color: #D97706; }
+.event-badge.video { background-color: rgba(16, 185, 129, 0.12); color: #059669; }
+.event-badge.announcement { background-color: rgba(139, 92, 246, 0.12); color: #7C3AED; }
+
+/* --------------------------------------------------------------------------
+   7. ADMIN TABLES
+   -------------------------------------------------------------------------- */
+.admin-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.admin-table th {
+    background-color: var(--bg-surface-alt) !important;
+    color: var(--text-secondary) !important;
+    font-weight: 700 !important;
+    padding: 0.85rem 1rem !important;
+    text-transform: uppercase !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.05em !important;
+    border-bottom: 2px solid #E2E8F0 !important;
+}
+
+.admin-table td {
+    padding: 0.85rem 1rem !important;
+    vertical-align: middle !important;
+    border-bottom: 1px solid #E2E8F0 !important;
+    color: var(--text-primary) !important;
+}
+
+.admin-table tbody tr:hover td {
+    background-color: rgba(248, 250, 252, 0.8) !important;
+}

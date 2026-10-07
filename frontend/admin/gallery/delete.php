@@ -11,11 +11,11 @@ $image = $service->findById($id);
 
 if (!$image) {
     echo '<div class="alert alert-danger">Gallery image not found.</div>';
-    include __DIR__ . '/components/footer.php';
+    include __DIR__ . '/../components/footer.php';
     exit;
 }
 ?>
-<?php include __DIR__ . '/components/admin-header.php'; ?>
+<?php include __DIR__ . '/../components/admin-header.php'; ?>
 
 <div class="page-heading">
     <h1>Delete Gallery Image</h1>
@@ -41,7 +41,7 @@ if (!$image) {
     </div>
 </div>
 
-<?php include __DIR__ . '/components/footer.php'; ?>
+<?php include __DIR__ . '/../components/footer.php'; ?>
 
 <?php
 // Handle form submission

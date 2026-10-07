@@ -11,11 +11,11 @@ $testimonial = $service->findById($id);
 
 if (!$testimonial) {
     echo '<div class="alert alert-danger">Testimonial not found.</div>';
-    include __DIR__ . '/components/footer.php';
+    include __DIR__ . '/../components/footer.php';
     exit;
 }
 ?>
-<?php include __DIR__ . '/components/admin-header.php'; ?>
+<?php include __DIR__ . '/../components/admin-header.php'; ?>
 
 <div class="page-heading">
     <h1>Delete Testimonial</h1>
@@ -42,7 +42,7 @@ if (!$testimonial) {
     </div>
 </div>
 
-<?php include __DIR__ . '/components/footer.php'; ?>
+<?php include __DIR__ . '/../components/footer.php'; ?>
 
 <?php
 // Handle form submission

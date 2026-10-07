@@ -23,19 +23,25 @@ $currentUser = AuthMiddleware::user();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' â€“ Admin' : 'Admin Â· Connect MyUni'; ?></title>
+    <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' – Admin' : 'Admin · Connect MyUni'; ?></title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="<?php echo $base_url; ?>frontend/assets/images/logo.png">
+    <link rel="apple-touch-icon" href="<?php echo $base_url; ?>frontend/assets/images/logo.png">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+    <!-- Custom Unique UI/UX Theme -->
+    <link rel="stylesheet" href="<?php echo $base_url; ?>frontend/assets/css/theme-core.css?v=<?php echo $style_version; ?>">
+    <link rel="stylesheet" href="<?php echo $base_url; ?>frontend/assets/css/theme-components.css?v=<?php echo $style_version; ?>">
+    <link rel="stylesheet" href="<?php echo $base_url; ?>frontend/assets/css/theme-pages.css?v=<?php echo $style_version; ?>">
     <style>
-        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-       TOKENS
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        /* TOKENS */
         :root {
             --sidebar-w: 240px;
             --topbar-h: 60px;
@@ -90,11 +96,27 @@ $currentUser = AuthMiddleware::user();
         }
 
         .sidebar-logo {
-            padding: 20px 20px 16px;
+            padding: 16px 18px;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .sidebar-logo:hover {
+            text-decoration: none;
+        }
+
+        .sidebar-logo .logo-brand-img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 3px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
         }
 
         .sidebar-logo .logo-icon {
@@ -111,12 +133,12 @@ $currentUser = AuthMiddleware::user();
         }
 
         .sidebar-logo .logo-text {
-            line-height: 1.2;
+            line-height: 1.25;
         }
 
         .sidebar-logo .logo-text strong {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             font-weight: 700;
             color: var(--txt);
             letter-spacing: 0.3px;
@@ -752,15 +774,15 @@ $currentUser = AuthMiddleware::user();
 
 <body>
 
-    <!-- â”€â”€ Sidebar â”€â”€ -->
+    <!-- ── Sidebar ── -->
     <aside class="admin-sidebar" id="sidebar">
-        <div class="sidebar-logo">
-            <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+        <a href="<?php echo $admin_url; ?>index.php" class="sidebar-logo">
+            <img src="<?php echo $base_url; ?>frontend/assets/images/logo.png" alt="Connect MyUni" class="logo-brand-img">
             <div class="logo-text">
                 <strong>Connect MyUni</strong>
                 <span>Admin Console</span>
             </div>
-        </div>
+        </a>
 
         <div class="nav-group">
             <div class="nav-label">Main</div>
@@ -798,15 +820,30 @@ $currentUser = AuthMiddleware::user();
                     <span class="nav-badge"><?php echo $newMsgs; ?></span>
                 <?php endif; ?>
             </a>
+            <a class="nav-item <?php echo strpos($_SERVER['REQUEST_URI'], 'settings') !== false ? 'active' : ''; ?>" href="<?php echo $admin_url; ?>settings/">
+                <i class="fas fa-cogs fa-fw"></i> Settings
+            </a>
         </div>
 
         <div class="nav-group">
-<div class="nav-group">
-<div class="nav-label">AI</div>
-<a class="nav-item <?php echo ($current_page === 'ai/' || strpos($_SERVER['REQUEST_URI'], '/ai/') !== false) ? 'active' : ''; ?>" href="<?php echo $admin_url; ?>ai/">
-<i class="fas fa-wand-magic-sparkles fa-fw"></i> AI Generator
-</a>
-</div>            <div class="nav-label">Account</div>
+            <div class="nav-label">Management</div>
+            <a class="nav-item <?php echo strpos($_SERVER['REQUEST_URI'], 'analytics') !== false ? 'active' : ''; ?>" href="<?php echo $admin_url; ?>analytics/">
+                <i class="fas fa-chart-line fa-fw"></i> Analytics
+            </a>
+            <a class="nav-item <?php echo strpos($_SERVER['REQUEST_URI'], 'users') !== false ? 'active' : ''; ?>" href="<?php echo $admin_url; ?>users/">
+                <i class="fas fa-users fa-fw"></i> Manage Users
+            </a>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-label">AI Studio</div>
+            <a class="nav-item <?php echo ($current_page === 'ai/' || strpos($_SERVER['REQUEST_URI'], '/ai/') !== false) ? 'active' : ''; ?>" href="<?php echo $admin_url; ?>ai/">
+                <i class="fas fa-wand-magic-sparkles fa-fw"></i> AI Generator
+            </a>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-label">Account</div>
             <a class="nav-item <?php echo $current_page === 'change-password.php' ? 'active' : ''; ?>" href="<?php echo $admin_url; ?>change-password.php">
                 <i class="fas fa-key fa-fw"></i> Change Password
             </a>
@@ -845,7 +882,7 @@ $currentUser = AuthMiddleware::user();
                 <i class="fas fa-chevron-right" style="font-size:0.6rem;"></i>
                 <span class="current">
                     <?php
-                    $titles = ['index.php' => 'Dashboard', 'post-event.php' => 'Post Event'];
+                    $titles = ['index.php' => 'Dashboard'];
                     echo $titles[$current_page] ?? 'Page';
                     ?>
                 </span>

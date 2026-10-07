@@ -1,12 +1,8 @@
-<?php include __DIR__ . '/../components/header.php'; ?>
-
 <?php
-// Include cache manager
+require_once __DIR__ . '/../../backend/bootstrap.php';
 use ConnectMyUni\Services\EventService;
 
-use ConnectMyUni\CacheManager;
-
-// Load events using cache
+// Load events from database
 $eventService = new EventService();
 try {
     $events = $eventService->getAllForPublic();
@@ -18,6 +14,45 @@ try {
 usort($events, function ($a, $b) {
     return strtotime($b['date']) - strtotime($a['date']);
 });
+
+// Get available categories
+$categories = array_unique(array_map(function($e) {
+    return $e['category'] ?? 'announcement';
+}, $events));
+sort($categories);
+
+// SEO Meta Configuration
+$page_title = 'Latest Updates, University News & Announcements | Connect MyUni';
+$meta_description = 'Stay informed with the latest study abroad news, international scholarship deadlines, university admission updates, and immigration policy changes.';
+$meta_keywords = 'study abroad news, university admission updates, scholarship deadlines, overseas education announcements';
+
+$origin = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'connectmyuni.com');
+
+$schema_json_ld = [
+    '@context' => 'https://schema.org',
+    '@type'    => 'CollectionPage',
+    'name'     => 'Connect MyUni News & Updates',
+    'description' => $meta_description,
+    'breadcrumb' => [
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'Home',
+                'item' => $origin . '/'
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => 'Updates',
+                'item' => $origin . '/updates.php'
+            ]
+        ]
+    ]
+];
+
+include __DIR__ . '/../components/header.php';
 ?>
 
 <!-- Updates Content -->
@@ -28,9 +63,11 @@ usort($events, function ($a, $b) {
             <div class="col-12 mb-5">
                 <div class="updates-filters cmi-fade-up">
                     <button class="filter-btn active" data-filter="all">All Updates</button>
-                    <button class="filter-btn" data-filter="webinar">Webinars</button>
-                    <button class="filter-btn" data-filter="workshop">Workshops</button>
-                    <button class="filter-btn" data-filter="announcement">Announcements</button>
+                    <?php foreach ($categories as $cat): ?>
+                        <button class="filter-btn" data-filter="<?php echo htmlspecialchars($cat); ?>">
+                            <?php echo ucfirst(htmlspecialchars($cat)); ?>s
+                        </button>
+                    <?php endforeach; ?>
                 </div>
             </div>
 

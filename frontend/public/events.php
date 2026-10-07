@@ -1,6 +1,5 @@
-<?php include __DIR__ . '/../components/header.php'; ?>
-
 <?php
+require_once __DIR__ . '/../../backend/bootstrap.php';
 use ConnectMyUni\Services\EventService;
 
 $eventService = new EventService();
@@ -17,7 +16,61 @@ $categories = array_unique(array_map(function($e) {
     return $e['category'] ?? 'announcement';
 }, $events));
 sort($categories);
+
+// SEO Meta Configuration
+$page_title = 'Education Fairs, Webinars & University Expos | Connect MyUni';
+$meta_description = 'Attend upcoming overseas education fairs, university open days, scholarship webinars, and direct one-on-one sessions with international university representatives.';
+$meta_keywords = 'study abroad events, education fair nigeria, uk university expo, study abroad webinars, university open day, scholarship seminars';
+
+$origin = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'connectmyuni.com');
+
+$schema_json_ld = [
+    '@context' => 'https://schema.org',
+    '@type'    => 'CollectionPage',
+    'name'     => 'Upcoming Education Events & University Fairs',
+    'description' => $meta_description,
+    'breadcrumb' => [
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'Home',
+                'item' => $origin . '/'
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => 'Events',
+                'item' => $origin . '/events.php'
+            ]
+        ]
+    ]
+];
+
+include __DIR__ . '/../components/header.php';
 ?>
+
+<!-- Page Hero -->
+<section class="page-hero cmi-section-enter">
+    <div class="container">
+        <div class="hero-content text-center">
+            <div class="hero-badge">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Global Expos &amp; Masterclasses</span>
+            </div>
+            <h1 class="page-hero__title cmi-fade-up">Events &amp; Webinars</h1>
+            <p class="hero-subtitle cmi-fade-up">
+                Discover upcoming international education fairs, direct admissions sessions, and visa masterclasses designed to launch your global career.
+            </p>
+            <div class="hero-breadcrumb">
+                <a href="<?php echo $base_url; ?>index.php">Home</a>
+                <span class="mx-2">/</span>
+                <span>Events</span>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section class="events-page-section cmi-section-enter">
     <div class="container">

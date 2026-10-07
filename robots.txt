@@ -1,0 +1,18 @@
+# Robots.txt for Connect MyUni
+User-agent: *
+Allow: /
+Allow: /frontend/assets/
+Allow: /storage/uploads/
+
+# Disallow administrative and private areas
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /frontend/admin/
+Disallow: /frontend/admin/*
+Disallow: /backend/
+Disallow: /backend/*
+Disallow: /database/
+Disallow: /database/*
+
+# XML Sitemap
+Sitemap: https://connectmyuni.com/sitemap.xml

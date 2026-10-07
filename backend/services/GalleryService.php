@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ConnectMyUni\Services;
 
 use ConnectMyUni\Repositories\GalleryRepository;
+use PDO;
 
 class GalleryService
 {
@@ -47,13 +48,18 @@ class GalleryService
     {
         $pdo = \ConnectMyUni\Database::getConnection();
         $stmt = $pdo->query("SELECT category, COUNT(*) AS cnt FROM gallery_images GROUP BY category ORDER BY category");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function storeImage(array $file, string $category = 'gallery'): array
     {
         $media = new \ConnectMyUni\Helpers\MediaService();
         return $media->store($file, $category);
+    }
+
+    public function createImage(array $data): int
+    {
+        return $this->galleryRepo->create($data);
     }
 
     public function updateMetadata(int $id, array $data): bool

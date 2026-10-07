@@ -32,15 +32,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Desktop image is required (image_path is NOT NULL in the schema).
-        if (empty($_FILES['image']['name'])) {
-            $error = 'A desktop image is required.';
-        } else {
+        if (!empty($_FILES['image']['name'])) {
             $upload = (new MediaService())->store($_FILES['image'], 'hero');
             if ($upload['key'] !== null) {
                 $data['image_path'] = $upload['key'];
             } else {
                 $error = $upload['error'];
             }
+        } elseif (!empty($_POST['ai_image_path'])) {
+            $data['image_path'] = trim((string) $_POST['ai_image_path']);
+        } else {
+            $error = 'A desktop image or AI generated banner is required.';
         }
 
         // Optional mobile image.
@@ -83,6 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'subtitle'    => 'subtitle',
             'destination' => 'subtitle',
             'cta_text'    => 'cta_text',
+            'cta_url'     => 'cta_url',
         ];
         $aiButtonLabel  = 'Generate Slide Copy with AI';
         include __DIR__ . '/../components/ai-content-generator.php';
@@ -105,8 +108,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="form-group">
             <label class="form-label">Desktop Image (JPEG / PNG / WEBP, max 5 MB) <span class="req">*</span></label>
-            <input class="form-control" type="file" name="image" accept="image/jpeg,image/png,image/webp" required>
-            <p class="form-hint">Saved as a storage-relative key in image_path.</p>
+            <?php
+            $aiImageCategory = 'hero';
+            $aiImageButtonLabel = 'Generate Hero Banner with AI';
+            include __DIR__ . '/../components/ai-image-generator.php';
+            ?>
+            <input class="form-control" type="file" name="image" accept="image/jpeg,image/png,image/webp">
+            <p class="form-hint">Choose a file or click the button above to generate a custom HD hero banner with AI.</p>
         </div>
         <div class="form-group">
             <label class="form-label">Mobile Image (optional)</label>

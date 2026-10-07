@@ -50,6 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
                 $error = $upload['error'];
             }
+        } elseif (!empty($_POST['ai_image_path'])) {
+            $data['image_path'] = trim((string) $_POST['ai_image_path']);
         } else {
             $data['image_path'] = $slide['image_path'] ?? null;
         }
@@ -101,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'subtitle'    => 'subtitle',
             'destination' => 'subtitle',
             'cta_text'    => 'cta_text',
+            'cta_url'     => 'cta_url',
         ];
         $aiButtonLabel  = 'Generate Slide Copy with AI';
         include __DIR__ . '/../components/ai-content-generator.php';
@@ -122,7 +125,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input class="form-control" type="url" name="cta_url" value="<?php echo htmlspecialchars($slide['cta_url'] ?? ''); ?>">
         </div>
         <div class="form-group">
-            <label class="form-label">Desktop Image (optional â€” leave empty to keep)</label>
+            <label class="form-label">Desktop Image (optional — leave empty to keep)</label>
+            <?php
+            $aiImageCategory = 'hero';
+            $aiImageButtonLabel = 'Generate Hero Banner with AI';
+            include __DIR__ . '/../components/ai-image-generator.php';
+            ?>
             <input class="form-control" type="file" name="image" accept="image/jpeg,image/png,image/webp">
         </div>
         <div class="form-group">

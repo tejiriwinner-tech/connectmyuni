@@ -38,9 +38,14 @@ Options -Indexes
     Header set X-XSS-Protection "1; mode=block"
 </IfModule>
 
-# php -- BEGIN cPanel-generated handler, do not edit
-# Set the "ea-php84" package as the default "PHP" programming language.
-<IfModule mime_module>
-  AddHandler application/x-httpd-ea-php84 .php .php8 .phtml
-</IfModule>
-# php -- END cPanel-generated handler, do not edit
+# php -- BEGIN cPanel-generated handler (live server only, NOT for local XAMPP)
+# This block must only be active on cPanel/live hosting.
+# On XAMPP, the ea-php84 handler does not exist and causes .php files
+# to be misread as .php4, breaking the router. Leave this commented
+# out locally; uncomment ONLY when deploying to the live cPanel server.
+#
+# <IfModule mime_module>
+#   AddHandler application/x-httpd-ea-php84 .php .php8 .phtml
+# </IfModule>
+#
+# php -- END cPanel-generated handler

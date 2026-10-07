@@ -1,0 +1,357 @@
+/**
+ * Connect MyUni — Flight-First Clean Design
+ * 
+ * Strips away cluttered backgrounds to prioritize the airplane animation
+ * while ensuring high text contrast and preserving layout structure.
+ */
+
+/* ==============================================
+   CLEAN BACKGROUND ARCHITECTURE
+   Force transparency on all sections and backgrounds
+   ============================================== */
+
+/* FORCE TRANS-SECTION TRANSPARENCY - strip all backgrounds */
+section,
+.bg-light,
+.bg-white,
+[class*="bg-"],
+.hero-cards-section,
+.cmi-3d-showcase-section,
+.services-section,
+.approach-hero-section,
+.events-section,
+.contact-section,
+.hero-section,
+.about-section {
+    background: transparent !important;
+    background-image: none !important;
+    background-color: transparent !important;
+}
+
+/* Remove all background overlays and patterns */
+.hero-overlay-gradient,
+.cmi-3d-backdrop-fx,
+.services-backdrop-glow,
+.approach-backdrop-glow,
+.approach-hero-overlay,
+.hero-bg-wrapper,
+.services-oval-wrapper,
+.approach-image-wrapper,
+.services-oval-orbit,
+.approach-oval-orbit,
+.services-oval-container,
+.approach-oval-container {
+    display: none !important;
+    background: none !important;
+}
+
+/* Force additional element transparency */
+.container, .row, .col-lg-6, .col-lg-4, .col-md-6 {
+    background: transparent !important;
+}
+
+/* Remove background images from sections and containers only */
+section, .container, .row, [class*="col-"],
+.hero-cards-section, .cmi-3d-showcase-section,
+.services-section, .approach-hero-section,
+.events-section, .contact-section {
+    background-image: none !important;
+}
+
+/* SET UNIFORM CANVAS BACKGROUND - single consistent sky */
+body {
+    background: linear-gradient(to bottom, #f4f7f6, #e9eff1) !important;
+    background-attachment: fixed !important;
+}
+
+/* Flight animation container - transparent to show body background */
+#flight-animation-container {
+    background: transparent !important;
+}
+
+/* ==============================================
+   HIGH CONTRAST TEXT OPTIMIZATION
+   Force dark text for uniform light background
+   ============================================== */
+
+/* FORCE DARK TEXT FOR ALL HEADINGS - was white on colored sections */
+h1, h2, h3, h4, h5, h6,
+.hero-title, .hero-subtitle,
+.services-title, .approach-hero-title,
+.events-section-title, .contact-title,
+.section-title, .universities-section-title,
+.cmi-3d-title, .cmi-3d-text,
+.text-white {
+    color: #0a2540 !important;
+    text-shadow: none !important;
+}
+
+/* Body text optimization - dark gray for readability */
+p, .service-card-text, .event-description,
+.contact-details p, .approach-hero-text,
+.accordion-body, .hero-subtitle {
+    color: #2d3748 !important;
+}
+
+/* Specific section text overrides */
+.hero-content h1, .hero-content p,
+.approach-hero-content h2, .approach-hero-content p,
+.cmi-3d-left-col h2, .cmi-3d-left-col p {
+    color: #0a2540 !important;
+}
+
+/* Card text contrast */
+.service-card-item, .event-card, .update-card,
+.uni-card, .university-card, .country-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.service-card-item h3, .event-card h3,
+.service-card-item p, .event-card p {
+    color: #1a1a2e !important;
+}
+
+/* Accordion text contrast - force dark text */
+.accordion-services .accordion-button {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #0a2540 !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+}
+
+.accordion-services .accordion-button:not(.collapsed) {
+    background: rgba(10, 37, 64, 0.08) !important;
+    color: #0a2540 !important;
+}
+
+.accordion-services .accordion-body {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #2d3748 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-top: none !important;
+}
+
+/* 3D showcase section - force dark text on all elements */
+.cmi-3d-title, .cmi-3d-text,
+.cmi-metric-card .cmi-metric-num,
+.cmi-metric-card .cmi-metric-label,
+.cmi-hud-title, .cmi-hud-city, .cmi-hud-partner,
+.cmi-hud-status, .cmi-filter-label,
+.cmi-3d-badge, .cmi-hub-btn {
+    color: #0a2540 !important;
+    text-shadow: none !important;
+}
+
+/* HUD and metric cards - clean backgrounds with borders */
+.cmi-hud-card, .cmi-metric-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 3D buttons - high contrast */
+.cmi-3d-hub-btn {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 2px solid #0a2540 !important;
+    color: #0a2540 !important;
+}
+
+.cmi-3d-hub-btn:hover, .cmi-3d-hub-btn.active {
+    background: #0a2540 !important;
+    color: #ffffff !important;
+}
+
+/* ==============================================
+   BUTTON AND LINK OPTIMIZATION
+   Maintain interactivity with clean backgrounds
+   ============================================== */
+
+/* Primary buttons - enhanced contrast */
+.btn-hero-cta, .btn-primary, .btn-cta {
+    background: linear-gradient(135deg, #1a56db 0%, #0d47a1 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(26, 86, 219, 0.3) !important;
+}
+
+.btn-hero-cta:hover, .btn-primary:hover, .btn-cta:hover {
+    background: linear-gradient(135deg, #0d47a1 0%, #1a56db 100%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26, 86, 219, 0.4) !important;
+}
+
+/* Secondary buttons - high contrast borders */
+.btn-about-link, .btn-event-link, .btn-hero-ghost {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 2px solid #0a2540 !important;
+    color: #0a2540 !important;
+}
+
+.btn-about-link:hover, .btn-event-link:hover, .btn-hero-ghost:hover {
+    background: #0a2540 !important;
+    color: #ffffff !important;
+}
+
+/* WhatsApp button - enhanced visibility */
+.whatsapp-btn {
+    background: #25d366 !important;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4) !important;
+}
+
+/* Enquire button */
+.enquire-btn {
+    background: #1a56db !important;
+    box-shadow: 0 4px 15px rgba(26, 86, 219, 0.3) !important;
+}
+
+/* ==============================================
+   CARD AND CONTAINER ENHANCEMENTS
+   Enhanced borders and shadows for light background
+   ============================================== */
+
+/* Service icon circles - clean style with borders */
+.service-icon-circle {
+    background: linear-gradient(135deg, rgba(10, 37, 64, 0.08) 0%, rgba(26, 86, 219, 0.12) 100%) !important;
+    border: 2px solid rgba(10, 37, 64, 0.2) !important;
+}
+
+.service-card-item:hover .service-icon-circle {
+    background: linear-gradient(135deg, #0a2540 0%, #1a56db 100%) !important;
+    color: #ffffff !important;
+}
+
+/* Event cards - enhanced borders */
+.event-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+.event-badge {
+    background: #0a2540 !important;
+    color: #ffffff !important;
+}
+
+/* All cards - enhanced borders for light background */
+.service-card-item, .update-card,
+.uni-card, .university-card, .country-card,
+.cmi-metric-card, .cmi-hud-card {
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ==============================================
+   NAVIGATION OPTIMIZATION
+   Clean navbar with high contrast
+   ============================================== */
+
+.navbar {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.nav-link {
+    color: #1a1a2e !important;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #1a56db !important;
+}
+
+/* ==============================================
+   FOOTER OPTIMIZATION
+   Clean footer with good contrast
+   ============================================== */
+
+.footer-section {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.footer-text {
+    color: #2d3748 !important;
+}
+
+.website-credit {
+    color: #1a56db !important;
+}
+
+/* ==============================================
+   FLIGHT ANIMATION CONTAINER
+   Ensure it's visible behind clean content
+   ============================================== */
+
+#flight-animation-container {
+    z-index: 0 !important;
+    background: transparent !important;
+}
+
+/* Ensure all content sits above flight animation */
+.navbar, .hero-section, .hero-cards-section,
+.cmi-3d-showcase-section, .services-section,
+.approach-hero-section, .events-section, .contact-section,
+.footer-section, .whatsapp-btn, .enquire-btn {
+    position: relative;
+    z-index: 10 !important;
+}
+
+/* Cards and interactive elements - highest z-index */
+.service-card-item, .event-card, .update-card,
+.uni-card, .university-card, .country-card,
+.accordion-item, .cmi-hud-card, .cmi-metric-card {
+    position: relative;
+    z-index: 20 !important;
+}
+
+/* ==============================================
+   RESPONSIVE ADJUSTMENTS
+   Maintain clean design on all devices
+   ============================================== */
+
+@media (max-width: 768px) {
+    body {
+        background: linear-gradient(180deg, #f5f9ff 0%, #eef6ff 100%);
+    }
+    
+    .service-card-item, .event-card {
+        background: rgba(255, 255, 255, 0.98) !important;
+    }
+}
+
+/* ==============================================
+   ACCESSIBILITY ENHANCEMENTS
+   Focus states and reduced motion
+   ============================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus states for keyboard navigation */
+a:focus, button:focus, .accordion-button:focus {
+    outline: 2px solid #1a56db !important;
+    outline-offset: 2px !important;
+}
+
+/* ==============================================
+   IMAGE AND MEDIA OPTIMIZATION
+   Clean presentation without obstruction
+   ============================================== */
+
+img {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Google Maps iframe - clean border */
+.contact-map-wrapper iframe {
+    border: 2px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}

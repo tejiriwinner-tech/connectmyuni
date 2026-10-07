@@ -11,11 +11,11 @@ $image = $service->findById($id);
 
 if (!$image) {
     echo '<div class="alert alert-danger">Gallery image not found.</div>';
-    include __DIR__ . '/components/footer.php';
+    include __DIR__ . '/../components/footer.php';
     exit;
 }
 ?>
-<?php include __DIR__ . '/components/admin-header.php'; ?>
+<?php include __DIR__ . '/../components/admin-header.php'; ?>
 
 <div class="page-heading">
     <h1>Edit Gallery Image</h1>
@@ -27,54 +27,44 @@ if (!$image) {
     </div>
     <div class="card-body">
         <?php if (isset($error)): ?>
-            <div class="alert alert-danger">
-                <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error); ?>
-            </div>
+            <div class="alert alert-danger"><?php echo $error; ?></div>
         <?php endif; ?>
         <?php if (isset($success)): ?>
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($success); ?>
-            </div>
+            <div class="alert alert-success"><?php echo $success; ?></div>
         <?php endif; ?>
 
-        <form method="POST" enctype="multipart/form-data" action="">
+        <form method="POST" action="">
             <?php echo Security::csrfInput(); ?>
-            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
             <input type="hidden" name="id" value="<?php echo $image['id']; ?>">
 
             <div class="mb-3">
-                <label class="form-label">Title <span class="req">*</span></label>
-                <input type="text" class="form-control" name="title" value="<?php echo htmlspecialchars($image['title'] ?? ''); ?>" required>
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" name="title" value="<?php echo htmlspecialchars($image['title'] ?? ''); ?>" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Alt Text <span class="req">*</span></label>
-                <input type="text" class="form-control" name="alt_text" value="<?php echo htmlspecialchars($image['alt_text'] ?? ''); ?>" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Category</label>
-                <select class="form-control" name="category">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-select" id="category" name="category" required>
                     <option value="campus" <?php echo ($image['category'] ?? '') === 'campus' ? 'selected' : ''; ?>>Campus Life</option>
-                    <option value="events" <?php echo ($image['category'] ?? '') === 'events' ? 'selected' : ''; ?>>Events</option>
+                    <option value="departure" <?php echo ($image['category'] ?? '') === 'departure' ? 'selected' : ''; ?>>Student Departure</option>
                     <option value="graduation" <?php echo ($image['category'] ?? '') === 'graduation' ? 'selected' : ''; ?>>Graduation</option>
-                    <option value="airport" <?php echo ($image['category'] ?? '') === 'airport' ? 'selected' : ''; ?>>Airport/Departure</option>
-                    <option value="general" <?php echo ($image['category'] ?? '') === 'general' ? 'selected' : ''; ?>>General</option>
+                    <option value="events" <?php echo ($image['category'] ?? '') === 'events' ? 'selected' : ''; ?>>Events & Team</option>
                 </select>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Sort Order</label>
-                <input type="number" class="form-control" name="sort_order" value="<?php echo ($image['sort_order'] ?? 0); ?>">
+                <label for="image_url" class="form-label">Image URL</label>
+                <input type="text" class="form-control" id="image_url" name="image_url" value="<?php echo htmlspecialchars($image['image_url'] ?? ''); ?>" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Current Image</label>
-                <div class="mt-2">
-                    <img src="<?php echo htmlspecialchars(\ConnectMyUni\Helpers\MediaResolver::url($image['image_path'] ?? '')); ?>" style="max-width: 200px; max-height: 150px; border: 1px solid #dee2e6;">
-                </div>
-                <input type="file" class="form-control" name="new_image" accept="image/jpeg,image/png,image/webp">
-                <small class="text-muted mt-2">Leave blank to keep current image. Allowed: JPEG, PNG, WebP. Max size: 5 MB.</small>
+                <label for="sort_order" class="form-label">Sort Order</label>
+                <input type="number" class="form-control" id="sort_order" name="sort_order" value="<?php echo (int) ($image['sort_order'] ?? 0); ?>">
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" <?php echo !empty($image['is_active']) ? 'checked' : ''; ?>>
+                <label class="form-check-label" for="is_active">Active (Visible on public site)</label>
             </div>
 
             <div class="d-flex gap-2">
@@ -85,7 +75,7 @@ if (!$image) {
     </div>
 </div>
 
-<?php include __DIR__ . '/components/footer.php'; ?>
+<?php include __DIR__ . '/../components/footer.php'; ?>
 
 <?php
 // Handle form submission

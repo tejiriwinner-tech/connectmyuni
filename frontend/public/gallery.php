@@ -1,5 +1,35 @@
 <?php
-$page_title = 'Gallery';
+// SEO Meta Configuration
+$page_title = 'Student Success Gallery & Campus Moments | Connect MyUni';
+$meta_description = 'Browse photos of our student visa success stories, university campus departures, graduation ceremonies, and annual overseas education fairs.';
+$meta_keywords = 'student visa success stories, study abroad photos, campus moments, graduation photos, university fair gallery';
+
+$origin = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'connectmyuni.com');
+
+$schema_json_ld = [
+    '@context' => 'https://schema.org',
+    '@type'    => 'CollectionPage',
+    'name'     => 'Connect MyUni Student Gallery & Moments',
+    'description' => $meta_description,
+    'breadcrumb' => [
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'Home',
+                'item' => $origin . '/'
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => 'Gallery',
+                'item' => $origin . '/gallery.php'
+            ]
+        ]
+    ]
+];
+
 require_once __DIR__ . '/../components/header.php';
 
 // ─────────────────────────────────────────────────────────────
@@ -57,7 +87,7 @@ $gallery_items = [
     ],
 ];
 
-// ── DB-driven: prefer published gallery_images when present ──
+// ── DB-driven: add published gallery_images to hardcoded ones ──
 $galleryLabelMap = [
     'campus'     => 'Campus Life',
     'airport'    => 'Departure',
@@ -82,9 +112,9 @@ try {
 } catch (\Throwable $e) {
     $dbGallery = [];
 }
-// Prefer DB rows; keep the static set below as a safe fallback that preserves the layout.
+// Merge database images with hardcoded images (keep both)
 if (!empty($dbGallery)) {
-    $gallery_items = $dbGallery;
+    $gallery_items = array_merge($gallery_items, $dbGallery);
 }
 
 $categories = [
@@ -98,13 +128,28 @@ $categories = [
 
 <!-- ── Gallery Hero Section ──────────────────────────────── -->
 <section class="gallery-hero cmi-section-enter">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10 text-center">
-                <h1 class="gallery-hero__title cmi-fade-up">Gallery</h1>
-                <p class="gallery-hero__subtitle cmi-fade-up">
-                    Explore inspiring moments from our students' journeys around the world
-                </p>
+    <div class="hero-background"></div>
+    <div class="hero-overlay"></div>
+    <div class="container position-relative">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-images"></i>
+                <span>Photo Gallery</span>
+            </div>
+            <h1 class="gallery-hero__title cmi-fade-up">Gallery</h1>
+            <p class="gallery-hero__subtitle cmi-fade-up">
+                Explore inspiring moments from our students' journeys around the world
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number"><?php echo count($gallery_items); ?></div>
+                    <div class="stat-label">Photos</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <div class="stat-number"><?php echo count($categories) - 1; ?></div>
+                    <div class="stat-label">Categories</div>
+                </div>
             </div>
         </div>
     </div>
@@ -114,46 +159,75 @@ $categories = [
 <section class="filter-bar cmi-fade-up">
     <div class="container">
         <div class="filter-bar__inner">
-            <?php foreach ($categories as $key => $label): ?>
-                <button
-                    class="filter-btn <?php echo $key === 'all' ? 'filter-btn--active' : ''; ?>"
-                    data-filter="<?php echo $key; ?>">
-                    <?php echo htmlspecialchars($label); ?>
-                </button>
-            <?php endforeach; ?>
+            <div class="filter-label">
+                <i class="fas fa-filter"></i>
+                <span>Filter by:</span>
+            </div>
+            <div class="filter-buttons">
+                <?php foreach ($categories as $key => $label): ?>
+                    <button
+                        class="filter-btn <?php echo $key === 'all' ? 'filter-btn--active' : ''; ?>"
+                        data-filter="<?php echo $key; ?>">
+                        <span class="btn-icon">
+                            <?php if ($key === 'all'): ?>
+                                <i class="fas fa-th"></i>
+                            <?php elseif ($key === 'campus'): ?>
+                                <i class="fas fa-university"></i>
+                            <?php elseif ($key === 'airport'): ?>
+                                <i class="fas fa-plane-departure"></i>
+                            <?php elseif ($key === 'graduation'): ?>
+                                <i class="fas fa-graduation-cap"></i>
+                            <?php elseif ($key === 'events'): ?>
+                                <i class="fas fa-calendar-alt"></i>
+                            <?php endif; ?>
+                        </span>
+                        <span class="btn-text"><?php echo htmlspecialchars($label); ?></span>
+                        <span class="btn-count">
+                            <?php 
+                            $count = $key === 'all' 
+                                ? count($gallery_items) 
+                                : count(array_filter($gallery_items, fn($item) => $item['category'] === $key));
+                            echo $count;
+                            ?>
+                        </span>
+                    </button>
+                <?php endforeach; ?>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- ── Masonry Gallery ────────────────────────────────────── -->
+<!-- ── Responsive Gallery Grid ────────────────────────────── -->
 <section class="gallery-section cmi-gallery-cinematic">
-    <div class="container-fluid gallery-container">
-        <div class="masonry-grid" id="galleryGrid">
+    <div class="container gallery-container">
+        <div class="gallery-grid" id="galleryGrid">
             <?php foreach ($gallery_items as $i => $item): ?>
                 <div
-                    class="masonry-item"
+                    class="gallery-item"
                     data-category="<?php echo htmlspecialchars($item['category']); ?>"
                     data-index="<?php echo $i; ?>"
-                    style="animation-delay: <?php echo $i * 0.07; ?>s">
-                    <div class="masonry-item__inner">
-                        <img
-                            src="<?php echo htmlspecialchars($item['file']); ?>"
-                            alt="<?php echo htmlspecialchars($item['caption']); ?>"
-                            class="masonry-item__img"
-                            loading="lazy"
-                            onerror="this.closest('.masonry-item').classList.add('masonry-item--placeholder')">
-                        <div class="masonry-item__overlay">
-                            <span class="masonry-item__label">
-                                <?php echo htmlspecialchars($item['label']); ?>
-                            </span>
-                            <p class="masonry-item__caption">
-                                <?php echo htmlspecialchars($item['caption']); ?>
-                            </p>
-                            <button class="masonry-item__zoom" aria-label="View full image">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                                </svg>
-                            </button>
+                    style="animation-delay: <?php echo min($i * 0.05, 0.5); ?>s">
+                    <div class="gallery-item__inner">
+                        <div class="gallery-item__image-wrapper">
+                            <img
+                                src="<?php echo htmlspecialchars($item['file']); ?>"
+                                alt="<?php echo htmlspecialchars($item['caption']); ?>"
+                                class="gallery-item__img"
+                                loading="lazy"
+                                onerror="this.closest('.gallery-item').classList.add('gallery-item--placeholder')">
+                            <div class="gallery-item__overlay">
+                                <div class="overlay-content">
+                                    <span class="gallery-item__label">
+                                        <?php echo htmlspecialchars($item['label']); ?>
+                                    </span>
+                                    <p class="gallery-item__caption">
+                                        <?php echo htmlspecialchars($item['caption']); ?>
+                                    </p>
+                                    <button class="gallery-item__zoom" aria-label="View full image">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -162,8 +236,11 @@ $categories = [
 
         <!-- Empty state -->
         <div class="gallery-empty" id="galleryEmpty" style="display:none">
-            <div class="gallery-empty__icon">📷</div>
-            <p>No photos in this category yet.</p>
+            <div class="gallery-empty__icon">
+                <i class="fas fa-images"></i>
+            </div>
+            <h3>No photos in this category yet.</h3>
+            <p>Check back later for more amazing moments!</p>
         </div>
     </div>
 </section>
@@ -220,155 +297,244 @@ $categories = [
 <style>
     /* ── Local tokens ── */
     :root {
-        --white: #ffffff;
-        --ink: #1a1a2e;
-        --muted: #6b7280;
-        --radius: 14px;
-        --shadow: 0 8px 32px rgba(26, 86, 219, .13);
+        --primary-gradient: linear-gradient(135deg, #1E1B4B 0%, #0D9488 100%);
+        --accent-gradient: linear-gradient(135deg, #0F766E 0%, #F59E0B 100%);
+        --glass-bg: rgba(255, 255, 255, 0.95);
+        --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.07);
+        --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.15);
+        --border-radius: 20px;
     }
 
-    /* ── Hero ── */
+    /* ── Hero Section ── */
+    /* ── Hero Section ── */
     .gallery-hero {
         position: relative;
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-        padding: 4rem 0;
-        color: #fff;
-        text-align: center;
+        padding: 5rem 0 4rem;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0F0E2E 0%, #1E1B4B 60%, #0F766E 100%) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #FFFFFF !important;
+    }
+
+    .hero-background, .hero-overlay {
+        display: none !important;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .hero-badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.12) !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
+        color: var(--color-accent) !important;
+        padding: 0.45rem 1.1rem;
+        border-radius: 50px;
+        font-family: var(--font-heading);
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 1.25rem;
+        backdrop-filter: blur(8px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .gallery-hero__title {
-        font-size: clamp(2.5rem, 6vw, 3.5rem);
-        font-weight: 900;
-        margin-bottom: 1rem;
-        letter-spacing: -0.02em;
+        font-size: clamp(2.2rem, 4vw, 3.25rem);
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+        color: #FFFFFF !important;
+        -webkit-text-fill-color: #FFFFFF !important;
+        text-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+        line-height: 1.15;
     }
 
     .gallery-hero__subtitle {
-        font-size: 1.1rem;
-        color: rgba(255, 255, 255, 0.85);
-        max-width: 600px;
-        margin: 0 auto;
+        font-size: 1.15rem;
+        color: rgba(255, 255, 255, 0.9) !important;
+        max-width: 650px;
+        margin: 0 auto 1.75rem;
         line-height: 1.6;
+    }
+
+    .hero-stats {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 2.5rem !important;
+        margin-top: 0.5rem;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: var(--color-accent) !important;
+        -webkit-text-fill-color: var(--color-accent) !important;
+        line-height: 1;
+        margin-bottom: 0.3rem;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.85) !important;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .stat-divider {
+        width: 1px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.25) !important;
     }
 
     /* ── Filter Bar ── */
     .filter-bar {
         position: sticky;
-        top: 62px;
+        top: 70px;
         z-index: 100;
-        background: rgba(255, 255, 255, .96);
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(12px);
         border-bottom: 1px solid #e9ecef;
-        padding: .9rem 0;
+        padding: 1.25rem 0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     }
 
     .filter-bar__inner {
         display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
         flex-wrap: wrap;
-        gap: .5rem;
+    }
+
+    .filter-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: #1e293b;
+        font-size: 0.9rem;
+    }
+
+    .filter-label i {
+        color: #2563eb;
+    }
+
+    .filter-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
     }
 
     .filter-btn {
-        border: 1.5px solid #dee2e6;
-        background: #fff;
-        border-radius: 100px;
-        padding: .4rem 1.1rem;
-        font-size: .83rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 2px solid #e9ecef;
+        background: white;
+        border-radius: 50px;
+        padding: 0.6rem 1.25rem;
+        font-size: 0.85rem;
         font-weight: 500;
-        color: var(--muted);
+        color: #64748b;
         cursor: pointer;
-        transition: all .2s;
+        transition: all 0.3s ease;
     }
 
     .filter-btn:hover {
-        border-color: var(--primary-color);
-        color: var(--primary-color);
-        background: var(--primary-light);
+        border-color: #2563eb;
+        color: #2563eb;
+        background: rgba(37, 99, 235, 0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
     }
 
     .filter-btn--active {
-        background: var(--primary-color);
-        border-color: var(--primary-color);
-        color: #fff;
+        background: var(--primary-gradient);
+        border-color: transparent;
+        color: white;
         font-weight: 600;
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-icon {
+        font-size: 1rem;
+    }
+
+    .btn-count {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.15rem 0.5rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .filter-btn:not(.filter-btn--active) .btn-count {
+        background: #f1f5f9;
+        color: #64748b;
     }
 
     /* ── Gallery Section ── */
     .gallery-section {
-        padding: 3rem 0 4rem;
-        background: #f8f9fb;
+        padding: 4rem 0;
+        background: white;
     }
 
     .gallery-container {
-        padding: 0 1.5rem;
         max-width: 1400px;
         margin: 0 auto;
+        padding: 0 1.5rem;
     }
 
-    /* Masonry via CSS columns */
-    .masonry-grid {
-        column-count: 4;
-        column-gap: 1rem;
+    /* Responsive Grid Layout - Auto-adjusting based on content */
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        min-height: 400px;
     }
 
     @media (max-width: 1200px) {
-        .masonry-grid {
-            column-count: 3;
+        .gallery-grid {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.25rem;
         }
     }
 
     @media (max-width: 768px) {
-        .masonry-grid {
-            column-count: 2;
+        .gallery-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
         }
     }
 
     @media (max-width: 480px) {
-        .masonry-grid {
-            column-count: 1;
+        .gallery-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.75rem;
         }
     }
 
-    /* Gallery hero responsive */
-    @media (max-width: 768px) {
-        .gallery-hero {
-            padding: 3rem 0;
-        }
-
-        .gallery-hero__title {
-            font-size: 2rem;
-        }
-
-        .gallery-hero__subtitle {
-            font-size: 1rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .gallery-hero {
-            padding: 2rem 0;
-        }
-
-        .gallery-hero__title {
-            font-size: 1.5rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .gallery-hero__subtitle {
-            font-size: 0.95rem;
-        }
-    }
-
-    /* ── Masonry Item ── */
-    .masonry-item {
-        break-inside: avoid;
-        margin-bottom: 1rem;
-        border-radius: var(--radius);
-        overflow: hidden;
-        cursor: pointer;
+    /* Gallery Item */
+    .gallery-item {
         opacity: 0;
         transform: translateY(20px);
-        animation: fadeUp .5s ease forwards;
+        animation: fadeUp 0.6s ease forwards;
     }
 
     @keyframes fadeUp {
@@ -378,108 +544,149 @@ $categories = [
         }
     }
 
-    .masonry-item--hidden {
+    .gallery-item--hidden {
         display: none;
     }
 
-    .masonry-item__inner {
+    .gallery-item__inner {
+        position: relative;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        background: #f1f5f9;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-item__inner {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-4px);
+    }
+
+    .gallery-item__image-wrapper {
         position: relative;
         overflow: hidden;
-        border-radius: var(--radius);
-        background: #dde4f0;
+        border-radius: var(--border-radius);
+        aspect-ratio: 4/3;
     }
 
-    .masonry-item__img {
+    .gallery-item__img {
         width: 100%;
-        height: auto;
-        display: block;
-        transition: transform .45s cubic-bezier(.25, .46, .45, .94);
+        height: 100%;
         object-fit: cover;
+        transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    .masonry-item:hover .masonry-item__img {
-        transform: scale(1.07);
+    .gallery-item:hover .gallery-item__img {
+        transform: scale(1.1);
     }
 
     /* Overlay */
-    .masonry-item__overlay {
+    .gallery-item__overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgba(26, 86, 219, 0.88) 0%, transparent 55%);
+        background: linear-gradient(to top, rgba(37, 99, 235, 0.9) 0%, transparent 60%);
         opacity: 0;
-        transition: opacity .3s;
+        transition: opacity 0.3s ease;
         display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 1.25rem 1rem 1rem;
+        align-items: flex-end;
+        padding: 1.5rem;
     }
 
-    .masonry-item:hover .masonry-item__overlay {
+    .gallery-item:hover .gallery-item__overlay {
         opacity: 1;
     }
 
-    .masonry-item__label {
+    .overlay-content {
+        width: 100%;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover .overlay-content {
+        transform: translateY(0);
+    }
+
+    .gallery-item__label {
         display: inline-block;
-        background: var(--secondary-color);
-        color: #fff;
-        font-size: .7rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        color: white;
+        font-size: 0.7rem;
         font-weight: 700;
-        letter-spacing: .1em;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        padding: .18rem .55rem;
-        border-radius: 100px;
-        margin-bottom: .4rem;
-        align-self: flex-start;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        margin-bottom: 0.5rem;
     }
 
-    .masonry-item__caption {
-        color: rgba(255, 255, 255, .92);
-        font-size: .82rem;
+    .gallery-item__caption {
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 0.9rem;
         line-height: 1.4;
-        margin: 0 0 .5rem;
+        margin: 0 0 0.75rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
-    .masonry-item__zoom {
-        align-self: flex-end;
-        background: rgba(255, 255, 255, .2);
+    .gallery-item__zoom {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
         border: none;
         border-radius: 50%;
-        width: 36px;
-        height: 36px;
+        width: 45px;
+        height: 45px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #fff;
+        color: white;
         cursor: pointer;
-        transition: background .2s;
+        transition: all 0.3s ease;
         padding: 0;
+        margin-left: auto;
     }
 
-    .masonry-item__zoom:hover {
-        background: rgba(255, 255, 255, .35);
+    .gallery-item__zoom:hover {
+        background: rgba(255, 255, 255, 0.35);
+        transform: scale(1.1);
     }
 
     /* Placeholder when image missing */
-    .masonry-item--placeholder .masonry-item__img {
-        min-height: 200px;
+    .gallery-item--placeholder .gallery-item__img {
         opacity: 0;
     }
 
-    .masonry-item--placeholder .masonry-item__inner {
-        background: linear-gradient(135deg, #dde4f0 0%, #c7d4ee 100%);
-        min-height: 200px;
+    .gallery-item--placeholder .gallery-item__image-wrapper {
+        background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
     }
 
     /* Empty state */
     .gallery-empty {
         text-align: center;
         padding: 5rem 0;
-        color: var(--muted);
+        color: #64748b;
     }
 
     .gallery-empty__icon {
-        font-size: 3rem;
-        margin-bottom: .75rem;
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .gallery-empty h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #1e293b;
+    }
+
+    .gallery-empty p {
+        font-size: 1rem;
+        color: #64748b;
     }
 
     /* ── Lightbox ── */
@@ -487,9 +694,9 @@ $categories = [
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(10, 12, 30, .92);
+        background: rgba(15, 23, 42, 0.95);
         z-index: 1050;
-        backdrop-filter: blur(6px);
+        backdrop-filter: blur(8px);
     }
 
     .lightbox {
@@ -511,8 +718,8 @@ $categories = [
     }
 
     .lightbox__stage {
-        max-width: min(90vw, 960px);
-        max-height: 88vh;
+        max-width: min(95vw, 1000px);
+        max-height: 90vh;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -520,102 +727,111 @@ $categories = [
 
     .lightbox__img {
         max-width: 100%;
-        max-height: 75vh;
+        max-height: 80vh;
         object-fit: contain;
-        border-radius: 10px;
-        box-shadow: 0 24px 80px rgba(0, 0, 0, .5);
+        border-radius: 12px;
+        box-shadow: 0 25px 100px rgba(0, 0, 0, 0.5);
         display: block;
     }
 
     .lightbox__meta {
-        margin-top: 1.1rem;
+        margin-top: 1.5rem;
         text-align: center;
+        max-width: 600px;
     }
 
     .lightbox__tag {
         display: inline-block;
-        background: var(--secondary-color);
-        color: #fff;
-        font-size: .7rem;
+        background: var(--primary-gradient);
+        color: white;
+        font-size: 0.75rem;
         font-weight: 700;
-        letter-spacing: .1em;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        padding: .18rem .6rem;
-        border-radius: 100px;
-        margin-bottom: .4rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        margin-bottom: 0.5rem;
     }
 
     .lightbox__caption {
-        color: rgba(255, 255, 255, .8);
-        font-size: .9rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1rem;
         margin: 0;
+        line-height: 1.5;
     }
 
     .lightbox__counter {
         position: fixed;
-        bottom: 1.5rem;
+        bottom: 2rem;
         left: 50%;
         transform: translateX(-50%);
-        color: rgba(255, 255, 255, .5);
-        font-size: .8rem;
-        letter-spacing: .08em;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+        letter-spacing: 0.1em;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
     }
 
     .lightbox__close {
         position: fixed;
-        top: 1.25rem;
-        right: 1.5rem;
-        background: rgba(255, 255, 255, .12);
+        top: 1.5rem;
+        right: 2rem;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
         border: none;
         border-radius: 50%;
-        width: 44px;
-        height: 44px;
+        width: 50px;
+        height: 50px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #fff;
+        color: white;
         cursor: pointer;
-        transition: background .2s;
+        transition: all 0.3s ease;
     }
 
     .lightbox__close:hover {
-        background: rgba(255, 255, 255, .25);
+        background: rgba(255, 255, 255, 0.25);
+        transform: rotate(90deg);
     }
 
     .lightbox__nav {
         position: fixed;
         top: 50%;
         transform: translateY(-50%);
-        background: rgba(255, 255, 255, .1);
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
         border: none;
         border-radius: 50%;
-        width: 52px;
-        height: 52px;
+        width: 55px;
+        height: 55px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #fff;
+        color: white;
         cursor: pointer;
-        transition: background .2s;
+        transition: all 0.3s ease;
     }
 
     .lightbox__nav:hover {
-        background: rgba(255, 255, 255, .25);
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-50%) scale(1.1);
     }
 
     .lightbox__nav--prev {
-        left: 1.5rem;
+        left: 2rem;
     }
 
     .lightbox__nav--next {
-        right: 1.5rem;
+        right: 2rem;
     }
 
-    /* ── CTA ── */
+    /* ── CTA Section ── */
     .gallery-cta {
-        background: var(--primary-color);
-        padding: 3.5rem 0;
-        color: #fff;
+        background: var(--primary-gradient);
+        padding: 4rem 0;
+        color: white;
     }
 
     .gallery-cta__inner {
@@ -627,15 +843,15 @@ $categories = [
     }
 
     .gallery-cta__title {
-        font-size: 1.6rem;
+        font-size: clamp(1.5rem, 3vw, 2rem);
         font-weight: 800;
-        margin-bottom: .35rem;
+        margin-bottom: 0.5rem;
     }
 
     .gallery-cta__sub {
-        color: rgba(255, 255, 255, .75);
+        color: rgba(255, 255, 255, 0.85);
         margin: 0;
-        font-size: .95rem;
+        font-size: 1rem;
     }
 
     .gallery-cta__actions {
@@ -645,38 +861,69 @@ $categories = [
     }
 
     .btn-cta {
-        display: inline-block;
-        padding: .7rem 1.75rem;
-        border-radius: 100px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.85rem 2rem;
+        border-radius: 50px;
         font-weight: 700;
-        font-size: .9rem;
+        font-size: 0.95rem;
         text-decoration: none;
-        transition: all .2s;
+        transition: all 0.3s ease;
     }
 
     .btn-cta--primary {
-        background: var(--secondary-color);
-        color: #fff;
+        background: white;
+        color: #2563eb;
     }
 
     .btn-cta--primary:hover {
-        background: var(--secondary-dark);
-        color: #fff;
+        background: #f8fafc;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     }
 
     .btn-cta--ghost {
         background: transparent;
-        color: #fff;
-        border: 2px solid rgba(255, 255, 255, .5);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.5);
     }
 
     .btn-cta--ghost:hover {
-        background: rgba(255, 255, 255, .12);
-        border-color: #fff;
-        color: #fff;
+        background: rgba(255, 255, 255, 0.15);
+        border-color: white;
     }
 
-    @media (max-width: 640px) {
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .gallery-hero {
+            padding: 4rem 0 3rem;
+        }
+
+        .hero-stats {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .stat-divider {
+            width: 40px;
+            height: 1px;
+        }
+
+        .filter-bar__inner {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .filter-buttons {
+            width: 100%;
+        }
+
+        .filter-btn {
+            flex: 1;
+            justify-content: center;
+        }
+
         .gallery-cta__inner {
             flex-direction: column;
             text-align: center;
@@ -684,6 +931,59 @@ $categories = [
 
         .gallery-cta__actions {
             justify-content: center;
+            width: 100%;
+        }
+
+        .btn-cta {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .lightbox__close {
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+        }
+
+        .lightbox__nav {
+            width: 45px;
+            height: 45px;
+        }
+
+        .lightbox__nav--prev {
+            left: 1rem;
+        }
+
+        .lightbox__nav--next {
+            right: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .gallery-hero {
+            padding: 3rem 0 2rem;
+        }
+
+        .gallery-hero__title {
+            font-size: 2rem;
+        }
+
+        .gallery-hero__subtitle {
+            font-size: 1rem;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+        }
+
+        .filter-buttons {
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
         }
     }
 </style>
@@ -692,7 +992,7 @@ $categories = [
 <script>
     (function() {
         // ── Data ──────────────────────────────────────────────
-        const items = document.querySelectorAll('.masonry-item');
+        const items = document.querySelectorAll('.gallery-item');
         const filterBtns = document.querySelectorAll('.filter-btn');
         const emptyState = document.getElementById('galleryEmpty');
 
@@ -707,7 +1007,7 @@ $categories = [
 
                 items.forEach((item, i) => {
                     const match = filter === 'all' || item.dataset.category === filter;
-                    item.classList.toggle('masonry-item--hidden', !match);
+                    item.classList.toggle('gallery-item--hidden', !match);
                     if (match) {
                         item.style.animationDelay = (visible * 0.06) + 's';
                         item.style.animation = 'none';
@@ -737,7 +1037,7 @@ $categories = [
         let visibleItems = [];
 
         function getVisibleItems() {
-            return [...items].filter(el => !el.classList.contains('masonry-item--hidden'));
+            return [...items].filter(el => !el.classList.contains('gallery-item--hidden'));
         }
 
         function openLightbox(index) {
@@ -759,9 +1059,9 @@ $categories = [
 
         function showImage(index) {
             const item = visibleItems[index];
-            const img = item.querySelector('.masonry-item__img');
-            const cap = item.querySelector('.masonry-item__caption');
-            const lbl = item.querySelector('.masonry-item__label');
+            const img = item.querySelector('.gallery-item__img');
+            const cap = item.querySelector('.gallery-item__caption');
+            const lbl = item.querySelector('.gallery-item__label');
             lbImg.src = img.src;
             lbImg.alt = img.alt;
             lbCaption.textContent = cap ? cap.textContent : '';
@@ -770,6 +1070,15 @@ $categories = [
         }
 
         items.forEach((item, i) => {
+            const zoomBtn = item.querySelector('.gallery-item__zoom');
+            if (zoomBtn) {
+                zoomBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    visibleItems = getVisibleItems();
+                    const vi = visibleItems.indexOf(item);
+                    openLightbox(vi >= 0 ? vi : 0);
+                });
+            }
             item.addEventListener('click', () => {
                 visibleItems = getVisibleItems();
                 const vi = visibleItems.indexOf(item);

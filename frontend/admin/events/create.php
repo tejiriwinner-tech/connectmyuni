@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contact_info'      => trim($_POST['contact_info'] ?? ''),
         ];
 
-        // Optional event image upload.
+        // Optional event image upload (file upload takes precedence; falls back to AI generated image path).
         if (!empty($_FILES['image']['name'])) {
             $upload = (new MediaService())->store($_FILES['image'], 'events');
             if ($upload['key'] !== null) {
@@ -41,6 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
                 $error = $upload['error'];
             }
+        } elseif (!empty($_POST['ai_image_path'])) {
+            $data['image_path'] = trim((string) $_POST['ai_image_path']);
         }
 
         if ($error === '') {
@@ -107,9 +109,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <textarea class="form-control" name="details" rows="4"><?php echo htmlspecialchars($_POST['details'] ?? ''); ?></textarea>
         </div>
         <div class="form-group">
-            <label class="form-label">Event Image (JPEG / PNG / WEBP, max 5 MB)</label>
+            <label class="form-label">Event Flyer / Image (JPEG / PNG / WEBP, max 5 MB)</label>
+            <?php
+            $aiImageCategory = 'events';
+            $aiImageButtonLabel = 'Generate Event Flyer with AI';
+            include __DIR__ . '/../components/ai-image-generator.php';
+            ?>
             <input class="form-control" type="file" name="image" accept="image/jpeg,image/png,image/webp">
-            <p class="form-hint">Optional. A unique file is generated; only its relative key is saved.</p>
+            <p class="form-hint">Optional. Choose a file from your device or click the button above to generate a custom HD flyer with AI.</p>
         </div>
         <div class="form-group">
             <label class="form-label">Registration Link</label>

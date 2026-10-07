@@ -102,7 +102,7 @@ $latestEventsEvents = array_slice(array_reverse($eventRepo->getAll()), 0, 5);
     <div>
         <div class="section-label">Quick Actions</div>
         <div class="action-grid">
-            <a class="action-box" href="post-event.php">
+            <a class="action-box" href="<?php echo $admin_url; ?>events/create.php">
                 <div class="box-icon" style="background:rgba(0,82,204,0.18);color:#4C8EF7;">
                     <i class="fas fa-calendar-plus"></i>
                 </div>
@@ -126,36 +126,36 @@ $latestEventsEvents = array_slice(array_reverse($eventRepo->getAll()), 0, 5);
                 <p>Preview the full Connect MyUni website as a visitor would see it.</p>
                 <div class="box-link"><i class="fas fa-arrow-right"></i> Open site</div>
             </a>
-            <div class="action-box disabled">
-                <div class="box-icon" style="background:rgba(136,146,164,0.1);color:#8892a4;">
+            <a class="action-box" href="<?php echo $admin_url; ?>analytics/">
+                <div class="box-icon" style="background:rgba(168,85,247,0.15);color:#a855f7;">
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <h3>Analytics</h3>
                 <p>View event performance, page views, and user engagement metrics.</p>
-                <div class="box-link" style="color:var(--txt-muted);">
-                    <i class="fas fa-lock"></i> Coming soon
+                <div class="box-link">
+                    <i class="fas fa-arrow-right"></i> View analytics
                 </div>
-            </div>
-            <div class="action-box disabled">
-                <div class="box-icon" style="background:rgba(136,146,164,0.1);color:#8892a4;">
+            </a>
+            <a class="action-box" href="<?php echo $admin_url; ?>users/">
+                <div class="box-icon" style="background:rgba(76,142,247,0.15);color:#4C8EF7;">
                     <i class="fas fa-users"></i>
                 </div>
                 <h3>Manage Users</h3>
                 <p>Control admin access and user roles across the platform.</p>
-                <div class="box-link" style="color:var(--txt-muted);">
-                    <i class="fas fa-lock"></i> Coming soon
+                <div class="box-link">
+                    <i class="fas fa-arrow-right"></i> Manage team
                 </div>
-            </div>
-            <div class="action-box disabled">
-                <div class="box-icon" style="background:rgba(136,146,164,0.1);color:#8892a4;">
+            </a>
+            <a class="action-box" href="<?php echo $admin_url; ?>settings/">
+                <div class="box-icon" style="background:rgba(34,197,94,0.14);color:#22c55e;">
                     <i class="fas fa-gear"></i>
                 </div>
                 <h3>Site Settings</h3>
                 <p>Configure contact info, SEO metadata, and general site preferences.</p>
-                <div class="box-link" style="color:var(--txt-muted);">
-                    <i class="fas fa-lock"></i> Coming soon
+                <div class="box-link">
+                    <i class="fas fa-arrow-right"></i> Configure site
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 

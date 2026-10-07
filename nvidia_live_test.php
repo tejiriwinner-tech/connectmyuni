@@ -1,6 +1,6 @@
 <?php
 
-$root = 'C:/xampp/htdocs/connectmyuni';
+$root = __DIR__;
 
 require_once $root . '/backend/config/app.php';
 require_once $root . '/backend/services/ai/AiProviderInterface.php';

@@ -131,12 +131,59 @@ class AdminUserRepository
     }
 
     /**
-     * Update user status
+     * Update user details
      */
-    public function updateStatus(int $userId, bool $isActive): bool
+    public function updateUser(int $userId, array $data): bool
     {
         $pdo = Database::getConnection();
-        $stmt = $pdo->prepare("UPDATE admin_users SET is_active = ?, updated_at = NOW() WHERE id = ?");
-        return $stmt->execute([$isActive, $userId]);
+        $fields = [];
+        $params = [];
+
+        if (isset($data['email'])) {
+            $fields[] = "email = ?";
+            $params[] = $data['email'];
+        }
+        if (isset($data['role'])) {
+            $fields[] = "role = ?";
+            $params[] = $data['role'];
+        }
+        if (isset($data['is_active'])) {
+            $fields[] = "is_active = ?";
+            $params[] = (bool) $data['is_active'];
+        }
+        if (!empty($data['password'])) {
+            $fields[] = "password_hash = ?";
+            $params[] = Security::hashPassword($data['password']);
+        }
+
+        if (empty($fields)) {
+            return false;
+        }
+
+        $fields[] = "updated_at = NOW()";
+        $params[] = $userId;
+
+        $sql = "UPDATE admin_users SET " . implode(', ', $fields) . " WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute($params);
+    }
+
+    /**
+     * Delete user
+     */
+    public function deleteUser(int $userId): bool
+    {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->prepare("DELETE FROM admin_users WHERE id = ?");
+        return $stmt->execute([$userId]);
+    }
+
+    /**
+     * Count total admin users
+     */
+    public function countAll(): int
+    {
+        $pdo = Database::getConnection();
+        return (int) $pdo->query("SELECT COUNT(*) FROM admin_users")->fetchColumn();
     }
 }

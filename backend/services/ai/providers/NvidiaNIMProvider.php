@@ -28,11 +28,12 @@ class NvidiaNIMProvider implements AiProviderInterface
     private string $baseUrl;
     private int $timeout;
 
-    public function __construct(?string $apiKey = null, ?string $model = null, ?string $baseUrl = null, int $timeout = 25)
+    public function __construct(?string $apiKey = null, ?string $model = null, ?string $baseUrl = null, int $timeout = 60)
     {
         $this->apiKey   = $apiKey ?? (string) env('AI_API_KEY', '');
-        $this->model    = $model  ?? (string) env('AI_MODEL', 'meta/muse-glimmer-30b');
-        $this->baseUrl  = rtrim((string) ($baseUrl ?? (string) env('AI_BASE_URL', 'https://integrate.api.nvidia.com/v1')), '/');
+        $this->model    = $model  ?? (string) env('AI_MODEL', 'moonshotai/kimi-k3');
+        $rawBase        = rtrim((string) ($baseUrl ?? (string) env('AI_BASE_URL', 'https://integrate.api.nvidia.com/v1')), '/');
+        $this->baseUrl  = preg_replace('#/chat/completions/?$#', '', $rawBase);
         $this->timeout  = $timeout;
     }
 
@@ -135,21 +136,46 @@ class NvidiaNIMProvider implements AiProviderInterface
             ];
         }
 
-                // The model is asked to return JSON; decode it so the service can map fields.
-        $jsonContent = json_decode((string) $content, true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            error_log('[AI Provider Error][nvidia] Malformed JSON in output: ' . json_last_error_msg());
+                // The model is asked to return JSON. Strip markdown code fences if present.
+        $clean = trim((string) $content);
+        if (preg_match('/^```(?:json)?\s*([\s\S]*?)\s*```$/i', $clean, $matches)) {
+            $clean = trim($matches[1]);
+        }
+
+        $jsonContent = json_decode($clean, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($jsonContent)) {
             return [
-                'success' => false,
-                'data'    => ['raw_text' => $content],
-                'error'   => 'Received malformed JSON from AI provider.',
+                'success' => true,
+                'data'    => $jsonContent,
+                'error'   => null,
+            ];
+        }
+
+        // Try extracting any embedded JSON block {...}
+        if (preg_match('/\{[\s\S]*\}/', $clean, $m)) {
+            $extracted = json_decode($m[0], true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($extracted)) {
+                return [
+                    'success' => true,
+                    'data'    => $extracted,
+                    'error'   => null,
+                ];
+            }
+        }
+
+        // If the model produced plain text content (e.g. during improvement/rewriting), wrap it gracefully
+        if ($clean !== '') {
+            return [
+                'success' => true,
+                'data'    => ['improved' => $clean, 'raw_text' => $clean],
+                'error'   => null,
             ];
         }
 
         return [
-            'success' => true,
-            'data'    => $jsonContent,
-            'error'   => null,
+            'success' => false,
+            'data'    => ['raw_text' => $content],
+            'error'   => 'Received empty or invalid response from AI provider.',
         ];
     }
 }

@@ -50,33 +50,87 @@
         return; /* Bail out entirely — no scroll animations */
     }
 
-    /* ── 2. Single IntersectionObserver ───────────────────────── */
+    /* ── 2. Scroll Direction & Bidirectional IntersectionObserver ── */
+    var lastScrollY = window.scrollY || document.documentElement.scrollTop;
+    var scrollDirection = 'down';
+
+    window.addEventListener('scroll', function () {
+        var currentScrollY = window.scrollY || document.documentElement.scrollTop;
+        if (Math.abs(currentScrollY - lastScrollY) > 5) {
+            scrollDirection = currentScrollY < lastScrollY ? 'up' : 'down';
+            lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
+        }
+    }, { passive: true });
+
     var observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
             if (entry.isIntersecting) {
+                if (scrollDirection === 'up') {
+                    entry.target.classList.add('cmi-scroll-up-fade');
+                } else {
+                    entry.target.classList.remove('cmi-scroll-up-fade');
+                }
                 entry.target.classList.add('is-animated');
-                observer.unobserve(entry.target); /* fire once */
+            } else {
+                // When element scrolls completely out of viewport, reset so it re-fades on scroll up/down
+                var rect = entry.target.getBoundingClientRect();
+                if (rect.bottom < -40 || rect.top > window.innerHeight + 40) {
+                    entry.target.classList.remove('is-animated');
+                    entry.target.classList.remove('cmi-scroll-up-fade');
+                }
             }
         });
     }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.08,
+        rootMargin: '20px 0px -30px 0px'
     });
 
-    /* ── 3. Observe scroll-reveal elements ────────────────────── */
-    var revealSelectors = [
+    /* ── 3. Comprehensive Scroll-Reveal & Stagger Engine ─────── */
+    var autoRevealSelectors = [
         '.cmi-fade-up',
         '.cmi-fade-in',
         '.cmi-slide-in-left',
         '.cmi-slide-in-right',
         '.cmi-scale',
         '.cmi-image',
-        '.cmi-section-enter'
+        '.cmi-section-enter',
+        '.hero-card-item',
+        '.event-card',
+        '.event-page-card',
+        '.update-card',
+        '.uni-card',
+        '.university-card',
+        '.country-card',
+        '.service-card-item',
+        '.cmi-metric-card',
+        '.accordion-item',
+        '.approach-oval-wrapper',
+        '.services-oval-wrapper',
+        '.cmi-3d-left-col',
+        '.cmi-3d-matrix-wrapper',
+        '.enquiry-card',
+        '.section-title',
+        '.events-section-title',
+        '.services-title',
+        '.approach-hero-title',
+        '.universities-section-title'
     ];
 
-    revealSelectors.forEach(function (selector) {
+    autoRevealSelectors.forEach(function (selector) {
         document.querySelectorAll(selector).forEach(function (el) {
-            observer.observe(el);
+            if (!el.classList.contains('cmi-reveal-skip')) {
+                el.classList.add('cmi-reveal-item');
+                observer.observe(el);
+            }
+        });
+    });
+
+    /* Auto-stagger sibling items in grids and rows */
+    document.querySelectorAll('.row, .carousel-cards-row, .cmi-3d-metrics-grid').forEach(function (container) {
+        var items = container.querySelectorAll('.cmi-reveal-item, .hero-card-item, .event-card, .uni-card, .country-card, .service-card-item, .cmi-metric-card');
+        items.forEach(function (item, index) {
+            var delay = Math.min(index * 0.1, 0.5);
+            item.style.transitionDelay = delay + 's';
         });
     });
 

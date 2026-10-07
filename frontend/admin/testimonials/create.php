@@ -6,7 +6,7 @@ use ConnectMyuni\Middleware\AuthMiddleware;
 AuthMiddleware::requireAuth();
 $csrfToken = Security::generateCsrfToken();
 ?>
-<?php include __DIR__ . '/components/admin-header.php'; ?>
+<?php include __DIR__ . '/../components/admin-header.php'; ?>
 
 <div class="page-heading">
     <h1>Add Testimonial</h1>
@@ -82,7 +82,7 @@ $csrfToken = Security::generateCsrfToken();
     </div>
 </div>
 
-<?php include __DIR__ . '/components/footer.php'; ?>
+<?php include __DIR__ . '/../components/footer.php'; ?>
 
 <?php
 // Handle form submission

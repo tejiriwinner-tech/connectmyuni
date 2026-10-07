@@ -221,17 +221,27 @@ async function generate(){
     setBusy(true);
     var o1 = setLoadingLabel('cmu-ai-generate', 'Generating…');
     var o2 = setLoadingLabel('cmu-ai-regen', 'Regenerating…');
+    var meta = document.getElementById('cmu-ai-meta');
+    if (meta) {
+        meta.innerHTML = '<span style="color:var(--accent);"><i class="fas fa-spinner fa-spin me-1"></i> Generating high-accuracy AI copy (<span id="cmu-ai-timer">0</span>s elapsed)... Please wait.</span>';
+    }
+    var seconds = 0;
+    var timerInterval = setInterval(function(){
+        seconds++;
+        var el = document.getElementById('cmu-ai-timer');
+        if (el) el.textContent = seconds;
+    }, 1000);
     try {
         var json = await fetchJson(c.generateUrl, data);
         if (!json.success) { showError(json.error || 'Generation failed.'); return; }
         // Provider-not-configured state surfaced by backend.
         setEditor(json.data);
         state.lastRequestId = json.requestId || null;
-        var meta = document.getElementById('cmu-ai-meta');
-        if (meta) meta.innerHTML = '<span style="color:var(--success);"><i class="fas fa-check-circle"></i> Generated. Review and edit below, then click <strong>Use This Content</strong> to fill the form. Nothing is saved automatically.</span>';
+        if (meta) meta.innerHTML = '<span style="color:var(--success);"><i class="fas fa-check-circle me-1"></i> Generated in ' + seconds + 's. Review and edit below, then click <strong>Use This Content</strong> to fill the form.</span>';
     } catch (e) {
         showError((e && e.message) ? e.message : String(e));
     } finally {
+        clearInterval(timerInterval);
         setBusy(false);
         if (o1) document.getElementById('cmu-ai-generate').innerHTML = o1;
         if (o2) document.getElementById('cmu-ai-regen').innerHTML = o2;

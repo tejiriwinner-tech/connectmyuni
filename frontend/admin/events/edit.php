@@ -52,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
                 $error = $upload['error'];
             }
+        } elseif (!empty($_POST['ai_image_path'])) {
+            $data['image_path'] = trim((string) $_POST['ai_image_path']);
         } else {
             $data['image_path'] = $event['image_path'] ?? null;
         }
@@ -126,9 +128,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <textarea class="form-control" name="details" rows="4"><?php echo htmlspecialchars($event['details'] ?? ''); ?></textarea>
         </div>
         <div class="form-group">
-            <label class="form-label">Event Image (JPEG / PNG / WEBP, max 5 MB)</label>
+            <label class="form-label">Event Flyer / Image (JPEG / PNG / WEBP, max 5 MB)</label>
+            <?php
+            $aiImageCategory = 'events';
+            $aiImageButtonLabel = 'Generate Event Flyer with AI';
+            include __DIR__ . '/../components/ai-image-generator.php';
+            ?>
             <input class="form-control" type="file" name="image" accept="image/jpeg,image/png,image/webp">
-            <p class="form-hint">Leave empty to keep the current image.</p>
+            <p class="form-hint">Leave empty to keep the current image, or generate a new AI flyer above.</p>
         </div>
         <div class="form-group">
             <label class="form-label">Registration Link</label>

@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "functions": {
+    "api/**/*.php": { "runtime": "vercel-php@0.7.3" },
+    "frontend/**/*.php": { "runtime": "vercel-php@0.7.3" },
+    "*.php": { "runtime": "vercel-php@0.7.3" }
+  },
+  "routes": [
+    { "src": "/frontend/assets/(.*)", "dest": "/frontend/assets/$1" },
+    { "src": "/storage/uploads/(.*)", "dest": "/storage/uploads/$1" },
+    { "src": "/robots.txt", "dest": "/robots.txt" },
+    { "src": "/sitemap.xml", "dest": "/sitemap.php" },
+    { "src": "/heartbeat", "dest": "/frontend/public/heartbeat.php" },
+    { "src": "/api/heartbeat", "dest": "/frontend/public/heartbeat.php" },
+    { "src": "/admin/(.*)", "dest": "/frontend/admin/$1" },
+    { "src": "/admin", "dest": "/frontend/admin/index.php" },
+    { "src": "/(about|services|universities|events|event-detail|contact|gallery|registration|updates)", "dest": "/frontend/public/$1.php" },
+    { "src": "/(about|services|universities|events|event-detail|contact|gallery|registration|updates).php", "dest": "/frontend/public/$1.php" },
+    { "src": "/index.php", "dest": "/frontend/public/index.php" },
+    { "src": "/", "dest": "/frontend/public/index.php" },
+    { "src": "/(.*)", "dest": "/router.php" }
+  ],
+  "crons": [
+    {
+      "path": "/heartbeat",
+      "schedule": "0 */12 * * *"
+    }
+  ]
+}

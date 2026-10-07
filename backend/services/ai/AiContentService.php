@@ -133,9 +133,12 @@ class AiContentService
         $systemPrompt = $this->buildGenerationSystemPrompt($contentType, $fields);
         $userPrompt   = $this->buildUserPrompt($params);
 
+        // Optimize max_tokens for snappy generation on short copy types
+        $maxTokens    = in_array($contentType, ['hero_slide', 'social_caption', 'event'], true) ? 350 : 1200;
+
         $response = $this->provider->generate($systemPrompt, $userPrompt, [
             'temperature' => (float) ($params['temperature'] ?? 0.7),
-            'max_tokens'  => 2000,
+            'max_tokens'  => $maxTokens,
         ]);
 
         if (empty($response['success'])) {
@@ -181,10 +184,22 @@ class AiContentService
      */
     public function improveContent(string $existing, string $instruction, string $context = ''): array
     {
-        $systemPrompt = 'You are an assistant that improves existing university-website '
-            . 'content. Return the improved text as a JSON object with exactly one key, '
-            . '"improved", whose value is the improved content as a plain string (no '
-            . 'markdown fences). Keep improvements concise and factual. ' . self::GUARDRAIL;
+        $decodedExisting = json_decode($existing, true);
+        $isStructuredJson = is_array($decodedExisting);
+
+        if ($isStructuredJson) {
+            $systemPrompt = 'You are an assistant that improves university-website content. '
+                . 'The input is a structured JSON object representing website content. '
+                . 'Apply the user\'s improvement instruction (such as expanding/lengthening, refining tone, or enhancing details) '
+                . 'to the appropriate fields while preserving the exact same JSON keys and structure. '
+                . 'Return ONLY the updated valid JSON object without markdown fences or additional conversational commentary. '
+                . self::GUARDRAIL;
+        } else {
+            $systemPrompt = 'You are an assistant that improves existing university-website '
+                . 'content. Return the improved text as a JSON object with exactly one key, '
+                . '"improved", whose value is the improved content as a plain string (no '
+                . 'markdown fences). ' . self::GUARDRAIL;
+        }
 
         $userPrompt = 'Existing content:' . "\n" . $existing . "\n\nInstruction:" . "\n" . $instruction;
         if ($context !== '') {
@@ -193,19 +208,33 @@ class AiContentService
 
         $response = $this->provider->generate($systemPrompt, $userPrompt, [
             'temperature' => 0.5,
-            'max_tokens'  => 2000,
+            'max_tokens'  => 2500,
         ]);
 
         if (empty($response['success'])) {
             return ['success' => false, 'error' => $response['error'] ?? 'AI improvement failed.'];
         }
 
-        $data     = $response['data'];
-        $improved = is_array($data) && array_key_exists('improved', $data)
-            ? (string) $data['improved']
-            : (is_string($data) ? $data : (string) json_encode($data));
+        $data = $response['data'];
+        if ($isStructuredJson) {
+            if (is_array($data)) {
+                // If it returned {"improved": ...} containing a JSON string, decode it
+                if (isset($data['improved']) && is_string($data['improved'])) {
+                    $inner = json_decode($data['improved'], true);
+                    $resultData = is_array($inner) ? $inner : $data['improved'];
+                } else {
+                    $resultData = $data;
+                }
+            } else {
+                $resultData = $data;
+            }
+        } else {
+            $resultData = is_array($data) && array_key_exists('improved', $data)
+                ? (string) $data['improved']
+                : (is_string($data) ? $data : (string) json_encode($data));
+        }
 
-        return ['success' => true, 'data' => $improved];
+        return ['success' => true, 'data' => $resultData];
     }
 
     /**
