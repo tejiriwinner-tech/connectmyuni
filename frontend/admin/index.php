@@ -96,7 +96,7 @@ $latestEventsEvents = array_slice(array_reverse($eventRepo->getAll()), 0, 5);
 </div>
 
 <!-- Two-col layout -->
-<div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;">
+<div class="admin-dashboard-layout">
 
     <!-- Quick actions -->
     <div>
@@ -238,7 +238,4 @@ $latestEventsEvents = array_slice(array_reverse($eventRepo->getAll()), 0, 5);
     </div>
 </div>
 
-</main>
 <?php include __DIR__ . '/components/footer.php'; ?>
-</body>
-</html>

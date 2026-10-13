@@ -92,7 +92,45 @@ $currentUser = AuthMiddleware::user();
             left: 0;
             bottom: 0;
             z-index: 200;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            z-index: 190;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .sidebar-backdrop.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .sidebar-close-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--txt-muted);
+            font-size: 1.25rem;
+            line-height: 1;
+            padding: 6px;
+            cursor: pointer;
+            margin-left: auto;
+            border-radius: 6px;
+            transition: color 0.18s, background 0.18s;
+        }
+
+        .sidebar-close-btn:hover {
+            color: var(--txt);
+            background: var(--surface2);
         }
 
         .sidebar-logo {
@@ -102,6 +140,10 @@ $currentUser = AuthMiddleware::user();
             align-items: center;
             gap: 12px;
             text-decoration: none;
+            position: sticky;
+            top: 0;
+            background: var(--surface);
+            z-index: 5;
         }
 
         .sidebar-logo:hover {
@@ -708,22 +750,52 @@ $currentUser = AuthMiddleware::user();
         /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        RESPONSIVE
     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+        /* ── Modern Responsive Breakpoints & Shell ── */
+        .admin-dashboard-layout {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 1024px) {
+            .admin-dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
         @media (max-width: 768px) {
             .admin-sidebar {
                 transform: translateX(-100%);
+                box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
             }
 
             .admin-sidebar.open {
                 transform: translateX(0);
             }
 
+            .sidebar-close-btn {
+                display: block;
+            }
+
             .admin-topbar {
                 left: 0;
+                padding: 0 16px;
             }
 
             .admin-main {
                 margin-left: 0;
-                padding: 20px 16px;
+                padding: 16px 14px;
             }
 
             .sidebar-toggle {
@@ -732,15 +804,72 @@ $currentUser = AuthMiddleware::user();
 
             .stat-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                margin-bottom: 20px;
             }
-        }
 
-        @media (max-width: 480px) {
-            .stat-grid {
-                grid-template-columns: 1fr 1fr;
+            .stat-card {
+                padding: 14px;
+            }
+
+            .stat-card .stat-val {
+                font-size: 1.45rem;
             }
 
             .action-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 12px;
+            }
+
+            .action-box {
+                padding: 16px;
+            }
+
+            .page-heading {
+                margin-bottom: 20px;
+            }
+
+            .page-heading h1 {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .topbar-time {
+                display: none;
+            }
+
+            .topbar-breadcrumb span:first-child,
+            .topbar-breadcrumb i {
+                display: none;
+            }
+
+            .topbar-breadcrumb .current {
+                font-size: 0.95rem;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .admin-table th,
+            .admin-table td {
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .stat-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -774,15 +903,23 @@ $currentUser = AuthMiddleware::user();
 
 <body>
 
+    <!-- ── Sidebar Backdrop for Mobile ── -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
+
     <!-- ── Sidebar ── -->
     <aside class="admin-sidebar" id="sidebar">
-        <a href="<?php echo $admin_url; ?>index.php" class="sidebar-logo">
-            <img src="<?php echo $base_url; ?>frontend/assets/images/logo.png" alt="Connect MyUni" class="logo-brand-img">
-            <div class="logo-text">
-                <strong>Connect MyUni</strong>
-                <span>Admin Console</span>
-            </div>
-        </a>
+        <div class="sidebar-logo">
+            <a href="<?php echo $admin_url; ?>index.php" style="display:flex;align-items:center;gap:12px;text-decoration:none;min-width:0;flex:1;">
+                <img src="<?php echo $base_url; ?>frontend/assets/images/logo.png" alt="Connect MyUni" class="logo-brand-img">
+                <div class="logo-text">
+                    <strong>Connect MyUni</strong>
+                    <span>Admin Console</span>
+                </div>
+            </a>
+            <button type="button" class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
 
         <div class="nav-group">
             <div class="nav-label">Main</div>
@@ -871,10 +1008,10 @@ $currentUser = AuthMiddleware::user();
         </div>
     </aside>
 
-    <!-- â”€â”€ Topbar â”€â”€ -->
+    <!-- ── Topbar ── -->
     <div class="admin-topbar">
         <div class="topbar-left">
-            <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+            <button type="button" class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation menu">
                 <i class="fas fa-bars"></i>
             </button>
             <div class="topbar-breadcrumb">
@@ -900,15 +1037,41 @@ $currentUser = AuthMiddleware::user();
     <main class="admin-main">
 
         <script>
+            function toggleSidebar() {
+                var sb = document.getElementById('sidebar');
+                var bd = document.getElementById('sidebarBackdrop');
+                if (!sb) return;
+                var isOpen = sb.classList.toggle('open');
+                if (bd) bd.classList.toggle('active', isOpen);
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            }
+
+            function closeSidebar() {
+                var sb = document.getElementById('sidebar');
+                var bd = document.getElementById('sidebarBackdrop');
+                if (sb) sb.classList.remove('open');
+                if (bd) bd.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeSidebar();
+            });
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 1024) closeSidebar();
+            });
+
             (function() {
                 function tick() {
-                    const t = new Date();
-                    document.getElementById('admin-clock').textContent =
-                        t.toLocaleTimeString('en-GB', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit'
-                        });
+                    var el = document.getElementById('admin-clock');
+                    if (!el) return;
+                    var t = new Date();
+                    el.textContent = t.toLocaleTimeString('en-GB', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
                 }
                 tick();
                 setInterval(tick, 1000);
