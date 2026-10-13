@@ -119,7 +119,7 @@ include __DIR__ . '/../components/admin-header.php';
                 View All
             </a>
         </div>
-        <div style="overflow-x:auto;">
+        <div class="table-responsive">
             <table class="admin-table">
                 <thead>
                     <tr>
@@ -229,7 +229,7 @@ include __DIR__ . '/../components/admin-header.php';
         <h3 style="font-size:1rem;font-weight:700;color:var(--txt);margin:0;">Recent Student Registrations</h3>
         <span style="font-size:0.75rem;color:var(--txt-muted);">Latest students registering for overseas education sessions</span>
     </div>
-    <div style="overflow-x:auto;">
+    <div class="table-responsive">
         <table class="admin-table">
             <thead>
                 <tr>
@@ -263,7 +263,4 @@ include __DIR__ . '/../components/admin-header.php';
     </div>
 </div>
 
-</main>
 <?php include __DIR__ . '/../components/footer.php'; ?>
-</body>
-</html>

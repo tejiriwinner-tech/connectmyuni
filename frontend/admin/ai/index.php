@@ -134,7 +134,8 @@ window.CMU_AI = {
         <?php if (empty($history)): ?>
             <p class="form-hint" style="margin-bottom:0;">No generation history yet.</p>
         <?php else: ?>
-        <table class="table" style="width:100%;border-collapse:collapse;">
+        <div class="table-responsive">
+            <table class="admin-table table" style="width:100%;border-collapse:collapse;">
             <thead>
                 <tr style="border-bottom:1px solid var(--border);">
                     <th align="left" style="padding:8px;font-size:.78rem;">ID</th>
@@ -162,6 +163,7 @@ window.CMU_AI = {
                 <?php endforeach; ?>
             </tbody>
         </table>
+        </div>
         <?php endif; ?>
     </div>
 </div>

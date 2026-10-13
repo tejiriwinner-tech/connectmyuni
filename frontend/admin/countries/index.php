@@ -36,38 +36,40 @@ unset($_SESSION['admin_flash']);
 <?php elseif (empty($countries)): ?>
     <div class="card"><p class="form-hint" style="padding:18px">No countries yet. Create your first country.</p></div>
 <?php else: ?>
-    <div class="card">
-        <table class="admin-table">
-            <thead>
-                <tr><th>Flag</th><th>Name</th><th>Slug</th><th>Universities</th><th>Featured</th><th>Order</th><th style="width:150px"></th></tr>
-            </thead>
-            <tbody>
-            <?php foreach ($countries as $c): ?>
-                <tr>
-                    <td><span style="font-size:1.25rem"><?php echo CountryService::flagEmoji((string) ($c['flag_emoji'] ?? '')); ?></span></td>
-                    <td><?php echo htmlspecialchars($c['name'] ?? ''); ?></td>
-                    <td><?php echo htmlspecialchars($c['slug'] ?? ''); ?></td>
-                    <td><?php echo (int) ($c['university_count'] ?? 0); ?></td>
-                    <td>
-                        <?php if (!empty($c['is_featured'])): ?>
-                            <span class="badge" style="background:var(--primary)">Featured</span>
-                        <?php else: ?>
-                            <span class="badge" style="background:var(--txt-muted)">Standard</span>
-                        <?php endif; ?>
-                    </td>
-                    <td><?php echo (int) ($c['sort_order'] ?? 0); ?></td>
-                    <td>
-                        <a class="btn btn-ghost" href="<?php echo $admin_url; ?>countries/edit.php?id=<?php echo (int) ($c['id'] ?? 0); ?>">Edit</a>
-                        <form method="POST" action="<?php echo $admin_url; ?>countries/delete.php" style="display:inline" onsubmit="return confirm('Delete this country?');">
-                            <?php echo Security::csrfInput(); ?>
-                            <input type="hidden" name="id" value="<?php echo (int) ($c['id'] ?? 0); ?>">
-                            <button type="submit" class="btn btn-ghost" style="color:var(--danger)">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
+    <div class="card" style="padding:0;overflow:hidden;">
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr><th>Flag</th><th>Name</th><th>Slug</th><th>Universities</th><th>Featured</th><th>Order</th><th style="width:150px"></th></tr>
+                </thead>
+                <tbody>
+                <?php foreach ($countries as $c): ?>
+                    <tr>
+                        <td><span style="font-size:1.25rem"><?php echo CountryService::flagEmoji((string) ($c['flag_emoji'] ?? '')); ?></span></td>
+                        <td><?php echo htmlspecialchars($c['name'] ?? ''); ?></td>
+                        <td><?php echo htmlspecialchars($c['slug'] ?? ''); ?></td>
+                        <td><?php echo (int) ($c['university_count'] ?? 0); ?></td>
+                        <td>
+                            <?php if (!empty($c['is_featured'])): ?>
+                                <span class="badge" style="background:var(--primary)">Featured</span>
+                            <?php else: ?>
+                                <span class="badge" style="background:var(--txt-muted)">Standard</span>
+                            <?php endif; ?>
+                        </td>
+                        <td><?php echo (int) ($c['sort_order'] ?? 0); ?></td>
+                        <td>
+                            <a class="btn btn-ghost" href="<?php echo $admin_url; ?>countries/edit.php?id=<?php echo (int) ($c['id'] ?? 0); ?>">Edit</a>
+                            <form method="POST" action="<?php echo $admin_url; ?>countries/delete.php" style="display:inline" onsubmit="return confirm('Delete this country?');">
+                                <?php echo Security::csrfInput(); ?>
+                                <input type="hidden" name="id" value="<?php echo (int) ($c['id'] ?? 0); ?>">
+                                <button type="submit" class="btn btn-ghost" style="color:var(--danger)">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 <?php endif; ?>
 

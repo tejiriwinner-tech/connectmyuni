@@ -12,123 +12,58 @@ $totalCount = $service->countAll();
 $ratingCounts = $service->countByRating();
 $csrfToken = Security::generateCsrfToken();
 ?>
-<?php include __DIR__ . '/components/admin-header.php'; ?>
+<?php include __DIR__ . '/../components/admin-header.php'; ?>
 
 <div class="page-heading">
     <h1>Testimonial Management</h1>
     <p>Manage student testimonials for the ConnectMyUni website.</p>
 </div>
 
-<div class="card">
+<div class="card" style="margin-bottom:20px;">
     <div class="card-header">
         <h3>Testimonial Overview</h3>
     </div>
     <div class="card-body">
-        <p>Total testimonials: <strong><?php echo $totalCount; ?></strong> | Active: <strong><?php echo $activeCount; ?></strong></p>
+        <p style="margin-bottom:16px;">Total testimonials: <strong><?php echo $totalCount; ?></strong> | Active: <strong><?php echo $activeCount; ?></strong></p>
 
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card bg-light">
-                    <div class="card-header">Ratings Distribution</div>
-                    <div class="card-body">
-                        <p><?php echo $ratingCounts[0]['cnt'] ?? 0; ?> - <span style="color:#dc3545;">1 Star</span></p>
-                        <p><?php echo $ratingCounts[1]['cnt'] ?? 0; ?> - <span style="color:#fd7e14;">2 Stars</span></p>
-                        <p><?php echo $ratingCounts[2]['cnt'] ?? 0; ?> - <span style="color:#ffc107;">3 Stars</span></p>
-                        <p><?php echo $ratingCounts[3]['cnt'] ?? 0; ?> - <span style="color:#17a2b8;">4 Stars</span></p>
-                        <p><?php echo $ratingCounts[4]['cnt'] ?? 0; ?> - <span style="color:#28a745;">5 Stars</span></p>
-                    </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:14px;">
+            <div class="card" style="padding:14px;background:var(--surface2);">
+                <div style="font-weight:700;font-size:0.85rem;margin-bottom:8px;color:var(--txt);">Ratings Distribution</div>
+                <div style="font-size:0.82rem;color:var(--txt-muted);display:flex;flex-direction:column;gap:4px;">
+                    <div><?php echo $ratingCounts[0]['cnt'] ?? 0; ?> &times; <span style="color:#dc3545;">1 Star</span></div>
+                    <div><?php echo $ratingCounts[1]['cnt'] ?? 0; ?> &times; <span style="color:#fd7e14;">2 Stars</span></div>
+                    <div><?php echo $ratingCounts[2]['cnt'] ?? 0; ?> &times; <span style="color:#ffc107;">3 Stars</span></div>
+                    <div><?php echo $ratingCounts[3]['cnt'] ?? 0; ?> &times; <span style="color:#17a2b8;">4 Stars</span></div>
+                    <div><?php echo $ratingCounts[4]['cnt'] ?? 0; ?> &times; <span style="color:#28a745;">5 Stars</span></div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card bg-light">
-                    <div class="card-header">Status Summary</div>
-                    <div class="card-body">
-                        <p>Active (featured): <strong><?php echo $activeCount; ?></strong></p>
-                        <p>Inactive: <strong><?php echo ($totalCount - $activeCount); ?></strong></p>
-                        <p>Total: <strong><?php echo $totalCount; ?></strong></p>
-                    </div>
+            <div class="card" style="padding:14px;background:var(--surface2);">
+                <div style="font-weight:700;font-size:0.85rem;margin-bottom:8px;color:var(--txt);">Status Summary</div>
+                <div style="font-size:0.82rem;color:var(--txt-muted);display:flex;flex-direction:column;gap:6px;">
+                    <div>Active (featured): <strong style="color:var(--success);"><?php echo $activeCount; ?></strong></div>
+                    <div>Inactive: <strong style="color:var(--txt-muted);"><?php echo ($totalCount - $activeCount); ?></strong></div>
+                    <div>Total logged: <strong style="color:var(--txt);"><?php echo $totalCount; ?></strong></div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card bg-light">
-                    <div class="card-header">Actions</div>
-                    <div class="card-body">
-                        <a href="create.php" class="btn btn-primary w-100 mb-2">Add Testimonial</a>
-                        <a href="edit.php" class="btn btn-secondary w-100 mb-2">Edit Testimonial</a>
-                    </div>
-                </div>
+            <div class="card" style="padding:14px;background:var(--surface2);display:flex;flex-direction:column;justify-content:center;gap:10px;">
+                <div style="font-weight:700;font-size:0.85rem;color:var(--txt);">Actions</div>
+                <a href="create.php" class="btn btn-primary" style="justify-content:center;">+ Add Testimonial</a>
             </div>
         </div>
     </div>
 </div>
 
-<div class="card mt-3">
-    <div class="card-header">
-        <h3>Testimonial List</h3>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Student Name</th>
-                        <th>University</th>
-                        <th>Country</th>
-                        <th>Rating</th>
-                        <th>Featured</th>
-                        <th>Sort Order</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($testimonials as $i => $t): ?>
-                    <tr>
-                        <td><?php echo ($i + 1); ?></td>
-                        <td>
-                            <input type="text" class="form-control form-control-sm" value="<?php echo htmlspecialchars($t['student_name'] ?? ''); ?>" readonly>
-                        </td>
-                        <td>
-                            <span class="badge bg-secondary"><?php echo htmlspecialchars($t['student_university'] ?? ''); ?></span>
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-value"><?php echo $totalCount; ?></div>
-                    <div class="stat-label">Total Testimonials</div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-value"><?php echo $activeCount; ?></div>
-                    <div class="stat-label">Active Testimonials</div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-value"><?php echo $totalCount - $activeCount; ?></div>
-                    <div class="stat-label">Inactive Testimonials</div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-value"><?php echo $ratingCounts[5] ?? 0; ?></div>
-                    <div class="stat-label">5-Star Testimonials</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card mt-3">
+<div class="card" style="padding:0;overflow:hidden;margin-bottom:20px;">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h3>All Testimonials</h3>
-        <a href="create.php" class="btn btn-primary btn-sm">Add New Testimonial</a>
+        <a href="create.php" class="btn btn-primary btn-sm">+ Add New</a>
     </div>
-    <div class="card-body">
+    <div class="card-body" style="padding:0;">
         <?php if (empty($testimonials)): ?>
-            <div class="alert alert-info">No testimonials found. <a href="create.php">Create your first testimonial</a>.</div>
+            <div class="alert alert-info" style="margin:20px;">No testimonials found. <a href="create.php">Create your first testimonial</a>.</div>
         <?php else: ?>
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="admin-table table-hover">
                     <thead>
                         <tr>
                             <th>Student</th>

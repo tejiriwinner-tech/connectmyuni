@@ -758,12 +758,93 @@ $currentUser = AuthMiddleware::user();
             align-items: start;
         }
 
+        .form-row,
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
         .table-responsive {
             width: 100%;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            margin-bottom: 0;
+            display: block;
         }
 
+        /* Auto-scroll any card containing a table */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .card:has(table),
+        .card:has(.admin-table) {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--txt);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Admin tables */
+        .admin-table {
+            width: 100%;
+            min-width: 620px;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .admin-table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--txt-muted);
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .admin-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        .admin-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .admin-table td:last-child {
+            white-space: nowrap;
+        }
+
+        /* ── Tablet Breakpoint (≤ 1024px) ── */
         @media (max-width: 1024px) {
             .admin-dashboard-layout {
                 grid-template-columns: 1fr;
@@ -774,6 +855,7 @@ $currentUser = AuthMiddleware::user();
             }
         }
 
+        /* ── Mobile Breakpoint (≤ 768px) ── */
         @media (max-width: 768px) {
             .admin-sidebar {
                 transform: translateX(-100%);
@@ -785,7 +867,7 @@ $currentUser = AuthMiddleware::user();
             }
 
             .sidebar-close-btn {
-                display: block;
+                display: flex;
             }
 
             .admin-topbar {
@@ -825,15 +907,85 @@ $currentUser = AuthMiddleware::user();
                 padding: 16px;
             }
 
+            /* Stack all form grids on mobile */
+            .form-row,
+            .form-grid,
+            [style*="grid-template-columns:1fr 1fr"],
+            [style*="grid-template-columns: 1fr 1fr"],
+            [style*="grid-template-columns:1fr 340px"] {
+                grid-template-columns: 1fr !important;
+                gap: 14px !important;
+            }
+
+            [style*="grid-column: span 2"] {
+                grid-column: span 1 !important;
+            }
+
+            /* Touch-friendly inputs (prevents iOS auto-zoom) */
+            .form-control,
+            input.form-control,
+            select.form-control,
+            textarea.form-control {
+                font-size: 16px;
+            }
+
             .page-heading {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
                 margin-bottom: 20px;
             }
 
             .page-heading h1 {
                 font-size: 1.25rem;
+                line-height: 1.3;
+            }
+
+            .page-heading p {
+                font-size: 0.82rem;
+                margin-top: 2px;
+            }
+
+            .page-heading > .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 11px 16px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .card-header {
+                padding: 14px 16px;
+            }
+
+            .card-body {
+                padding: 16px 14px;
+            }
+
+            /* Data definition lists (Messages page) */
+            dl.row dt {
+                margin-top: 12px;
+                margin-bottom: 4px;
+                font-weight: 700;
+                color: var(--txt);
+            }
+
+            dl.row dd {
+                margin-bottom: 12px;
+            }
+
+            /* Table action buttons */
+            .admin-table td .btn,
+            .admin-table td .btn-ghost {
+                padding: 6px 10px;
+                font-size: 0.8rem;
             }
         }
 
+        /* ── Small Mobile (≤ 576px) ── */
         @media (max-width: 576px) {
             .topbar-time {
                 display: none;
@@ -858,7 +1010,8 @@ $currentUser = AuthMiddleware::user();
             }
 
             .card {
-                padding: 16px;
+                padding: 14px;
+                border-radius: 8px;
             }
 
             .admin-table th,
@@ -866,37 +1019,62 @@ $currentUser = AuthMiddleware::user();
                 padding: 8px 10px;
                 font-size: 0.8rem;
             }
+
+            /* AI Modals on mobile */
+            .cmu-ai-modal,
+            #cmu-ai-image-modal {
+                padding: 8px !important;
+            }
+
+            .cmu-ai-modal-card {
+                max-height: 94vh !important;
+                border-radius: 8px !important;
+            }
+
+            .cmu-ai-modal-body {
+                padding: 14px !important;
+            }
+
+            .cmu-ai-modal-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .cmu-ai-modal-actions .btn {
+                width: 100%;
+                justify-content: center;
+                font-size: 0.78rem;
+                padding: 8px 6px;
+            }
+
+            #tab-btn-stock,
+            #tab-btn-custom {
+                padding: 8px 8px !important;
+                font-size: 0.75rem !important;
+                flex: 1;
+                text-align: center;
+            }
+
+            select#cmu-ai-content-type {
+                width: 100% !important;
+                min-width: 0 !important;
+            }
         }
 
+        /* ── Ultra-Compact Mobile (≤ 360px) ── */
         @media (max-width: 360px) {
             .stat-grid {
                 grid-template-columns: 1fr;
             }
-        }
 
-        /* â”€â”€ Admin tables (used by CRUD modules) â”€â”€ */
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.88rem;
-        }
-        .admin-table th {
-            text-align: left;
-            padding: 10px 14px;
-            color: var(--txt-muted);
-            font-weight: 600;
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            border-bottom: 1px solid var(--border);
-        }
-        .admin-table td {
-            padding: 10px 14px;
-            border-bottom: 1px solid var(--border);
-            vertical-align: middle;
-        }
-        .admin-table tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
+            .admin-main {
+                padding: 12px 10px;
+            }
+
+            .card {
+                padding: 12px;
+            }
         }
     </style>
 </head>

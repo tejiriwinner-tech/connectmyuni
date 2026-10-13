@@ -30,33 +30,35 @@ try {
 <?php elseif (empty($unis)): ?>
     <div class="card"><p class="form-hint" style="padding:18px">No universities yet.</p></div>
 <?php else: ?>
-    <div class="card">
-        <table class="admin-table">
-            <thead><tr><th></th><th>Name</th><th>Country</th><th>Featured</th><th style="width:150px"></th></tr></thead>
-            <tbody>
-            <?php foreach ($unis as $u): ?>
-                <tr>
-                    <td>
-                        <?php $logo = MediaResolver::url($u['logo_path'] ?? ''); ?>
-                        <?php if ($logo !== ''): ?>
-                            <img src="<?php echo htmlspecialchars($logo); ?>" alt="" style="width:48px;height:48px;object-fit:contain;border-radius:6px;display:block">
-                        <?php else: ?>—<?php endif; ?>
-                    </td>
-                    <td><?php echo htmlspecialchars($u['name'] ?? ''); ?></td>
-                    <td><?php echo htmlspecialchars($u['country_name'] ?? ''); ?></td>
-                    <td><?php echo !empty($u['is_featured']) ? 'Yes' : 'No'; ?></td>
-                    <td>
-                        <a class="btn btn-ghost" href="<?php echo $admin_url; ?>universities/edit.php?id=<?php echo (int) ($u['id'] ?? 0); ?>">Edit</a>
-                        <form method="POST" action="<?php echo $admin_url; ?>universities/delete.php" style="display:inline" onsubmit="return confirm('Delete this university?');">
-                            <?php echo Security::csrfInput(); ?>
-                            <input type="hidden" name="id" value="<?php echo (int) ($u['id'] ?? 0); ?>">
-                            <button type="submit" class="btn btn-ghost" style="color:var(--danger)">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
+    <div class="card" style="padding:0;overflow:hidden;">
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead><tr><th></th><th>Name</th><th>Country</th><th>Featured</th><th style="width:150px"></th></tr></thead>
+                <tbody>
+                <?php foreach ($unis as $u): ?>
+                    <tr>
+                        <td>
+                            <?php $logo = MediaResolver::url($u['logo_path'] ?? ''); ?>
+                            <?php if ($logo !== ''): ?>
+                                <img src="<?php echo htmlspecialchars($logo); ?>" alt="" style="width:48px;height:48px;object-fit:contain;border-radius:6px;display:block">
+                            <?php else: ?>—<?php endif; ?>
+                        </td>
+                        <td><?php echo htmlspecialchars($u['name'] ?? ''); ?></td>
+                        <td><?php echo htmlspecialchars($u['country_name'] ?? ''); ?></td>
+                        <td><?php echo !empty($u['is_featured']) ? 'Yes' : 'No'; ?></td>
+                        <td>
+                            <a class="btn btn-ghost" href="<?php echo $admin_url; ?>universities/edit.php?id=<?php echo (int) ($u['id'] ?? 0); ?>">Edit</a>
+                            <form method="POST" action="<?php echo $admin_url; ?>universities/delete.php" style="display:inline" onsubmit="return confirm('Delete this university?');">
+                                <?php echo Security::csrfInput(); ?>
+                                <input type="hidden" name="id" value="<?php echo (int) ($u['id'] ?? 0); ?>">
+                                <button type="submit" class="btn btn-ghost" style="color:var(--danger)">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 <?php endif; ?>
 

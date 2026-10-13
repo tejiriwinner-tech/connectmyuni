@@ -140,9 +140,9 @@ include __DIR__ . '/components/admin-header.php';
             </div>
         </div>
     <?php else: ?>
-        <div class="card">
+        <div class="card" style="padding:0;overflow:hidden;">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="admin-table table table-hover align-middle mb-0">
                     <thead>
                         <tr>
                             <th>#</th>

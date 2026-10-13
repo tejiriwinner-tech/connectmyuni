@@ -30,36 +30,38 @@ try {
 <?php elseif (empty($events)): ?>
     <div class="card"><p class="form-hint" style="padding:18px">No events yet. Create your first event.</p></div>
 <?php else: ?>
-    <div class="card">
-        <table class="admin-table">
-            <thead>
-                <tr><th></th><th>Title</th><th>Category</th><th>Date</th><th>Status</th><th style="width:150px"></th></tr>
-            </thead>
-            <tbody>
-            <?php foreach ($events as $e): ?>
-                <tr>
-                    <td>
-                        <?php $img = MediaResolver::url($e['image_path'] ?? ''); ?>
-                        <?php if ($img !== ''): ?>
-                            <img src="<?php echo htmlspecialchars($img); ?>" alt="" style="width:64px;height:40px;object-fit:cover;border-radius:6px;display:block">
-                        <?php else: ?>—<?php endif; ?>
-                    </td>
-                    <td><?php echo htmlspecialchars($e['title'] ?? ''); ?></td>
-                    <td><?php echo htmlspecialchars($e['category'] ?? ''); ?></td>
-                    <td><?php echo htmlspecialchars($e['event_date'] ?? ''); ?></td>
-                    <td><?php echo htmlspecialchars($e['status'] ?? ''); ?></td>
-                    <td>
-                        <a class="btn btn-ghost" href="<?php echo $admin_url; ?>events/edit.php?id=<?php echo (int) ($e['id'] ?? 0); ?>">Edit</a>
-                        <form method="POST" action="<?php echo $admin_url; ?>events/delete.php" style="display:inline" onsubmit="return confirm('Delete this event?');">
-                            <?php echo Security::csrfInput(); ?>
-                            <input type="hidden" name="id" value="<?php echo (int) ($e['id'] ?? 0); ?>">
-                            <button type="submit" class="btn btn-ghost" style="color:var(--danger)">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
+    <div class="card" style="padding:0;overflow:hidden;">
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr><th></th><th>Title</th><th>Category</th><th>Date</th><th>Status</th><th style="width:150px"></th></tr>
+                </thead>
+                <tbody>
+                <?php foreach ($events as $e): ?>
+                    <tr>
+                        <td>
+                            <?php $img = MediaResolver::url($e['image_path'] ?? ''); ?>
+                            <?php if ($img !== ''): ?>
+                                <img src="<?php echo htmlspecialchars($img); ?>" alt="" style="width:64px;height:40px;object-fit:cover;border-radius:6px;display:block">
+                            <?php else: ?>—<?php endif; ?>
+                        </td>
+                        <td><?php echo htmlspecialchars($e['title'] ?? ''); ?></td>
+                        <td><?php echo htmlspecialchars($e['category'] ?? ''); ?></td>
+                        <td><?php echo htmlspecialchars($e['event_date'] ?? ''); ?></td>
+                        <td><?php echo htmlspecialchars($e['status'] ?? ''); ?></td>
+                        <td>
+                            <a class="btn btn-ghost" href="<?php echo $admin_url; ?>events/edit.php?id=<?php echo (int) ($e['id'] ?? 0); ?>">Edit</a>
+                            <form method="POST" action="<?php echo $admin_url; ?>events/delete.php" style="display:inline" onsubmit="return confirm('Delete this event?');">
+                                <?php echo Security::csrfInput(); ?>
+                                <input type="hidden" name="id" value="<?php echo (int) ($e['id'] ?? 0); ?>">
+                                <button type="submit" class="btn btn-ghost" style="color:var(--danger)">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 <?php endif; ?>
 

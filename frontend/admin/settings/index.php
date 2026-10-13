@@ -215,13 +215,10 @@ include __DIR__ . '/../components/admin-header.php';
     </div>
 
     <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:36px;">
-        <button type="submit" class="btn btn-primary" <?php echo !$settingsTableExists ? 'disabled' : ''; ?>>
+        <button type="submit" class="btn btn-primary" style="min-width:180px;justify-content:center;" <?php echo !$settingsTableExists ? 'disabled' : ''; ?>>
             <i class="fas fa-save me-1"></i> Save All Settings
         </button>
     </div>
 </form>
 
-</main>
 <?php include __DIR__ . '/../components/footer.php'; ?>
-</body>
-</html>

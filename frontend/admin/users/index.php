@@ -85,7 +85,7 @@ include __DIR__ . '/../components/admin-header.php';
 <?php endif; ?>
 
 <div class="card" style="padding:0;overflow:hidden;">
-    <div style="overflow-x:auto;">
+    <div class="table-responsive">
         <table class="admin-table">
             <thead>
                 <tr>
@@ -192,7 +192,4 @@ include __DIR__ . '/../components/admin-header.php';
     </div>
 </div>
 
-</main>
 <?php include __DIR__ . '/../components/footer.php'; ?>
-</body>
-</html>
