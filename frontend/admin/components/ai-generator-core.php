@@ -187,6 +187,10 @@ function escHtml(s){
 
 async function fetchJson(url, body){
     var c = getCfg();
+    body = body || {};
+    if (typeof body === 'object' && !body.csrf_token && c.csrf) {
+        body.csrf_token = c.csrf;
+    }
     var res = await fetch(url, {
         method: 'POST',
         credentials: 'same-origin',
@@ -200,7 +204,10 @@ async function fetchJson(url, body){
     var text = await res.text();
     var json;
     try { json = JSON.parse(text); }
-    catch (e) { throw new Error('Server returned a non-JSON response (HTTP ' + res.status + ').'); }
+    catch (e) {
+        var cleanMsg = text.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
+        throw new Error('Server returned an invalid response (HTTP ' + res.status + '): ' + (cleanMsg.substring(0, 160) || 'Unknown error'));
+    }
     return json;
 }
 
@@ -224,6 +231,58 @@ function buildForm(type, container, seed){
         }
 
         var hintHtml = '';
+        if (f.name === 'topic' || f.name === 'university_name') {
+            if (type === 'hero_slide') {
+                hintHtml = '<div class="cmu-ai-hint-row">' +
+                    '<div><i class="fas fa-bullhorn text-warning"></i> Main headline or promotional offer. Tap a preset or type your offer:</div>' +
+                    '<div class="cmu-ai-chips-container">' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'topic\', \'50% Tuition Scholarship & Early Bird Discount for Fall 2026\')"><i class="fas fa-tags"></i> 50% Tuition Scholarship</span>' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'topic\', \'Study in the UK, Canada & USA &ndash; Fast-Track Direct Admission\')"><i class="fas fa-plane-departure"></i> UK, Canada &amp; USA Admission</span>' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'topic\', \'Zero Application Fee Week for Top Partner Universities\')"><i class="fas fa-gift"></i> Zero Fee Week</span>' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'topic\', \'Graduate with 2-3 Year Post-Study Work Visa Opportunities\')"><i class="fas fa-briefcase"></i> Work Visa Opportunities</span>' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'topic\', \'Fast-Track Visa Counseling & Full Application Support\')"><i class="fas fa-passport"></i> Fast-Track Support</span>' +
+                        '<button type="button" class="cmu-ai-guide-toggle" onclick="ConnectMyUni.Ai.toggleGuide(\'topic-offer\')"><i class="fas fa-question-circle"></i> Offer Guide</button>' +
+                    '</div>' +
+                    '<div id="cmu-ai-guide-topic-offer" class="cmu-ai-guide-box" style="display:none;">' +
+                        '<div><strong><i class="fas fa-lightbulb me-1"></i> Writing High-Converting Banner Offers:</strong></div>' +
+                        '<ul>' +
+                            '<li><strong>Scholarships &amp; Discounts:</strong> Specify incentives (e.g. "Partial Tuition Grants up to $10,000" or "Early-Bird Bursaries").</li>' +
+                            '<li><strong>Target Intakes:</strong> Call out intake dates (e.g. "September 2026 / January 2027 Intakes Open").</li>' +
+                            '<li><strong>Key Student Benefit:</strong> Highlight key differentiators (e.g. "No IELTS Required / WAEC Accepted" or "Post-Study Work Permits").</li>' +
+                        '</ul>' +
+                        '<div style="margin-top:6px;font-size:0.73rem;color:#64748b;"><em>Pro-Tip: Keep it focused on 1 core offer so the headline stays crisp and readable on mobile devices.</em></div>' +
+                    '</div>' +
+                '</div>';
+            } else if (type === 'event') {
+                hintHtml = '<div class="cmu-ai-hint-row">' +
+                    '<div><i class="fas fa-calendar-star text-warning"></i> Event title or webinar focus. Tap a preset or type your title:</div>' +
+                    '<div class="cmu-ai-chips-container">' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'topic\', \'Global Study Abroad & Education Fair 2026\')"><i class="fas fa-globe"></i> Global Education Fair</span>' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'topic\', \'UK Student Visa & Application Processing Seminar\')"><i class="fas fa-passport"></i> UK Visa Seminar</span>' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'topic\', \'International Scholarships & Funding Masterclass\')"><i class="fas fa-award"></i> Scholarships Masterclass</span>' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'topic\', \'Undergraduate & Postgraduate Direct Application Day\')"><i class="fas fa-user-graduate"></i> Direct Application Day</span>' +
+                    '</div>' +
+                '</div>';
+            } else if (type === 'university') {
+                hintHtml = '<div class="cmu-ai-hint-row">' +
+                    '<div><i class="fas fa-university text-warning"></i> University or institution name. Tap an example or type yours:</div>' +
+                    '<div class="cmu-ai-chips-container">' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'university_name\', \'University of Greenwich\'); ConnectMyUni.Ai.setField(\'country\', \'United Kingdom\'); ConnectMyUni.Ai.setField(\'city\', \'London\');"><i class="fas fa-landmark"></i> Univ. of Greenwich (UK)</span>' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'university_name\', \'University of Windsor\'); ConnectMyUni.Ai.setField(\'country\', \'Canada\'); ConnectMyUni.Ai.setField(\'city\', \'Windsor\');"><i class="fas fa-landmark"></i> Univ. of Windsor (Canada)</span>' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'university_name\', \'Western Sydney University\'); ConnectMyUni.Ai.setField(\'country\', \'Australia\'); ConnectMyUni.Ai.setField(\'city\', \'Sydney\');"><i class="fas fa-landmark"></i> Western Sydney Univ. (Aus)</span>' +
+                    '</div>' +
+                '</div>';
+            } else if (type === 'blog_post' || type === 'social_caption' || type === 'website_content') {
+                hintHtml = '<div class="cmu-ai-hint-row">' +
+                    '<div><i class="fas fa-pen-nib text-warning"></i> Primary topic or campaign focus. Tap an example or type yours:</div>' +
+                    '<div class="cmu-ai-chips-container">' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'topic\', \'Step-by-Step Guide to Securing a UK Student Visa in 2026\')"><i class="fas fa-book"></i> UK Visa Guide</span>' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'topic\', \'Top 10 Most Affordable Universities in Canada for International Students\')"><i class="fas fa-school"></i> Affordable Canada Unis</span>' +
+                        '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'topic\', \'How to Write a Winning Statement of Purpose (SOP)\')"><i class="fas fa-file-signature"></i> Winning SOP</span>' +
+                    '</div>' +
+                '</div>';
+            }
+        }
         if (f.name === 'tone') {
             hintHtml = '<div class="cmu-ai-hint-row">' +
                 '<div><i class="fas fa-info-circle text-info"></i> Sets the voice and style of the text. Tap a preset or type your own:</div>' +
@@ -300,9 +359,25 @@ function clearEditor(){
 
 function showError(msg){
     var meta = document.getElementById('cmu-ai-meta');
+    var area = document.getElementById('cmu-ai-result-area');
+    var banner = document.getElementById('cmu-ai-banner');
+    if (banner) {
+        banner.hidden = false;
+        banner.style.display = 'block';
+        banner.className = 'cmu-ai-banner';
+        banner.innerHTML = '<div style="background:rgba(239,68,68,0.15);border:1px solid #ef4444;color:#ef4444;padding:12px 16px;border-radius:8px;font-size:0.85rem;margin-bottom:14px;"><i class="fas fa-exclamation-triangle me-2"></i> ' + escHtml(msg) + '</div>';
+    }
+    if (area) {
+        area.hidden = false;
+        area.style.display = 'block';
+    }
     if (meta) {
-        meta.innerHTML = '<span style="color:var(--danger);"><i class="fas fa-exclamation-triangle"></i> ' + escHtml(msg) + '</span>';
-    } else { alert(msg); }
+        meta.innerHTML = '<span style="color:var(--danger);"><i class="fas fa-exclamation-triangle me-1"></i> ' + escHtml(msg) + '</span>';
+    }
+    if (!banner && !meta) {
+        alert(msg);
+    }
+} else { alert(msg); }
 }
 
 function flashButton(id, html){
@@ -335,7 +410,15 @@ function setLoadingLabel(elId, label){
 async function generate(){
     var c = getCfg();
     if (state.busy) return;
-    if (!state.contentType) { showError('No content type selected.'); return; }
+
+    var banner = document.getElementById('cmu-ai-banner');
+    if (banner) {
+        banner.hidden = true;
+        banner.style.display = 'none';
+        banner.innerHTML = '';
+    }
+
+    if (!state.contentType) { showError('Please select a content type.'); return; }
     if (!c.generateUrl) { showError('AI endpoint not configured.'); return; }
     // required-field validation
     var defs = fieldDefs[state.contentType] || [];
@@ -354,6 +437,11 @@ async function generate(){
     var o1 = setLoadingLabel('cmu-ai-generate', 'Generating…');
     var o2 = setLoadingLabel('cmu-ai-regen', 'Regenerating…');
     var meta = document.getElementById('cmu-ai-meta');
+    var area = document.getElementById('cmu-ai-result-area');
+    if (area) {
+        area.hidden = false;
+        area.style.display = 'block';
+    }
     if (meta) {
         meta.innerHTML = '<span style="color:var(--accent);"><i class="fas fa-spinner fa-spin me-1"></i> Generating high-accuracy AI copy (<span id="cmu-ai-timer">0</span>s elapsed)... Please wait.</span>';
     }

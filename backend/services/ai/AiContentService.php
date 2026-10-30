@@ -103,19 +103,11 @@ class AiContentService
     {
         $which = strtolower(trim((string) ($provider ?? env('AI_PROVIDER', ''))));
 
-        if ($which === 'gemini' || $which === 'google' || (!empty(env('GEMINI_API_KEY')) && $which !== 'nvidia' && $which !== 'openai')) {
-            return new GeminiProvider();
-        }
-
-        if ($which === 'nvidia') {
-            return new NvidiaNIMProvider();
-        }
-
-        if ($which === 'openai' || !empty(env('OPENAI_API_KEY'))) {
+        if ($which === 'openai' || (!empty(env('OPENAI_API_KEY')) && $which !== 'gemini' && $which !== 'google')) {
             return new OpenAiProvider();
         }
 
-        // Default to Gemini if key exists or fallback to GeminiProvider
+        // Gemini is our primary, verified provider. Avoid stale nvidia endpoints.
         return new GeminiProvider();
     }
 

@@ -24,6 +24,7 @@ $provider     = AiContentService::resolveProvider();
 $configured   = $provider->isConfigured();
 $providerName = $configured ? $provider->getName() : 'Not configured';
 $types        = AiContentService::allowedContentTypes();
+$selectedType = isset($_GET['type']) && in_array($_GET['type'], $types, true) ? $_GET['type'] : 'event';
 
 $history = [];
 if ($configured) {
@@ -92,9 +93,8 @@ window.CMU_AI = {
             <div>
                 <label class="form-label" style="margin-bottom:4px;">Content Type</label>
                 <select id="cmu-ai-content-type" style="padding:8px 10px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface2);color:var(--txt);min-width:220px;">
-                    <option value="">— Select a content type —</option>
                     <?php foreach ($types as $t): ?>
-                        <option value="<?php echo $t; ?>"><?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $t))); ?></option>
+                        <option value="<?php echo $t; ?>" <?php echo $t === $selectedType ? 'selected' : ''; ?>><?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $t))); ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

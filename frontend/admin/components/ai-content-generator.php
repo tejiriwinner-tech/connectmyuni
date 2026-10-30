@@ -44,7 +44,7 @@ window.CMU_AI = {
 window.__cmuAiFieldMap = <?php echo $aiFieldMapJson; ?>;
 </script>
 
-<button type="button" class="cmu-ai-trigger" onclick="ConnectMyUni.Ai.openFromTrigger()">
+<button type="button" class="cmu-ai-trigger" onclick="ConnectMyUni.Ai.openFromTrigger(this)">
     <i class="fas fa-wand-magic-sparkles"></i> <?php echo htmlspecialchars($aiButtonLabel); ?>
 </button>
 
@@ -88,13 +88,9 @@ window.__cmuAiContentType = <?php echo $aiTypeJson; ?>;
     }
     if (window.ConnectMyUni && window.ConnectMyUni.Ai) {
         window.ConnectMyUni.Ai.fieldMap = window.__cmuAiFieldMap || {};
-        window.ConnectMyUni.Ai.openFromTrigger = function () {
+        window.ConnectMyUni.Ai.openFromTrigger = function (triggerEl) {
             var fm = window.__cmuAiFieldMap || {};
-            // Resolve the actual parent CRUD form (this component is always
-            // included inside the CRUD <form>). closest('form') is more robust
-            // than 'form' (document.querySelector('form') -> first form on page).
-            var trigger = document.querySelector('.cmu-ai-trigger');
-            var form = trigger ? trigger.closest('form') : document.querySelector('form');
+            var form = triggerEl ? triggerEl.closest('form') : document.querySelector('form');
             window.ConnectMyUni.Ai.open({
                 contentType: window.__cmuAiContentType || 'website_content',
                 targetForm: form || 'form',
