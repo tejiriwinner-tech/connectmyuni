@@ -39,7 +39,6 @@ $currentUser = AuthMiddleware::user();
     <!-- Custom Unique UI/UX Theme -->
     <link rel="stylesheet" href="<?php echo $base_url; ?>frontend/assets/css/theme-core.css?v=<?php echo $style_version; ?>">
     <link rel="stylesheet" href="<?php echo $base_url; ?>frontend/assets/css/theme-components.css?v=<?php echo $style_version; ?>">
-    <link rel="stylesheet" href="<?php echo $base_url; ?>frontend/assets/css/theme-pages.css?v=<?php echo $style_version; ?>">
     <style>
         /* TOKENS */
         :root {
@@ -76,6 +75,17 @@ $currentUser = AuthMiddleware::user();
             min-height: 100vh;
             font-size: 14px;
             overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                display: block !important;
+                width: 100% !important;
+                max-width: 100vw !important;
+                overflow-x: hidden !important;
+            }
         }
 
         /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -413,10 +423,15 @@ $currentUser = AuthMiddleware::user();
         .admin-main {
             margin-left: var(--sidebar-w);
             margin-top: var(--topbar-h);
-            flex: 1;
+            flex: 1 1 auto;
+            min-width: 0 !important;
+            max-width: calc(100vw - var(--sidebar-w)) !important;
+            width: calc(100vw - var(--sidebar-w)) !important;
             min-height: calc(100vh - var(--topbar-h));
             background: var(--bg);
             padding: 32px 28px;
+            box-sizing: border-box !important;
+            overflow-x: hidden !important;
         }
 
         /* Page title */
@@ -876,8 +891,14 @@ $currentUser = AuthMiddleware::user();
             }
 
             .admin-main {
-                margin-left: 0;
-                padding: 16px 14px;
+                margin-left: 0 !important;
+                margin-top: var(--topbar-h) !important;
+                width: 100% !important;
+                max-width: 100vw !important;
+                min-width: 0 !important;
+                padding: 16px 12px !important;
+                box-sizing: border-box !important;
+                overflow-x: hidden !important;
             }
 
             .sidebar-toggle {
@@ -1076,7 +1097,139 @@ $currentUser = AuthMiddleware::user();
                 padding: 12px;
             }
         }
+
+        /* ── Robust Admin Cards & Horizontal Scrolling Tables ── */
+        .card,
+        .admin-main .card {
+            background: #181c25 !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 12px !important;
+            color: #e8eaf0 !important;
+            padding: 20px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            margin-bottom: 20px !important;
+        }
+
+        .card-header,
+        .admin-main .card-header {
+            background: #1e2333 !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            padding: 14px 18px !important;
+            margin: -20px -20px 16px -20px !important;
+            border-top-left-radius: 12px !important;
+            border-top-right-radius: 12px !important;
+        }
+
+        .card-header h3,
+        .card-header h2,
+        .card-header h4 {
+            color: #ffffff !important;
+            font-size: 1.05rem !important;
+            font-weight: 700 !important;
+            margin: 0 !important;
+        }
+
+        .card-body,
+        .admin-main .card-body {
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+        }
+
+        .table-responsive,
+        .admin-main .table-responsive {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            display: block !important;
+            box-sizing: border-box !important;
+            margin: 10px 0 0 0 !important;
+            padding: 0 0 4px 0 !important;
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+            border-radius: 8px !important;
+        }
+
+        .admin-table,
+        .admin-main .admin-table {
+            width: 100% !important;
+            min-width: 620px !important;
+            border-collapse: collapse !important;
+            margin: 0 !important;
+            color: #cbd5e1 !important;
+        }
+
+        .admin-table th,
+        .admin-main .admin-table th {
+            background: #1e2333 !important;
+            color: #94a3b8 !important;
+            font-weight: 700 !important;
+            font-size: 0.78rem !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            padding: 12px 14px !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            white-space: nowrap !important;
+        }
+
+        .admin-table td,
+        .admin-main .admin-table td {
+            padding: 12px 14px !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+            vertical-align: middle !important;
+            color: #cbd5e1 !important;
+            font-size: 0.85rem !important;
+        }
+
+        .admin-table tr:hover td {
+            background: rgba(255, 255, 255, 0.03) !important;
+        }
+
+        @media (max-width: 768px) {
+            .page-heading {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 12px !important;
+                margin-bottom: 18px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .page-heading > .btn,
+            .page-heading > a.btn {
+                width: 100% !important;
+                max-width: 100% !important;
+                justify-content: center !important;
+                box-sizing: border-box !important;
+                padding: 12px 16px !important;
+                font-size: 0.9rem !important;
+                text-align: center !important;
+                white-space: normal !important;
+            }
+
+            .card,
+            .admin-main .card {
+                padding: 14px 12px !important;
+                border-radius: 10px !important;
+            }
+
+            .card-header,
+            .admin-main .card-header {
+                padding: 12px 14px !important;
+                margin: -14px -12px 12px -12px !important;
+                border-top-left-radius: 10px !important;
+                border-top-right-radius: 10px !important;
+            }
+        }
     </style>
+
 </head>
 
 <body>

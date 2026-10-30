@@ -1678,3 +1678,47 @@
         padding-right: 1rem !important;
     }
 }
+
+/* ==========================================================================
+   UNBREAKABLE GLOBAL VIEWPORT & MOBILE OVERFLOW PROTECTION
+   ========================================================================== */
+html, body {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    width: 100% !important;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+img, video, canvas, iframe {
+    max-width: 100% !important;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .container, .container-fluid {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .row {
+        margin-left: -7px !important;
+        margin-right: -7px !important;
+    }
+    .row > * {
+        padding-left: 7px !important;
+        padding-right: 7px !important;
+    }
+    .service-card-item,
+    .event-card,
+    .university-card,
+    .cmi-metric-card,
+    .gallery-item,
+    .card {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
