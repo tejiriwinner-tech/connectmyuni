@@ -37,6 +37,22 @@ if ($configured) {
     }
 }
 
+$socialSettings = [];
+try {
+    $pdo = ConnectMyUni\Database::getConnection();
+    $settingsRepo = new ConnectMyUni\Repositories\SettingsRepository($pdo);
+    $publicSettings = $settingsRepo->getAllPublicSettings();
+    $socialSettings = [
+        'facebook'  => $publicSettings['social_facebook'] ?? '',
+        'twitter'   => $publicSettings['social_twitter'] ?? '',
+        'instagram' => $publicSettings['social_instagram'] ?? '',
+        'linkedin'  => $publicSettings['social_linkedin'] ?? '',
+        'youtube'   => $publicSettings['social_youtube'] ?? '',
+    ];
+} catch (\Throwable $e) {
+    $socialSettings = [];
+}
+
 $baseUrl     = $admin_url ?? (defined('CONNECTMYUNI_BASE_URL') ? CONNECTMYUNI_BASE_URL . 'frontend/admin/' : '/');
 $generateUrl = $baseUrl . 'ai/generate.php';
 $improveUrl  = $baseUrl . 'ai/improve.php';
@@ -45,7 +61,8 @@ $improveUrl  = $baseUrl . 'ai/improve.php';
 window.CMU_AI = {
     csrf: <?php echo json_encode($csrf); ?>,
     generateUrl: <?php echo json_encode($generateUrl); ?>,
-    improveUrl: <?php echo json_encode($improveUrl); ?>
+    improveUrl: <?php echo json_encode($improveUrl); ?>,
+    socialLinks: <?php echo json_encode($socialSettings); ?>
 };
 </script>
 
