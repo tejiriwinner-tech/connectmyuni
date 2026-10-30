@@ -72,13 +72,14 @@ class SettingsRepository
     {
         try {
             $stmt = $this->pdo->prepare("
-                INSERT INTO settings (setting_key, setting_value, setting_type, description)
-                VALUES (:key, :value, :type, :description)
+                INSERT INTO settings (setting_key, setting_value, setting_type, description, is_public)
+                VALUES (:key, :value, :type, :description, TRUE)
                 ON CONFLICT (setting_key)
                 DO UPDATE SET
                     setting_value = :value,
                     setting_type = :type,
                     description = COALESCE(:description, settings.description),
+                    is_public = TRUE,
                     updated_at = CURRENT_TIMESTAMP
             ");
 

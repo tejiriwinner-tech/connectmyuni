@@ -5,9 +5,16 @@ require_once __DIR__ . '/../../backend/bootstrap.php';
 use ConnectMyUni\Config\Security;
 use ConnectMyUni\Services\ContactMessageService;
 
+// Load dynamic site settings
+$site_settings   = get_site_settings();
+$contact_phone   = $site_settings['contact_phone'] ?? '+234 806 332 5541';
+$contact_email   = $site_settings['contact_email'] ?? 'info@connectmyuni.net';
+$contact_address = $site_settings['contact_address'] ?? 'Plot 100, Lincoln College of Science Management & Technology, Nyanya-Karshi Rd, Kurudu Azhata, FCT Abuja';
+$clean_phone     = get_clean_phone($contact_phone);
+
 // SEO Meta Configuration
 $page_title = 'Contact Us | Connect MyUni Admissions & Counseling Office';
-$meta_description = 'Get in touch with Connect MyUni for free study abroad counseling. Call +234 806 332 5541 or chat on WhatsApp (+63 917 692 3263) to begin your overseas university application.';
+$meta_description = "Get in touch with Connect MyUni for free study abroad counseling. Call {$contact_phone} or email {$contact_email} to begin your overseas university application.";
 $meta_keywords = 'contact connect myuni, study abroad counseling nigeria, education consultancy abuja, university admission contact, study in uk advisor';
 
 $origin = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'connectmyuni.com');
@@ -20,12 +27,10 @@ $schema_json_ld = [
     'mainEntity' => [
         '@type' => 'LocalBusiness',
         'name'  => 'Connect MyUni',
-        'telephone' => '+2348063325541',
+        'telephone' => '+' . $clean_phone,
         'address' => [
             '@type' => 'PostalAddress',
-            'streetAddress' => 'Plot 100, Lincoln College of Science Management & Technology, Nyanya-Karshi Rd, Kurudu Azhata',
-            'addressLocality' => 'Abuja',
-            'addressRegion' => 'FCT',
+            'streetAddress' => $contact_address,
             'addressCountry' => 'NG'
         ]
     ]
@@ -117,7 +122,7 @@ include __DIR__ . '/../components/header.php';
                             </div>
                             <div class="contact-text">
                                 <h5>Our Location</h5>
-                                <p>Plot 100, Lincoln College of Science Management &amp; Technology, Nyanya-Karshi Rd, Kurudu Azhata, FCT Abuja</p>
+                                <p><?php echo htmlspecialchars($contact_address); ?></p>
                             </div>
                         </div>
 
@@ -127,7 +132,7 @@ include __DIR__ . '/../components/header.php';
                             </div>
                             <div class="contact-text">
                                 <h5>Phone Number</h5>
-                                <p><a href="tel:+2348063325541" style="color:inherit;text-decoration:none;font-weight:600;">+234 806 332 5541</a></p>
+                                <p><a href="tel:+<?php echo htmlspecialchars($clean_phone); ?>" style="color:inherit;text-decoration:none;font-weight:600;"><?php echo htmlspecialchars($contact_phone); ?></a></p>
                             </div>
                         </div>
 
@@ -137,7 +142,7 @@ include __DIR__ . '/../components/header.php';
                             </div>
                             <div class="contact-text">
                                 <h5>Email Address</h5>
-                                <p><a href="mailto:info@connectmyuni.net" style="color:inherit;text-decoration:none;font-weight:600;">info@connectmyuni.net</a></p>
+                                <p><a href="mailto:<?php echo htmlspecialchars($contact_email); ?>" style="color:inherit;text-decoration:none;font-weight:600;"><?php echo htmlspecialchars($contact_email); ?></a></p>
                             </div>
                         </div>
                     </div>

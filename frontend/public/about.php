@@ -328,21 +328,21 @@ include __DIR__ . '/../components/header.php';
                     <i class="fas fa-envelope"></i>
                 </div>
                 <h3 class="contact-title">Email Us</h3>
-                <p class="contact-detail">info@connectmyuni.org</p>
+                <p class="contact-detail"><a href="mailto:<?php echo htmlspecialchars($contact_email); ?>" style="color:inherit;text-decoration:none;font-weight:600;"><?php echo htmlspecialchars($contact_email); ?></a></p>
             </div>
             <div class="contact-info-card">
                 <div class="contact-icon">
                     <i class="fab fa-instagram"></i>
                 </div>
                 <h3 class="contact-title">Follow Us</h3>
-                <p class="contact-detail">@connect_myuni_edu</p>
+                <p class="contact-detail"><a href="<?php echo htmlspecialchars($social_instagram); ?>" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;font-weight:600;">Instagram</a></p>
             </div>
             <div class="contact-info-card">
                 <div class="contact-icon">
-                    <i class="fas fa-globe"></i>
+                    <i class="fas fa-phone"></i>
                 </div>
-                <h3 class="contact-title">Visit Us</h3>
-                <p class="contact-detail">www.connectmyuni.org</p>
+                <h3 class="contact-title">Call Us</h3>
+                <p class="contact-detail"><a href="tel:+<?php echo htmlspecialchars($clean_phone); ?>" style="color:inherit;text-decoration:none;font-weight:600;"><?php echo htmlspecialchars($contact_phone); ?></a></p>
             </div>
         </div>
     </div>

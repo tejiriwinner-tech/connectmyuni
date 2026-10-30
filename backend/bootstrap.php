@@ -81,6 +81,9 @@ spl_autoload_register(static function (string $class): void {
     }
 });
 
+// 4. Preload global SettingsHelper
+require_once __DIR__ . '/helpers/SettingsHelper.php';
+
 // Mark bootstrap complete and expose config for callers.
 $GLOBALS['connectmyuni_app_config'] = $appConfig;
 define('CONNECTMYUNI_BOOTSTRAPPED', true);

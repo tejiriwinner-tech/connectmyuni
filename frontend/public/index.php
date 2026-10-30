@@ -643,18 +643,18 @@ include __DIR__ . '/../components/header.php';
                         <div class="tile-body">
                             <span class="tile-label">Physical Campus</span>
                             <h4 class="tile-heading">Main Office Location</h4>
-                            <p class="tile-value">Plot 100, Lincoln College of Science Management &amp; Technology, Nyanya-Karshi Rd, Kurudu Azhata, FCT Abuja</p>
+                            <p class="tile-value"><?php echo htmlspecialchars($contact_address); ?></p>
                         </div>
                     </div>
 
                     <!-- Phone Tile -->
-                    <a href="tel:+2348063325541" class="cmi-contact-tile phone-tile">
+                    <a href="tel:+<?php echo htmlspecialchars($clean_phone); ?>" class="cmi-contact-tile phone-tile">
                         <div class="tile-icon-box phone">
                             <i class="fas fa-phone-alt"></i>
                         </div>
                         <div class="tile-body">
                             <span class="tile-label">Admissions Hotline</span>
-                            <h4 class="tile-heading">+234 806 332 5541</h4>
+                            <h4 class="tile-heading"><?php echo htmlspecialchars($contact_phone); ?></h4>
                             <p class="tile-subtext">Direct voice call &amp; admissions consultation</p>
                         </div>
                         <div class="tile-action-arrow">
@@ -663,13 +663,13 @@ include __DIR__ . '/../components/header.php';
                     </a>
 
                     <!-- Email Tile -->
-                    <a href="mailto:info@connectmyuni.net" class="cmi-contact-tile email-tile">
+                    <a href="mailto:<?php echo htmlspecialchars($contact_email); ?>" class="cmi-contact-tile email-tile">
                         <div class="tile-icon-box email">
                             <i class="fas fa-envelope"></i>
                         </div>
                         <div class="tile-body">
                             <span class="tile-label">Official Inquiries</span>
-                            <h4 class="tile-heading">info@connectmyuni.net</h4>
+                            <h4 class="tile-heading"><?php echo htmlspecialchars($contact_email); ?></h4>
                             <p class="tile-subtext">Average response time: &lt; 2 hours</p>
                         </div>
                         <div class="tile-action-arrow">
@@ -689,7 +689,7 @@ include __DIR__ . '/../components/header.php';
                             <p class="whatsapp-banner-desc">Connect directly with an education advisor on WhatsApp for fast-track university guidance.</p>
                         </div>
                     </div>
-                    <a href="https://wa.me/+639176923263" class="btn btn-whatsapp-cta" target="_blank" rel="noopener">
+                    <a href="https://wa.me/<?php echo htmlspecialchars($clean_phone); ?>" class="btn btn-whatsapp-cta" target="_blank" rel="noopener">
                         <i class="fab fa-whatsapp me-2"></i> Chat on WhatsApp
                     </a>
                 </div>

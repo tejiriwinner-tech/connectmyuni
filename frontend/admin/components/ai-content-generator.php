@@ -48,23 +48,27 @@ window.__cmuAiFieldMap = <?php echo $aiFieldMapJson; ?>;
     <i class="fas fa-wand-magic-sparkles"></i> <?php echo htmlspecialchars($aiButtonLabel); ?>
 </button>
 
-<div id="cmu-ai-modal" hidden>
-    <div class="cmu-ai-modal-backdrop" data-ai-close></div>
-    <div class="cmu-ai-modal-card">
-        <header>
-            <h2><i class="fas fa-wand-magic-sparkles" style="color:var(--accent);margin-right:6px;"></i> AI Content Generator</h2>
-            <button type="button" class="cmu-ai-modal-close" data-ai-close aria-label="Close">&times;</button>
+<div id="cmu-ai-modal" class="cmu-ai-modal" hidden style="display:none;position:fixed;inset:0;z-index:10050;align-items:center;justify-content:center;padding:16px;">
+    <div class="cmu-ai-modal-backdrop" data-ai-close style="position:absolute;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);"></div>
+    <div class="cmu-ai-modal-card" style="position:relative;z-index:2;background:var(--surface,#181c25);border:1px solid var(--border,rgba(255,255,255,0.12));border-radius:12px;max-width:760px;width:100%;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.75);color:var(--txt,#f1f5f9);overflow:hidden;">
+        <header style="padding:14px 20px;border-bottom:1px solid var(--border,rgba(255,255,255,0.1));display:flex;justify-content:space-between;align-items:center;background:var(--surface2,#1e2333);flex-shrink:0;">
+            <h2 style="font-size:1.05rem;font-weight:700;margin:0;color:var(--txt,#fff);display:flex;align-items:center;gap:8px;">
+                <i class="fas fa-wand-magic-sparkles" style="color:var(--accent,#06b6d4);"></i> AI Content Generator
+            </h2>
+            <button type="button" class="cmu-ai-modal-close" data-ai-close aria-label="Close" style="background:none;border:none;color:var(--txt-muted,#94a3b8);cursor:pointer;font-size:1.6rem;line-height:1;padding:2px 8px;border-radius:6px;">&times;</button>
         </header>
-        <div class="cmu-ai-modal-body">
-            <div id="cmu-ai-type-badge" class="form-hint" style="margin-bottom:6px;"></div>
+        <div class="cmu-ai-modal-body" style="padding:18px;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;">
+            <div id="cmu-ai-type-badge" class="form-hint" style="margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--accent,#06b6d4);font-size:0.75rem;"></div>
             <div id="cmu-ai-context-form" style="margin-bottom:12px;"></div>
-            <div id="cmu-ai-banner" hidden style="display:none;"></div>
+            <div id="cmu-ai-banner" hidden style="display:none;margin-bottom:12px;"></div>
             <div id="cmu-ai-result-area">
-                <label class="form-label" style="margin-bottom:6px;">Generated Content</label>
-                <textarea id="cmu-ai-editor" class="cmu-ai-editor" rows="8" readonly></textarea>
+                <label class="form-label" style="margin-bottom:6px;font-weight:600;display:flex;align-items:center;gap:6px;">
+                    <i class="fas fa-file-lines text-primary"></i> Generated Content
+                </label>
+                <textarea id="cmu-ai-editor" class="cmu-ai-editor" rows="7" readonly style="width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--border,rgba(255,255,255,0.15));border-radius:8px;padding:12px;color:#fff;font-family:monospace;font-size:0.88rem;resize:vertical;"></textarea>
                 <div id="cmu-ai-meta" class="form-hint" style="margin-top:8px;"></div>
             </div>
-            <div class="cmu-ai-modal-actions">
+            <div class="cmu-ai-modal-actions" style="margin-top:16px;">
                 <button id="cmu-ai-generate" type="button" class="btn btn-primary"><i class="fas fa-bolt"></i> Generate</button>
                 <button id="cmu-ai-regen" type="button" class="btn btn-ghost"><i class="fas fa-sync"></i> Regenerate</button>
                 <button id="cmu-ai-improve" type="button" class="btn btn-ghost"><i class="fas fa-wand-magic-sparkles"></i> Improve</button>

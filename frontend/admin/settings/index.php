@@ -21,16 +21,30 @@ $settingsTableExists = false;
 $settingsRepo = null;
 if ($pdo) {
     try {
-        $checkTable = $pdo->query("SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'settings')");
-        if ($checkTable) {
-            $settingsTableExists = (bool) $checkTable->fetchColumn();
-        }
-    } catch (\Throwable $e) {
-        $settingsTableExists = false;
-    }
-
-    if ($settingsTableExists) {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS settings (
+                id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                setting_key VARCHAR(100) NOT NULL UNIQUE,
+                setting_value TEXT NULL,
+                setting_type VARCHAR(20) DEFAULT 'text',
+                description TEXT NULL,
+                is_public BOOLEAN DEFAULT TRUE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ");
+        $settingsTableExists = true;
         $settingsRepo = new SettingsRepository($pdo);
+    } catch (\Throwable $e) {
+        try {
+            $checkTable = $pdo->query("SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'settings')");
+            if ($checkTable && $checkTable->fetchColumn()) {
+                $settingsTableExists = true;
+                $settingsRepo = new SettingsRepository($pdo);
+            }
+        } catch (\Throwable $e2) {
+            $settingsTableExists = false;
+        }
     }
 }
 
@@ -69,39 +83,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $settingsTableExists && $settingsRe
         $settingsRepo->updateSetting('contact_address', $contact_address, 'text', 'Physical office address');
         $settingsRepo->updateSetting('seo_meta_keywords', $seo_meta_keywords, 'text', 'Default SEO keywords');
 
-        $success_message = "Settings updated successfully!";
+        // Clear in-memory cached settings
+        \ConnectMyUni\Helpers\SettingsHelper::clearCache();
+
+        $success_message = "Settings updated successfully! Changes are now live across all pages of Connect MyUni.";
     }
 }
 
 // Get current settings
-if ($settingsTableExists && $settingsRepo) {
-    $settings = $settingsRepo->getAllPublicSettings();
-    $social_facebook = $settings['social_facebook'] ?? '#';
-    $social_twitter = $settings['social_twitter'] ?? '#';
-    $social_instagram = $settings['social_instagram'] ?? '#';
-    $social_linkedin = $settings['social_linkedin'] ?? '#';
-    $social_youtube = $settings['social_youtube'] ?? '#';
+$settings = \ConnectMyUni\Helpers\SettingsHelper::all();
+$social_facebook = $settings['social_facebook'] ?? 'https://facebook.com/connectmyuni';
+$social_twitter = $settings['social_twitter'] ?? 'https://twitter.com/connectmyuni';
+$social_instagram = $settings['social_instagram'] ?? 'https://instagram.com/connectmyuni';
+$social_linkedin = $settings['social_linkedin'] ?? 'https://linkedin.com/company/connectmyuni';
+$social_youtube = $settings['social_youtube'] ?? '#';
 
-    $site_title = $settings['site_title'] ?? 'Connect MyUni';
-    $site_description = $settings['site_description'] ?? 'Your Gateway to Global Education';
-    $contact_email = $settings['contact_email'] ?? 'info@connectmyuni.net';
-    $contact_phone = $settings['contact_phone'] ?? '+234 800 000 0000';
-    $contact_address = $settings['contact_address'] ?? 'Lagos & Abuja, Nigeria';
-    $seo_meta_keywords = $settings['seo_meta_keywords'] ?? 'study abroad nigeria, education consultancy lagos, study in uk, study in canada, study in usa';
-} else {
-    $social_facebook = '#';
-    $social_twitter = '#';
-    $social_instagram = '#';
-    $social_linkedin = '#';
-    $social_youtube = '#';
-
-    $site_title = 'Connect MyUni';
-    $site_description = 'Your Gateway to Global Education';
-    $contact_email = 'info@connectmyuni.net';
-    $contact_phone = '+234 800 000 0000';
-    $contact_address = 'Lagos & Abuja, Nigeria';
-    $seo_meta_keywords = 'study abroad nigeria, education consultancy lagos, study in uk, study in canada, study in usa';
-}
+$site_title = $settings['site_title'] ?? 'Connect MyUni';
+$site_description = $settings['site_description'] ?? 'Your Gateway to Global Education. Premier overseas education & university admission consultancy.';
+$contact_email = $settings['contact_email'] ?? 'info@connectmyuni.net';
+$contact_phone = $settings['contact_phone'] ?? '+234 806 332 5541';
+$contact_address = $settings['contact_address'] ?? 'Plot 100, Lincoln College of Science Management & Technology, Nyanya-Karshi Rd, Kurudu Azhata, FCT Abuja';
+$seo_meta_keywords = $settings['seo_meta_keywords'] ?? 'study abroad nigeria, education consultancy lagos, study in uk, study in canada, study in usa';
 
 $page_title = 'Website Settings';
 $csrfToken = Security::generateCsrfToken();
@@ -164,11 +166,11 @@ include __DIR__ . '/../components/admin-header.php';
             </div>
             <div class="form-group">
                 <label class="form-label">Contact Telephone</label>
-                <input type="text" name="contact_phone" class="form-control" value="<?php echo htmlspecialchars($contact_phone); ?>" placeholder="+234 800 000 0000" <?php echo !$settingsTableExists ? 'disabled' : ''; ?>>
+                <input type="text" name="contact_phone" class="form-control" value="<?php echo htmlspecialchars($contact_phone); ?>" placeholder="+234 806 332 5541" <?php echo !$settingsTableExists ? 'disabled' : ''; ?>>
             </div>
             <div class="form-group" style="grid-column: span 2;">
                 <label class="form-label">Office Address</label>
-                <input type="text" name="contact_address" class="form-control" value="<?php echo htmlspecialchars($contact_address); ?>" placeholder="Lagos & Abuja, Nigeria" <?php echo !$settingsTableExists ? 'disabled' : ''; ?>>
+                <input type="text" name="contact_address" class="form-control" value="<?php echo htmlspecialchars($contact_address); ?>" placeholder="Plot 100, Lincoln College..." <?php echo !$settingsTableExists ? 'disabled' : ''; ?>>
             </div>
         </div>
     </div>

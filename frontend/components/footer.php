@@ -14,32 +14,12 @@
                     </div>
                     <div class="footer-social">
                         <?php
-                        // Try to get social media links from database if available
-                        try {
-                            $social_links = [];
-                            if (isset($pdo) && $pdo) {
-                                // Check if settings table exists
-                                $checkTable = $pdo->query("SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'settings')");
-                                if ($checkTable && $checkTable->fetchColumn()) {
-                                    $stmt = $pdo->query("SELECT setting_key, setting_value FROM settings WHERE setting_key LIKE 'social_%' AND is_public = TRUE");
-                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                        $social_links[$row['setting_key']] = $row['setting_value'];
-                                    }
-                                }
-                            }
-
-                            // Use database links if available, otherwise use placeholders
-                            $facebook_link = $social_links['social_facebook'] ?? '#';
-                            $twitter_link = $social_links['social_twitter'] ?? '#';
-                            $instagram_link = $social_links['social_instagram'] ?? '#';
-                            $linkedin_link = $social_links['social_linkedin'] ?? '#';
-                        } catch (Exception $e) {
-                            // Fallback to placeholder links if database fails
-                            $facebook_link = '#';
-                            $twitter_link = '#';
-                            $instagram_link = '#';
-                            $linkedin_link = '#';
-                        }
+                        $site_settings = $site_settings ?? get_site_settings();
+                        $facebook_link  = $site_settings['social_facebook'] ?? '#';
+                        $twitter_link   = $site_settings['social_twitter'] ?? '#';
+                        $instagram_link = $site_settings['social_instagram'] ?? '#';
+                        $linkedin_link  = $site_settings['social_linkedin'] ?? '#';
+                        $youtube_link   = $site_settings['social_youtube'] ?? '#';
                         ?>
                         <a href="<?php echo htmlspecialchars($facebook_link); ?>" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
                             <i class="fab fa-facebook-f"></i>
@@ -53,6 +33,11 @@
                         <a href="<?php echo htmlspecialchars($linkedin_link); ?>" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
+                        <?php if (!empty($youtube_link) && $youtube_link !== '#'): ?>
+                        <a href="<?php echo htmlspecialchars($youtube_link); ?>" class="social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="footer-links">

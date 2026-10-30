@@ -835,33 +835,33 @@ include __DIR__ . '/../components/header.php';
                         <h3>NEED HELP?</h3>
                     </div>
                     <div class="contact-methods">
-                        <a href="https://wa.me/639176923263" class="contact-method" target="_blank" rel="noopener">
+                        <a href="https://wa.me/<?php echo htmlspecialchars($clean_phone); ?>" class="contact-method" target="_blank" rel="noopener">
                             <div class="contact-icon whatsapp">
                                 <i class="fab fa-whatsapp"></i>
                             </div>
                             <div class="contact-details">
                                 <span class="contact-label">WhatsApp Desk</span>
-                                <span class="contact-value">+63 917 692 3263</span>
+                                <span class="contact-value"><?php echo htmlspecialchars($contact_phone); ?></span>
                             </div>
                             <i class="fas fa-external-link-alt contact-arrow"></i>
                         </a>
-                        <a href="tel:+2348063325541" class="contact-method">
+                        <a href="tel:+<?php echo htmlspecialchars($clean_phone); ?>" class="contact-method">
                             <div class="contact-icon phone" style="background: var(--color-primary);">
                                 <i class="fas fa-phone-alt"></i>
                             </div>
                             <div class="contact-details">
                                 <span class="contact-label">Admissions Hotline</span>
-                                <span class="contact-value">+234 806 332 5541</span>
+                                <span class="contact-value"><?php echo htmlspecialchars($contact_phone); ?></span>
                             </div>
                             <i class="fas fa-external-link-alt contact-arrow"></i>
                         </a>
-                        <a href="mailto:info@connectmyuni.net" class="contact-method">
+                        <a href="mailto:<?php echo htmlspecialchars($contact_email); ?>" class="contact-method">
                             <div class="contact-icon email">
                                 <i class="fas fa-envelope"></i>
                             </div>
                             <div class="contact-details">
                                 <span class="contact-label">Email</span>
-                                <span class="contact-value">info@connectmyuni.net</span>
+                                <span class="contact-value"><?php echo htmlspecialchars($contact_email); ?></span>
                             </div>
                             <i class="fas fa-external-link-alt contact-arrow"></i>
                         </a>

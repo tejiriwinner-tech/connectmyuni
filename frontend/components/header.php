@@ -11,8 +11,19 @@ $is_homepage = (basename($_SERVER['PHP_SELF'] ?? '') === 'index.php');
 // Get cache buster version based on file modification time
 $style_version = @filemtime(__DIR__ . '/../assets/css/style.css') ?: time();
 $modern_ui_version = time() + 23; // Force refresh for larger secondary images
-// SEO Defaults & Dynamic Configuration
-$site_name = 'Connect MyUni';
+// Retrieve live site settings from database or defaults
+$site_settings    = get_site_settings();
+$site_name        = $site_settings['site_title'] ?? 'Connect MyUni';
+$contact_phone    = $site_settings['contact_phone'] ?? '+234 806 332 5541';
+$contact_email    = $site_settings['contact_email'] ?? 'info@connectmyuni.net';
+$contact_address  = $site_settings['contact_address'] ?? 'Plot 100, Lincoln College of Science Management & Technology, Nyanya-Karshi Rd, Kurudu Azhata, FCT Abuja';
+$social_facebook  = $site_settings['social_facebook'] ?? 'https://facebook.com/connectmyuni';
+$social_twitter   = $site_settings['social_twitter'] ?? 'https://twitter.com/connectmyuni';
+$social_instagram = $site_settings['social_instagram'] ?? 'https://instagram.com/connectmyuni';
+$social_linkedin  = $site_settings['social_linkedin'] ?? 'https://linkedin.com/company/connectmyuni';
+$social_youtube   = $site_settings['social_youtube'] ?? '#';
+$clean_phone      = get_clean_phone($contact_phone);
+
 $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
 $http_host = $_SERVER['HTTP_HOST'] ?? 'connectmyuni.com';
 $full_origin = "{$scheme}://{$http_host}";
@@ -27,10 +38,10 @@ if (!empty($page_title)) {
 }
 
 // Meta Description (Target: 150-160 characters, keyword-rich)
-$meta_desc = $meta_description ?? 'Connect MyUni connects ambitious students with world-class universities in the UK, USA, Canada, Australia, and Europe. Expert admission, visa counseling, and scholarship guidance.';
+$meta_desc = $meta_description ?? ($site_settings['site_description'] ?? 'Connect MyUni connects ambitious students with world-class universities in the UK, USA, Canada, Australia, and Europe. Expert admission, visa counseling, and scholarship guidance.');
 
 // Meta Keywords
-$meta_keys = $meta_keywords ?? 'study abroad nigeria, education consultancy lagos, study in uk, study in canada, study in usa, overseas university admission, student visa counseling, scholarship assistance, connect myuni';
+$meta_keys = $meta_keywords ?? ($site_settings['seo_meta_keywords'] ?? 'study abroad nigeria, education consultancy lagos, study in uk, study in canada, study in usa, overseas university admission, student visa counseling, scholarship assistance, connect myuni');
 
 // Canonical URL
 $req_path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
@@ -98,27 +109,27 @@ $robots_val = $meta_robots ?? 'index, follow, max-image-preview:large, max-snipp
       "url": "<?php echo htmlspecialchars($full_origin . $base_url); ?>",
       "logo": "<?php echo htmlspecialchars($social_image); ?>",
       "description": "Premier overseas education and university admission consultancy guiding students to top institutions in the UK, USA, Canada, Australia, and Europe.",
-      "telephone": "+2348063325541",
+      "telephone": "+<?php echo $clean_phone; ?>",
       "contactPoint": [
         {
           "@type": "ContactPoint",
-          "telephone": "+234 806 332 5541",
+          "telephone": "<?php echo htmlspecialchars($contact_phone); ?>",
           "contactType": "Admissions Hotline",
           "areaServed": ["NG", "GH", "KE", "Global"],
           "availableLanguage": ["English"]
         },
         {
           "@type": "ContactPoint",
-          "telephone": "+63 917 692 3263",
+          "telephone": "<?php echo htmlspecialchars($contact_phone); ?>",
           "contactType": "WhatsApp Counseling Desk",
           "availableLanguage": ["English"]
         }
       ],
       "sameAs": [
-        "https://facebook.com/connectmyuni",
-        "https://instagram.com/connectmyuni",
-        "https://linkedin.com/company/connectmyuni",
-        "https://twitter.com/connectmyuni"
+        "<?php echo htmlspecialchars($social_facebook); ?>",
+        "<?php echo htmlspecialchars($social_instagram); ?>",
+        "<?php echo htmlspecialchars($social_linkedin); ?>",
+        "<?php echo htmlspecialchars($social_twitter); ?>"
       ]
     }
     </script>
@@ -173,7 +184,7 @@ $robots_val = $meta_robots ?? 'index, follow, max-image-preview:large, max-snipp
     <?php endif; ?>
 
     <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/+639176923263" class="whatsapp-btn" target="_blank" aria-label="Contact us on WhatsApp">
+    <a href="https://wa.me/<?php echo $clean_phone; ?>" class="whatsapp-btn" target="_blank" aria-label="Contact us on WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
 

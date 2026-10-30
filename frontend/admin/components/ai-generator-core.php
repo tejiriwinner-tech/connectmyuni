@@ -15,15 +15,15 @@ if (defined('CMU_AI_CORE_EMITTED') && CMU_AI_CORE_EMITTED) {
 define('CMU_AI_CORE_EMITTED', true);
 ?>
 <style>
-.cmu-ai-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;}
-.cmu-ai-modal[hidden]{display:none;}
-.cmu-ai-modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(3px);}
-.cmu-ai-modal-card{position:relative;z-index:2;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);max-width:780px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);color:var(--txt);}
-.cmu-ai-modal-card header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--surface);z-index:1;}
-.cmu-ai-modal-card header h2{font-size:1rem;font-weight:600;margin:0;color:var(--txt);}
-.cmu-ai-modal-close{background:none;border:none;color:var(--txt-muted);cursor:pointer;font-size:1.5rem;line-height:1;padding:2px 8px;border-radius:6px;}
+#cmu-ai-modal, .cmu-ai-modal{position:fixed !important;inset:0 !important;z-index:10050 !important;display:flex !important;align-items:center !important;justify-content:center !important;padding:16px !important;}
+#cmu-ai-modal[hidden], .cmu-ai-modal[hidden]{display:none !important;}
+#cmu-ai-modal .cmu-ai-modal-backdrop, .cmu-ai-modal-backdrop{position:absolute !important;inset:0 !important;background:rgba(0,0,0,.75) !important;backdrop-filter:blur(5px) !important;-webkit-backdrop-filter:blur(5px) !important;}
+#cmu-ai-modal .cmu-ai-modal-card, .cmu-ai-modal-card{position:relative !important;z-index:2 !important;background:var(--surface, #181c25) !important;border:1px solid var(--border, rgba(255,255,255,0.12)) !important;border-radius:var(--radius, 12px) !important;max-width:760px !important;width:100% !important;max-height:90vh !important;overflow-y:auto !important;-webkit-overflow-scrolling:touch !important;box-shadow:0 20px 60px rgba(0,0,0,.75) !important;color:var(--txt, #f1f5f9) !important;display:flex !important;flex-direction:column !important;}
+.cmu-ai-modal-card header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--surface2, var(--surface));z-index:5;flex-shrink:0;}
+.cmu-ai-modal-card header h2{font-size:1.05rem;font-weight:700;margin:0;color:var(--txt,#fff);display:flex;align-items:center;gap:8px;}
+.cmu-ai-modal-close{background:none;border:none;color:var(--txt-muted);cursor:pointer;font-size:1.6rem;line-height:1;padding:2px 8px;border-radius:6px;}
 .cmu-ai-modal-close:hover{color:var(--txt);background:var(--surface2);}
-.cmu-ai-modal-body{padding:20px;}
+.cmu-ai-modal-body{padding:18px;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;}
 .cmu-ai-modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center;}
 .cmu-ai-modal-actions .btn{flex:0 0 auto;}
 .cmu-ai-trigger{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:var(--radius);background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;cursor:pointer;font-weight:600;font-size:.85rem;font-family:inherit;transition:opacity .15s ease,transform .15s ease;margin:4px 0 12px;}
@@ -922,16 +922,28 @@ function openModal(opts){
             banner.innerHTML = '<i class="fas fa-info-circle"></i> This is standalone generation. Review and edit before approving. Approval records this in history only — it does not publish.';
         }
         banner.hidden = false;
+        banner.style.display = 'block';
     }
     buildForm(opts.contentType, formArea, opts.contextSeed);
     clearEditor();
-    if (modal) modal.hidden = false;
+    if (modal) {
+        if (modal.parentNode && modal.parentNode !== document.body) {
+            document.body.appendChild(modal);
+        }
+        modal.hidden = false;
+        modal.removeAttribute('hidden');
+        modal.style.display = 'flex';
+    }
     document.body.style.overflow = 'hidden';
 }
 
 function close(){
     var modal = document.getElementById('cmu-ai-modal');
-    if (modal) modal.hidden = true;
+    if (modal) {
+        modal.hidden = true;
+        modal.setAttribute('hidden', '');
+        modal.style.display = 'none';
+    }
     document.body.style.overflow = '';
 }
 

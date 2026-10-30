@@ -168,19 +168,19 @@ include __DIR__ . '/../components/header.php';
         <div class="contact-details">
             <div class="contact-detail-item cmi-fade-up">
                 <i class="fas fa-phone"></i>
-                <span>Phone: +234 806 332 5541</span>
+                <span>Phone: <a href="tel:+<?php echo htmlspecialchars($clean_phone); ?>" style="color:inherit;text-decoration:none;font-weight:600;"><?php echo htmlspecialchars($contact_phone); ?></a></span>
             </div>
             <div class="contact-detail-item cmi-fade-up">
                 <i class="fas fa-envelope"></i>
-                <span>Email: info@connectmyuni.org</span>
+                <span>Email: <a href="mailto:<?php echo htmlspecialchars($contact_email); ?>" style="color:inherit;text-decoration:none;font-weight:600;"><?php echo htmlspecialchars($contact_email); ?></a></span>
             </div>
             <div class="contact-detail-item cmi-fade-up">
                 <i class="fas fa-globe"></i>
-                <span>Visit: www.connectmyuni.org</span>
+                <span>Website: <?php echo htmlspecialchars($_SERVER['HTTP_HOST'] ?? 'connectmyuni.com'); ?></span>
             </div>
             <div class="contact-detail-item cmi-fade-up">
                 <i class="fas fa-map-marker-alt"></i>
-                <span>Office: Suite B3, 1st Floor, 2 Michika St, Abuja, Nigeria</span>
+                <span>Office: <?php echo htmlspecialchars($contact_address); ?></span>
             </div>
         </div>
     </div>
