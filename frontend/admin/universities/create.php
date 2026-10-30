@@ -132,5 +132,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 </div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    try {
+        var raw = sessionStorage.getItem('cmu_ai_prefill_university');
+        if (raw) {
+            var data = JSON.parse(raw);
+            if (data.name && document.querySelector('[name="name"]')) document.querySelector('[name="name"]').value = data.name;
+            if (data.location && document.querySelector('[name="location"]')) document.querySelector('[name="location"]').value = data.location;
+            if (data.website_url && document.querySelector('[name="website_url"]')) document.querySelector('[name="website_url"]').value = data.website_url;
+            var desc = data.overview || data.description || '';
+            if (data.programs) {
+                var p = Array.isArray(data.programs) ? data.programs.join(', ') : data.programs;
+                desc += (desc ? '\n\n' : '') + 'Programs: ' + p;
+            }
+            if (data.selling_points) {
+                var sp = Array.isArray(data.selling_points) ? data.selling_points.join('\n- ') : data.selling_points;
+                desc += (desc ? '\n\n' : '') + 'Selling Points:\n- ' + sp;
+            }
+            if (desc && document.querySelector('[name="description"]')) document.querySelector('[name="description"]').value = desc;
+            sessionStorage.removeItem('cmu_ai_prefill_university');
+        }
+    } catch(e) {}
+});
+</script>
 <?php include __DIR__ . '/../components/footer.php'; ?>
 

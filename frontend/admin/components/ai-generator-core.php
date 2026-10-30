@@ -550,8 +550,55 @@ async function approve(){
 
 function useContent(){
     var editor = document.getElementById('cmu-ai-editor');
-    if (!editor) { showError('Editor missing.'); return; }
-    if (!state.fieldMap || !state.targetForm) { showError('Use This Content is only available when the AI generator is opened from a CRUD create/edit form. On this standalone page, copy the generated content manually.'); return; }
+    if (!editor || !editor.value.trim()) { showError('Please generate content before using.'); return; }
+
+    // Standalone AI Studio flow (no parent CRUD form attached)
+    if (!state.fieldMap || !state.targetForm) {
+        try {
+            navigator.clipboard.writeText(editor.value);
+        } catch (_) {
+            editor.select();
+            try { document.execCommand('copy'); } catch (e) {}
+        }
+
+        var type = state.contentType || 'event';
+        var typeLabels = {
+            event: 'Event',
+            university: 'University',
+            hero_slide: 'Hero Slide',
+            services: 'Service',
+            website_content: 'Service'
+        };
+        var typeUrls = {
+            event: '../events/create.php',
+            university: '../universities/create.php',
+            hero_slide: '../hero-slides/create.php',
+            services: '../services/create.php',
+            website_content: '../services/create.php'
+        };
+
+        try {
+            sessionStorage.setItem('cmu_ai_prefill_' + type, editor.value);
+        } catch(e) {}
+
+        var targetUrl = typeUrls[type] || '';
+        var targetLabel = typeLabels[type] || 'Content';
+
+        var banner = document.getElementById('cmu-ai-banner');
+        if (banner) {
+            banner.hidden = false;
+            banner.style.display = 'block';
+            banner.className = 'cmu-ai-banner';
+            var actionBtn = targetUrl ? '<a href="' + targetUrl + '" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:6px;text-decoration:none;font-weight:600;margin-top:6px;"><i class="fas fa-plus-circle"></i> Open Create ' + escHtml(targetLabel) + ' Form (Pre-filled)</a>' : '';
+            banner.innerHTML = '<div style="background:rgba(16,185,129,0.14);border:1px solid #10b981;color:#10b981;padding:14px 18px;border-radius:10px;font-size:0.86rem;margin-bottom:14px;">' +
+                '<div style="font-weight:700;font-size:0.95rem;display:flex;align-items:center;gap:8px;margin-bottom:6px;"><i class="fas fa-check-circle" style="font-size:1.15rem;"></i> Content Copied to Clipboard!</div>' +
+                '<div style="color:var(--txt,#cbd5e1);font-size:0.82rem;line-height:1.45;margin-bottom:6px;">The generated AI text has been copied to your clipboard. You can paste it into any page, or open the create form directly with this content:</div>' +
+                '<div>' + actionBtn + '</div>' +
+            '</div>';
+        }
+        flashButton('cmu-ai-use', '<i class="fas fa-check"></i> Copied to Clipboard!');
+        return;
+    }
     var data = {};
     try { data = JSON.parse(editor.value) || {}; }
     catch (_) { showError('Generated content is not valid JSON. Edit it into valid JSON first.'); return; }

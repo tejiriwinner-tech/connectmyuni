@@ -147,5 +147,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 </div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    try {
+        var raw = sessionStorage.getItem('cmu_ai_prefill_event');
+        if (raw) {
+            var data = JSON.parse(raw);
+            if (data.title && document.querySelector('[name="title"]')) document.querySelector('[name="title"]').value = data.title;
+            if (data.description && document.querySelector('[name="description"]')) document.querySelector('[name="description"]').value = data.description;
+            if (data.details && document.querySelector('[name="details"]')) document.querySelector('[name="details"]').value = data.details;
+            if (data.location && document.querySelector('[name="location"]')) document.querySelector('[name="location"]').value = data.location;
+            if (data.cta && document.querySelector('[name="registration_link"]')) document.querySelector('[name="registration_link"]').value = data.cta;
+            if (data.category && document.querySelector('[name="category"]')) {
+                var catSelect = document.querySelector('[name="category"]');
+                var val = data.category.toLowerCase();
+                for (var i = 0; i < catSelect.options.length; i++) {
+                    if (catSelect.options[i].value.toLowerCase() === val || catSelect.options[i].text.toLowerCase() === val) {
+                        catSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            sessionStorage.removeItem('cmu_ai_prefill_event');
+        }
+    } catch(e) {}
+});
+</script>
 <?php include __DIR__ . '/../components/footer.php'; ?>
 

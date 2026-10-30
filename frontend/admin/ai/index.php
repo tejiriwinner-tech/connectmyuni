@@ -117,7 +117,7 @@ window.CMU_AI = {
             <button id="cmu-ai-generate" type="button" class="btn btn-primary"><i class="fas fa-bolt"></i> Generate</button>
             <button id="cmu-ai-regen" type="button" class="btn btn-ghost"><i class="fas fa-sync"></i> Regenerate</button>
             <button id="cmu-ai-improve" type="button" class="btn btn-ghost"><i class="fas fa-wand-magic-sparkles"></i> Improve</button>
-            <button id="cmu-ai-use" type="button" class="btn btn-ghost"><i class="fas fa-file-import"></i> Use This Content</button>
+            <button id="cmu-ai-use" type="button" class="btn btn-primary" style="background:#0d9488;color:#fff;border-color:#0d9488;"><i class="fas fa-clipboard-check"></i> Copy &amp; Use Content</button>
             <button id="cmu-ai-approve" type="button" class="btn btn-ghost"><i class="fas fa-check"></i> Approve</button>
             <button id="cmu-ai-copy" type="button" class="btn btn-ghost"><i class="fas fa-copy"></i> Copy</button>
             <button id="cmu-ai-clear" type="button" class="btn btn-ghost"><i class="fas fa-trash"></i> Clear</button>

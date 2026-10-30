@@ -137,5 +137,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 </div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    try {
+        var raw = sessionStorage.getItem('cmu_ai_prefill_hero_slide');
+        if (raw) {
+            var data = JSON.parse(raw);
+            if (data.title && document.querySelector('[name="title"]')) document.querySelector('[name="title"]').value = data.title;
+            if (data.subtitle && document.querySelector('[name="subtitle"]')) document.querySelector('[name="subtitle"]').value = data.subtitle;
+            if (data.cta_text && document.querySelector('[name="cta_text"]')) document.querySelector('[name="cta_text"]').value = data.cta_text;
+            if (data.cta_url && document.querySelector('[name="cta_url"]')) document.querySelector('[name="cta_url"]').value = data.cta_url;
+            sessionStorage.removeItem('cmu_ai_prefill_hero_slide');
+        }
+    } catch(e) {}
+});
+</script>
 <?php include __DIR__ . '/../components/footer.php'; ?>
 
