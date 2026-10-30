@@ -47,6 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $redirect = $_SESSION['redirect_after_login'] ?? CONNECTMYUNI_BASE_URL . 'frontend/admin/index.php';
                     unset($_SESSION['redirect_after_login']);
 
+                    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                        header('Content-Type: application/json');
+                        echo json_encode(['success' => true, 'redirect' => $redirect]);
+                        exit;
+                    }
+
                     header('Location: ' . $redirect);
                     exit;
                 } else {
@@ -55,6 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } catch (\Throwable $e) {
                 error_log('Login verification failed: ' . $e->getMessage());
                 $error = 'We could not process your login request. Please try again later.';
+            }
+
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => $error ?: 'Invalid login credentials.']);
+                exit;
             }
         }
     }
@@ -244,6 +257,62 @@ $baseUrl   = CONNECTMYUNI_BASE_URL;
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    (function(){
+        var form = document.querySelector('form');
+        var btn = document.querySelector('.btn-login');
+        if (!form || !btn) return;
+
+        form.addEventListener('submit', async function(e){
+            e.preventDefault();
+            var origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Signing in...';
+            btn.style.opacity = '0.9';
+
+            var alertEl = document.querySelector('.alert-danger');
+            if (alertEl) alertEl.remove();
+
+            var formData = new FormData(form);
+
+            try {
+                var res = await fetch(window.location.href, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    body: formData
+                });
+                var text = await res.text();
+                var data;
+                try { data = JSON.parse(text); } catch(_) { data = null; }
+
+                if (data && data.success) {
+                    btn.innerHTML = '<i class="fas fa-check-circle me-2"></i> Redirecting...';
+                    btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                    window.location.replace(data.redirect || 'index.php');
+                    return;
+                }
+
+                // If not JSON or failed, show error or fall back to native submit
+                if (data && data.error) {
+                    var errDiv = document.createElement('div');
+                    errDiv.className = 'alert alert-danger';
+                    errDiv.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> ' + (data.error || 'Invalid username or password.');
+                    var body = document.querySelector('.login-body');
+                    if (body) body.insertBefore(errDiv, form);
+                    btn.disabled = false;
+                    btn.innerHTML = origHtml;
+                    btn.style.opacity = '1';
+                } else {
+                    // Fallback to normal form submit if server gave non-JSON
+                    form.submit();
+                }
+            } catch(err) {
+                // Network error or fallback
+                form.submit();
+            }
+        });
+    })();
+    </script>
 </body>
 </html>
 

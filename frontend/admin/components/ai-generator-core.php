@@ -377,7 +377,6 @@ function showError(msg){
     if (!banner && !meta) {
         alert(msg);
     }
-} else { alert(msg); }
 }
 
 function flashButton(id, html){
@@ -691,6 +690,20 @@ async function copyGenerated(requestId){
     }
 }
 
+function setupStandalone(){
+    var sel = document.getElementById('cmu-ai-content-type');
+    var formArea = document.getElementById('cmu-ai-context-form');
+    if (sel && formArea) {
+        if (!sel.dataset.bound) {
+            sel.dataset.bound = '1';
+            sel.addEventListener('change', function(){ setContentType(this.value); });
+        }
+        if (!state.contentType || !formArea.children.length) {
+            setContentType(sel.value || 'event');
+        }
+    }
+}
+
 function init(){
     document.addEventListener('click', function(e){
         var t = e.target;
@@ -708,15 +721,18 @@ function init(){
         if (e.key === 'Escape') close();
     });
     // Standalone page: wire the content-type selector (if present) and build the initial form.
-    var sel = document.getElementById('cmu-ai-content-type');
-    if (sel) {
-        sel.addEventListener('change', function(){ setContentType(this.value); });
-        setContentType(sel.value);
-    }
+    setupStandalone();
 }
 
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-else init();
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function(){ init(); setupStandalone(); });
+} else {
+    init();
+    setupStandalone();
+}
+window.addEventListener('load', setupStandalone);
+setTimeout(setupStandalone, 60);
+setTimeout(setupStandalone, 250);
 
 window.ConnectMyUni = window.ConnectMyUni || {};
 window.ConnectMyUni.Ai = window.ConnectMyUni.Ai || {};

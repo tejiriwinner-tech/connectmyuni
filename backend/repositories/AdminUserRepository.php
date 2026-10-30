@@ -40,7 +40,7 @@ class AdminUserRepository
     public function findByUsername(string $username): ?array
     {
         $pdo = Database::getConnection();
-        $stmt = $pdo->prepare("SELECT * FROM admin_users WHERE username = ?");
+        $stmt = $pdo->prepare("SELECT id, username, email, password_hash, role, is_active FROM admin_users WHERE username = ? LIMIT 1");
         $stmt->execute([$username]);
         $user = $stmt->fetch();
 

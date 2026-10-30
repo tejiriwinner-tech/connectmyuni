@@ -18,16 +18,32 @@ $messageRepo = new ContactMessageRepository();
 $testimonialRepo = new TestimonialRepository();
 $galleryRepo = new GalleryRepository();
 
-// Get counts from database
-$totalEvents = count($eventRepo->getAll());
-$totalCountries = count($countryRepo->getAll());
-$totalUniversities = count($universityRepo->getAll());
-$totalEnquiries = $messageRepo->count();
-$totalTestimonials = count($testimonialRepo->getAll());
+// Fast aggregated counts from database (1 network roundtrip instead of 8)
+try {
+    $pdo = ConnectMyUni\Database::getConnection();
+    $statsRow = $pdo->query("SELECT 
+        (SELECT COUNT(*) FROM events) AS total_events,
+        (SELECT COUNT(*) FROM events WHERE category = 'webinar') AS total_webinars,
+        (SELECT COUNT(*) FROM events WHERE category = 'workshop') AS total_workshops,
+        (SELECT COUNT(*) FROM countries) AS total_countries,
+        (SELECT COUNT(*) FROM universities) AS total_universities,
+        (SELECT COUNT(*) FROM contact_messages) AS total_messages,
+        (SELECT COUNT(*) FROM testimonials) AS total_testimonials")->fetch() ?: [];
 
-$webinars = count(array_filter($eventRepo->getAll(), fn($e) => ($e['category'] ?? '') === 'webinar'));
-$workshops = count(array_filter($eventRepo->getAll(), fn($e) => ($e['category'] ?? '') === 'workshop'));
-$latestEventsEvents = array_slice(array_reverse($eventRepo->getAll()), 0, 5);
+    $totalEvents       = (int) ($statsRow['total_events'] ?? 0);
+    $webinars          = (int) ($statsRow['total_webinars'] ?? 0);
+    $workshops         = (int) ($statsRow['total_workshops'] ?? 0);
+    $totalCountries    = (int) ($statsRow['total_countries'] ?? 0);
+    $totalUniversities = (int) ($statsRow['total_universities'] ?? 0);
+    $totalEnquiries    = (int) ($statsRow['total_messages'] ?? 0);
+    $totalTestimonials = (int) ($statsRow['total_testimonials'] ?? 0);
+
+    $latestEvents = $eventRepo->getRecent(5);
+} catch (\Throwable $e) {
+    error_log('Admin dashboard stats query failed: ' . $e->getMessage());
+    $totalEvents = $webinars = $workshops = $totalCountries = $totalUniversities = $totalEnquiries = $totalTestimonials = 0;
+    $latestEvents = [];
+}
 ?>
 
 <div class="page-heading">
@@ -197,7 +213,7 @@ $latestEventsEvents = array_slice(array_reverse($eventRepo->getAll()), 0, 5);
                             <?php echo htmlspecialchars($ev['title']); ?>
                         </div>
                         <div style="font-size:0.72rem;color:var(--txt-muted);margin-top:2px;">
-                            <?php echo htmlspecialchars(date('d M Y', strtotime($ev['date']))); ?>
+                            <?php echo htmlspecialchars(date('d M Y', strtotime($ev['event_date'] ?? ($ev['date'] ?? $ev['created_at'])))); ?>
                             &nbsp;·&nbsp;
                             <span style="text-transform:capitalize;"><?php echo $cat; ?></span>
                         </div>
