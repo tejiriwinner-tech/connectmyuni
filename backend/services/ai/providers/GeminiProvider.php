@@ -3,7 +3,7 @@
 /**
  * Connect MyUni — Google Gemini Provider Implementation
  *
- * Connects to Google AI Studio's Gemini REST API (gemini-2.5-flash / gemini-3.1-flash-lite),
+ * Connects to Google AI Studio's Gemini REST API (gemini-3.1-flash-lite / gemini-flash-lite-latest),
  * providing ultra-fast, high-accuracy structured JSON content generation
  * without deprecation or 404 errors.
  *
@@ -42,9 +42,10 @@ class GeminiProvider implements AiProviderInterface
         }
 
         $this->apiKey = trim($candidateKey);
-        $this->model  = $model ?? (string) (env('AI_MODEL') ?: 'gemini-2.5-flash');
-        if (empty($this->model) || str_contains($this->model, 'llama') || str_contains($this->model, '1.5-flash') || str_contains($this->model, '2.0-flash')) {
-            $this->model = 'gemini-2.5-flash';
+        $this->model  = $model ?? (string) (env('AI_MODEL') ?: 'gemini-3.1-flash-lite');
+        // Automatically migrate deprecated models to active gemini-3.1-flash-lite
+        if (empty($this->model) || str_contains($this->model, 'llama') || str_contains($this->model, '1.5-flash') || str_contains($this->model, '2.0-flash') || str_contains($this->model, '2.5-flash')) {
+            $this->model = 'gemini-3.1-flash-lite';
         }
         $this->apiEndpoint = 'https://generativelanguage.googleapis.com/v1beta/models/' . $this->model . ':generateContent';
         $this->timeout = $timeout;
@@ -80,10 +81,7 @@ class GeminiProvider implements AiProviderInterface
             ];
         }
 
-        $url = $this->apiEndpoint . '?key=' . urlencode(trim($this->apiKey));
-
         $combinedPrompt = trim($systemPrompt . "\n\n" . $userPrompt);
-
         $payload = [
             'contents' => [
                 [
@@ -99,92 +97,106 @@ class GeminiProvider implements AiProviderInterface
             ]
         ];
 
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_POST           => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POSTFIELDS     => json_encode($payload),
-            CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
-            CURLOPT_TIMEOUT        => $this->timeout,
-            CURLOPT_CONNECTTIMEOUT => 8,
-            CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_USERAGENT      => 'ConnectMyUni-Gemini/1.0',
-        ]);
+        // Attempt generation with primary model; retry once with fallback model if deprecated/unavailable
+        $modelsToTry = array_unique([$this->model, 'gemini-3.1-flash-lite', 'gemini-flash-lite-latest']);
+        $lastError   = 'Generation failed.';
 
-        $responseBody = curl_exec($ch);
-        $httpCode     = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlErr      = curl_error($ch);
-        curl_close($ch);
+        foreach ($modelsToTry as $currentModel) {
+            $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . $currentModel . ':generateContent?key=' . urlencode(trim($this->apiKey));
 
-        if ($curlErr) {
-            error_log('[AI Provider Error][gemini] cURL error: ' . $curlErr);
-            return [
-                'success' => false,
-                'data'    => null,
-                'error'   => 'Failed to connect to Google Gemini service: ' . $curlErr,
-            ];
-        }
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_POST           => true,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POSTFIELDS     => json_encode($payload),
+                CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+                CURLOPT_TIMEOUT        => $this->timeout,
+                CURLOPT_CONNECTTIMEOUT => 8,
+                CURLOPT_SSL_VERIFYPEER => true,
+                CURLOPT_USERAGENT      => 'ConnectMyUni-Gemini/1.0',
+            ]);
 
-        $decoded = json_decode((string) $responseBody, true);
+            $responseBody = curl_exec($ch);
+            $httpCode     = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlErr      = curl_error($ch);
+            curl_close($ch);
 
-        if ($httpCode !== 200) {
-            $errMsg = $decoded['error']['message'] ?? "Google API returned HTTP status $httpCode";
-            error_log("[AI Provider Error][gemini] HTTP $httpCode: $errMsg");
-            return [
-                'success' => false,
-                'data'    => null,
-                'error'   => 'Google Gemini error: ' . $errMsg,
-            ];
-        }
+            if ($curlErr) {
+                error_log('[AI Provider Error][gemini] cURL error: ' . $curlErr);
+                return [
+                    'success' => false,
+                    'data'    => null,
+                    'error'   => 'Failed to connect to Google Gemini service: ' . $curlErr,
+                ];
+            }
 
-        $content = $decoded['candidates'][0]['content']['parts'][0]['text'] ?? null;
+            $decoded = json_decode((string) $responseBody, true);
 
-        if ($content === null || trim((string) $content) === '') {
-            return [
-                'success' => false,
-                'data'    => null,
-                'error'   => 'Google Gemini returned an empty response.',
-            ];
-        }
+            if ($httpCode !== 200) {
+                $errMsg = $decoded['error']['message'] ?? "Google API returned HTTP status $httpCode";
+                $lastError = 'Google Gemini error: ' . $errMsg;
+                error_log("[AI Provider Error][gemini][$currentModel] HTTP $httpCode: $errMsg");
 
-        $clean = trim((string) $content);
-        if (preg_match('/^```(?:json)?\s*([\s\S]*?)\s*```$/i', $clean, $matches)) {
-            $clean = trim($matches[1]);
-        }
+                // If this specific model is deprecated or 404, try next candidate model in list
+                if ($httpCode === 404 || str_contains($errMsg, 'no longer available') || $httpCode === 503) {
+                    continue;
+                }
 
-        $jsonContent = json_decode($clean, true);
-        if (json_last_error() === JSON_ERROR_NONE && is_array($jsonContent)) {
-            return [
-                'success' => true,
-                'data'    => $jsonContent,
-                'error'   => null,
-            ];
-        }
+                return [
+                    'success' => false,
+                    'data'    => null,
+                    'error'   => $lastError,
+                ];
+            }
 
-        // Try extracting any embedded JSON block {...}
-        if (preg_match('/\{[\s\S]*\}/', $clean, $m)) {
-            $extracted = json_decode($m[0], true);
-            if (json_last_error() === JSON_ERROR_NONE && is_array($extracted)) {
+            $content = $decoded['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+            if ($content === null || trim((string) $content) === '') {
+                continue;
+            }
+
+            $clean = trim((string) $content);
+            if (preg_match('/^```(?:json)?\s*([\s\S]*?)\s*```$/i', $clean, $matches)) {
+                $clean = trim($matches[1]);
+            }
+
+            $jsonContent = json_decode($clean, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($jsonContent)) {
+                $this->model = $currentModel;
                 return [
                     'success' => true,
-                    'data'    => $extracted,
+                    'data'    => $jsonContent,
+                    'error'   => null,
+                ];
+            }
+
+            // Try extracting any embedded JSON block {...}
+            if (preg_match('/\{[\s\S]*\}/', $clean, $m)) {
+                $extracted = json_decode($m[0], true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($extracted)) {
+                    $this->model = $currentModel;
+                    return [
+                        'success' => true,
+                        'data'    => $extracted,
+                        'error'   => null,
+                    ];
+                }
+            }
+
+            if ($clean !== '') {
+                $this->model = $currentModel;
+                return [
+                    'success' => true,
+                    'data'    => ['improved' => $clean, 'raw_text' => $clean],
                     'error'   => null,
                 ];
             }
         }
 
-        if ($clean !== '') {
-            return [
-                'success' => true,
-                'data'    => ['improved' => $clean, 'raw_text' => $clean],
-                'error'   => null,
-            ];
-        }
-
         return [
             'success' => false,
             'data'    => null,
-            'error'   => 'Unable to parse AI response into structured content.',
+            'error'   => $lastError ?: 'Unable to parse AI response into structured content.',
         ];
     }
 }
