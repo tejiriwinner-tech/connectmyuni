@@ -48,11 +48,13 @@ spl_autoload_register(static function (string $class): void {
     $backendDir = __DIR__;
 
     $prefixes = [
-        'ConnectMyUni\\Config\\'       => $backendDir . '/config',
-        'ConnectMyUni\\Middleware\\'   => $backendDir . '/middleware',
-        'ConnectMyUni\\Repositories\\' => $backendDir . '/repositories',
-        'ConnectMyUni\\Services\\'     => $backendDir . '/services',
-        'ConnectMyUni\\Helpers\\'      => $backendDir . '/helpers',
+        'ConnectMyUni\\Config\\'                  => $backendDir . '/config',
+        'ConnectMyUni\\Middleware\\'              => $backendDir . '/middleware',
+        'ConnectMyUni\\Repositories\\'            => $backendDir . '/repositories',
+        'ConnectMyUni\\Services\\Ai\\Providers\\' => $backendDir . '/services/ai/providers',
+        'ConnectMyUni\\Services\\Ai\\'            => $backendDir . '/services/ai',
+        'ConnectMyUni\\Services\\'                => $backendDir . '/services',
+        'ConnectMyUni\\Helpers\\'                 => $backendDir . '/helpers',
     ];
 
     $classMap = [

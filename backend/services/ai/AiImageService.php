@@ -149,9 +149,12 @@ class AiImageService
         $falKey = \ConnectMyUni\Config\env('FAL_KEY') ?: \ConnectMyUni\Config\env('FAL_API_KEY');
         if (!empty($falKey)) {
             $falRes = $this->generateWithFalAi($cleanPrompt, (string)$falKey, $category);
-            if (!empty($falRes['success']) || !empty($falRes['is_fatal'])) {
+            if (!empty($falRes['success'])) {
                 return $falRes;
             }
+            // If fal.ai fails (e.g. out of credit, auth error, timeout), gracefully fall back
+            // to the free photoreal generator below instead of blocking the user with a fatal error.
+            error_log('AiImageService: fal.ai skipped/failed (' . ($falRes['error'] ?? 'unknown') . '). Falling back to photoreal generation.');
         }
 
         $enhancedPrompt = "Authentic commercial stock photography of real diverse university students, {$cleanPrompt}, real people, modern campus, natural sunlight, sharp 8k photorealistic, Canon EOS R5 photo, no anime, no 3D render, no CGI, no cartoon, no fantasy, no dark moody illustration, professional bright editorial lighting";
@@ -192,6 +195,14 @@ class AiImageService
         }
 
         if (empty($imageData)) {
+            // Ultimate fallback to high-quality curated education stock photography
+            $fallbackKeys = ['imagen3_campus', 'campus_students', 'study_consultation', 'global_classroom'];
+            $selectedKey = $fallbackKeys[array_rand($fallbackKeys)];
+            $stockRes = $this->fetchStockPhoto($selectedKey, $category);
+            if (!empty($stockRes['success'])) {
+                return $stockRes;
+            }
+
             return [
                 'success' => false,
                 'error' => 'AI image provider is currently busy. Please try again in a few moments: ' . $lastError

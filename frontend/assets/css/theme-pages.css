@@ -74,6 +74,33 @@
     transform: scaleX(1);
 }
 
+/* Mobile Navigation Drawer (< 992px) */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        background: #ffffff !important;
+        border-radius: 16px;
+        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(226, 232, 240, 0.8);
+        padding: 1.25rem 1.5rem !important;
+        margin-top: 0.85rem;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+    }
+    .navbar-nav .nav-link {
+        padding: 0.75rem 0.5rem !important;
+        border-bottom: 1px solid rgba(241, 245, 249, 0.9);
+        font-size: 1rem !important;
+    }
+    .navbar-nav .nav-item:last-child .nav-link {
+        border-bottom: none;
+    }
+    .navbar-nav .nav-link::after {
+        display: none !important;
+    }
+    .navbar-nav .nav-link.active {
+        color: var(--color-primary) !important;
+        font-weight: 700 !important;
+    }
+}
+
 /* --------------------------------------------------------------------------
    2. SHARED SUBPAGE HEROES (High Contrast Pure White Typography)
    -------------------------------------------------------------------------- */
@@ -506,6 +533,13 @@
     margin-top: 1.75rem;
 }
 
+@media (max-width: 576px) {
+    .about-features {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+    }
+}
+
 .feature-item {
     display: flex;
     align-items: center;
@@ -602,6 +636,13 @@
     padding: 0 !important;
     background: transparent !important;
     border: none !important;
+}
+
+@media (max-width: 768px) {
+    .secondary-images {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.65rem !important;
+    }
 }
 
 .secondary-image {
@@ -1216,6 +1257,14 @@
     margin-bottom: 2rem;
 }
 
+@media (max-width: 768px) {
+    .event-detail-meta {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+        padding: 1rem;
+    }
+}
+
 .meta-item {
     display: flex;
     align-items: center;
@@ -1575,4 +1624,57 @@
 .website-credit {
     color: var(--color-secondary-light) !important;
     font-weight: 700 !important;
+}
+
+/* ==========================================================================
+   GLOBAL MOBILE RESPONSIVENESS & TOUCH OPTIMIZATIONS (All Pages)
+   ========================================================================== */
+@media (max-width: 576px) {
+    /* Prevent iOS auto-zoom on form inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+
+    /* Floating buttons on small screens */
+    .whatsapp-btn {
+        bottom: 18px !important;
+        right: 14px !important;
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 1.4rem !important;
+    }
+
+    .enquire-btn {
+        bottom: 74px !important;
+        right: 14px !important;
+        padding: 8px 14px !important;
+        font-size: 12px !important;
+    }
+
+    /* Hero section text & padding on mobile */
+    .page-hero, .about-hero-section, .registration-page-hero, .gallery-hero {
+        padding: 3.5rem 0 2.5rem !important;
+    }
+
+    .hero-title, .page-hero-title {
+        font-size: 1.85rem !important;
+        line-height: 1.25 !important;
+    }
+
+    .hero-subtitle, .page-hero-subtitle {
+        font-size: 0.95rem !important;
+    }
+
+    /* Container padding safety */
+    .container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
 }

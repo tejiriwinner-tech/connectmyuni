@@ -4,6 +4,7 @@ namespace ConnectMyUni\Services\Ai;
 
 use ConnectMyUni\Middleware\AuthMiddleware;
 use ConnectMyUni\Repositories\AiContentRequestRepository;
+use ConnectMyUni\Services\Ai\Providers\GeminiProvider;
 use ConnectMyUni\Services\Ai\Providers\NvidiaNIMProvider;
 use ConnectMyUni\Services\Ai\Providers\OpenAiProvider;
 use Throwable;
@@ -89,9 +90,10 @@ class AiContentService
     /**
      * Resolve the active AI provider from configuration (env() AI_PROVIDER).
      *
-     * Selection uses a short, unambiguous identifier — NEVER the URL:
-     *   'nvidia'        -> NvidiaNIMProvider (NVIDIA NIM)
-     *   'openai' | other -> OpenAiProvider (default, backward compatible)
+     * Selection uses a short, unambiguous identifier:
+     *   'gemini' | 'google' -> GeminiProvider (Google Gemini - default if GEMINI_API_KEY present)
+     *   'nvidia'            -> NvidiaNIMProvider (NVIDIA NIM)
+     *   'openai' | other    -> OpenAiProvider (OpenAI)
      *
      * Reads env() (process env first, then .env) so the operator can switch the
      * provider via environment without code changes. No API key or secret is
@@ -99,13 +101,22 @@ class AiContentService
      */
     public static function resolveProvider(?string $provider = null): AiProviderInterface
     {
-        $which = strtolower(trim((string) ($provider ?? env('AI_PROVIDER', 'openai'))));
+        $which = strtolower(trim((string) ($provider ?? env('AI_PROVIDER', ''))));
+
+        if ($which === 'gemini' || $which === 'google' || (!empty(env('GEMINI_API_KEY')) && $which !== 'nvidia' && $which !== 'openai')) {
+            return new GeminiProvider();
+        }
 
         if ($which === 'nvidia') {
             return new NvidiaNIMProvider();
         }
 
-        return new OpenAiProvider();
+        if ($which === 'openai' || !empty(env('OPENAI_API_KEY'))) {
+            return new OpenAiProvider();
+        }
+
+        // Default to Gemini if key exists or fallback to GeminiProvider
+        return new GeminiProvider();
     }
 
     public function providerName(): string

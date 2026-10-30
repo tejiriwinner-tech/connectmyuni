@@ -30,6 +30,13 @@ define('CMU_AI_CORE_EMITTED', true);
 .cmu-ai-trigger:hover{opacity:.92;transform:translateY(-1px);}
 .cmu-ai-trigger i{font-size:.9rem;}
 .cmu-ai-editor{font-family:'DM Mono',monospace;font-size:.85rem;min-height:140px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);}
+@media (max-width: 576px){
+    .cmu-ai-modal, #cmu-ai-image-modal{padding:8px !important;}
+    .cmu-ai-modal-card, .cmu-ai-modal-card{max-height:96vh !important;border-radius:10px !important;}
+    .cmu-ai-modal-body{padding:12px !important;}
+    .cmu-ai-modal-actions{flex-direction:column;align-items:stretch;}
+    .cmu-ai-modal-actions .btn{width:100% !important;justify-content:center;}
+}
 </style>
 <script>
 (function(){
