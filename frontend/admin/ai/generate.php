@@ -154,8 +154,7 @@ try {
     $result = $service->generateContent($contentType, $params);
 } catch (\Throwable $e) {
     error_log('[AI generate] Unhandled error: ' . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'Generation failed. Please try again later.']);
+    echo json_encode(['success' => false, 'error' => 'Generation error: ' . $e->getMessage()]);
     exit;
 }
 

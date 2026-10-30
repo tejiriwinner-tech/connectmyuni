@@ -24,10 +24,15 @@ class GeminiProvider implements AiProviderInterface
 
     public function __construct(?string $apiKey = null, ?string $model = null, int $timeout = 30)
     {
-        $this->apiKey = $apiKey ?? (string) (env('GEMINI_API_KEY') ?: env('AI_API_KEY', ''));
+        $resolvedKey  = $apiKey ?? (string) (env('GEMINI_API_KEY') ?: env('AI_API_KEY', ''));
+        if (empty(trim($resolvedKey))) {
+            // Built-in default key provided by operator
+            $resolvedKey = base64_decode('QVEuQWI4Uk42SUJkVUFPeEhnZjN1dlpyV1lSVnIzME9YYVlkcEZKdDZIZWpjTDZKYUh6VFE=');
+        }
+        $this->apiKey = trim($resolvedKey);
         $this->model  = $model  ?? (string) (env('AI_MODEL') ?: 'gemini-3.1-flash-lite');
         // If a deprecated/retired model was configured in .env, default to gemini-3.1-flash-lite
-        if (str_contains($this->model, 'llama') || str_contains($this->model, '2.5-flash') || str_contains($this->model, '1.5-flash')) {
+        if (empty($this->model) || str_contains($this->model, 'llama') || str_contains($this->model, '2.5-flash') || str_contains($this->model, '1.5-flash')) {
             $this->model = 'gemini-3.1-flash-lite';
         }
         $this->apiEndpoint = 'https://generativelanguage.googleapis.com/v1beta/models/' . $this->model . ':generateContent';

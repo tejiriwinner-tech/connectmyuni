@@ -89,8 +89,7 @@ try {
 } catch (\Throwable $e) {
     error_log('[AI improve] Unhandled error: ' . $e->getMessage());
     if (ob_get_length()) ob_clean();
-    http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'Improvement failed. Please try again later.']);
+    echo json_encode(['success' => false, 'error' => 'Improvement error: ' . $e->getMessage()]);
     exit;
 }
 

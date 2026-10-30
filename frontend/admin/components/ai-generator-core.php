@@ -37,6 +37,84 @@ define('CMU_AI_CORE_EMITTED', true);
     .cmu-ai-modal-actions{flex-direction:column;align-items:stretch;}
     .cmu-ai-modal-actions .btn{width:100% !important;justify-content:center;}
 }
+
+.cmu-ai-hint-row {
+    margin-top: 6px;
+    margin-bottom: 8px;
+    font-size: 0.78rem;
+    color: var(--txt-muted);
+    line-height: 1.4;
+}
+.cmu-ai-chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+    align-items: center;
+}
+.cmu-ai-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--surface2, #1e2333);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--txt, #cbd5e1);
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+.cmu-ai-chip:hover {
+    background: rgba(13, 148, 136, 0.2);
+    border-color: #0d9488;
+    color: #14b8a6;
+    transform: translateY(-1px);
+}
+.cmu-ai-chip:active {
+    transform: scale(0.97);
+}
+.cmu-ai-guide-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: #06b6d4;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 3px 6px;
+    border-radius: 4px;
+    text-decoration: underline;
+    transition: color 0.15s ease;
+}
+.cmu-ai-guide-toggle:hover {
+    color: #38bdf8;
+}
+.cmu-ai-guide-box {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: #94a3b8;
+}
+.cmu-ai-guide-box strong {
+    color: #e2e8f0;
+}
+.cmu-ai-guide-box ul {
+    margin: 6px 0 0 0;
+    padding-left: 18px;
+}
+.cmu-ai-guide-box li {
+    margin-bottom: 5px;
+}
+
 </style>
 <script>
 (function(){
@@ -139,9 +217,56 @@ function buildForm(type, container, seed){
         if (f.type === 'textarea') {
             inp = '<textarea class="form-control" id="' + id + '" name="' + f.name + '" rows="4" placeholder="Enter ' + escHtml(f.label) + '...">' + v + '</textarea>';
         } else {
-            inp = '<input class="form-control" type="text" id="' + id + '" name="' + f.name + '"' + (f.required ? ' required' : '') + ' placeholder="Enter ' + escHtml(f.label) + '..." value="' + v + '">';
+            var ph = 'Enter ' + escHtml(f.label) + '...';
+            if (f.name === 'tone') ph = 'e.g. Professional & academic, or click a preset below';
+            if (f.name === 'length') ph = 'e.g. Medium (~150 words), or click a preset below';
+            inp = '<input class="form-control" type="text" id="' + id + '" name="' + f.name + '"' + (f.required ? ' required' : '') + ' placeholder="' + ph + '" value="' + v + '">';
         }
-        return '<div class="form-group"><label class="form-label" for="' + id + '">' + escHtml(f.label) + req + '</label>' + inp + '</div>';
+
+        var hintHtml = '';
+        if (f.name === 'tone') {
+            hintHtml = '<div class="cmu-ai-hint-row">' +
+                '<div><i class="fas fa-info-circle text-info"></i> Sets the voice and style of the text. Tap a preset or type your own:</div>' +
+                '<div class="cmu-ai-chips-container">' +
+                    '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'tone\', \'Professional, academic, and reassuring\')"><i class="fas fa-graduation-cap"></i> Professional &amp; Academic</span>' +
+                    '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'tone\', \'Inspiring, aspirational, and empowering\')"><i class="fas fa-lightbulb"></i> Inspiring &amp; Motivating</span>' +
+                    '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'tone\', \'Urgent, exciting, and call-to-action focused\')"><i class="fas fa-fire"></i> Urgent &amp; Action-Oriented</span>' +
+                    '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'tone\', \'Warm, conversational, and youth-friendly\')"><i class="fas fa-comments"></i> Friendly &amp; Relatable</span>' +
+                    '<button type="button" class="cmu-ai-guide-toggle" onclick="ConnectMyUni.Ai.toggleGuide(\'tone\')"><i class="fas fa-question-circle"></i> Tone Guide</button>' +
+                '</div>' +
+                '<div id="cmu-ai-guide-tone" class="cmu-ai-guide-box" style="display:none;">' +
+                    '<div><strong><i class="fas fa-book-reader me-1"></i> Tone Guidelines &amp; Best Practices:</strong></div>' +
+                    '<ul>' +
+                        '<li><strong>Professional &amp; Informative:</strong> Best for university admission requirements, visa advisory guidelines, and formal education announcements.</li>' +
+                        '<li><strong>Inspiring &amp; Motivating:</strong> Best for study abroad fairs, scholarship seminars, and student success stories.</li>' +
+                        '<li><strong>Urgent &amp; Action-Oriented:</strong> Best for application deadlines, last remaining seats, and early-bird scholarship discounts.</li>' +
+                        '<li><strong>Friendly &amp; Relatable:</strong> Best for social media captions, student spotlights, and FAQ responses.</li>' +
+                    '</ul>' +
+                    '<div style="margin-top:6px;font-size:0.73rem;color:#64748b;"><em>Pro-Tip: You can combine adjectives (e.g. \'Warm, authoritative, and concise\') or leave blank for the default professional consultancy voice.</em></div>' +
+                '</div>' +
+            '</div>';
+        } else if (f.name === 'length') {
+            hintHtml = '<div class="cmu-ai-hint-row">' +
+                '<div><i class="fas fa-info-circle text-info"></i> Controls how detailed or concise the text will be. Tap a preset or type word count:</div>' +
+                '<div class="cmu-ai-chips-container">' +
+                    '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'length\', \'Short (~50 words)\')"><i class="fas fa-bolt"></i> Short (~50 words)</span>' +
+                    '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'length\', \'Medium (~150 words)\')"><i class="fas fa-file-alt"></i> Medium (~150 words &bull; Recommended)</span>' +
+                    '<span class="cmu-ai-chip" onclick="ConnectMyUni.Ai.setField(\'length\', \'Long / Detailed (~350 words)\')"><i class="fas fa-book-open"></i> Long (~350 words)</span>' +
+                    '<button type="button" class="cmu-ai-guide-toggle" onclick="ConnectMyUni.Ai.toggleGuide(\'length\')"><i class="fas fa-question-circle"></i> Length Guide</button>' +
+                '</div>' +
+                '<div id="cmu-ai-guide-length" class="cmu-ai-guide-box" style="display:none;">' +
+                    '<div><strong><i class="fas fa-ruler-combined me-1"></i> Content Length Guidelines:</strong></div>' +
+                    '<ul>' +
+                        '<li><strong>Short (~50 words):</strong> Best for hero banner slides, quick notification blurbs, and social media captions.</li>' +
+                        '<li><strong>Medium (~150 words):</strong> Recommended default for event descriptions, service summaries, and standard university highlights.</li>' +
+                        '<li><strong>Long / Detailed (~350 words):</strong> Best for in-depth university profile pages, full event agendas, and comprehensive admission/visa guides.</li>' +
+                    '</ul>' +
+                    '<div style="margin-top:6px;font-size:0.73rem;color:#64748b;"><em>Pro-Tip: Leave blank to automatically generate balanced, publication-ready Medium copy.</em></div>' +
+                '</div>' +
+            '</div>';
+        }
+
+        return '<div class="form-group"><label class="form-label" for="' + id + '">' + escHtml(f.label) + req + '</label>' + inp + hintHtml + '</div>';
     }).join('');
 }
 
@@ -521,6 +646,21 @@ window.ConnectMyUni.Ai.buildContextForm = buildForm;
 window.ConnectMyUni.Ai.setContentType = setContentType;
 window.ConnectMyUni.Ai.copyGenerated = copyGenerated;
 window.ConnectMyUni.Ai.cfg = getCfg;
+window.ConnectMyUni.Ai.setField = function(name, val){
+    var el = document.getElementById('cmu-ai-ctx-' + name);
+    if (el) {
+        el.value = val;
+        el.focus();
+        el.style.borderColor = '#0d9488';
+        setTimeout(function(){ el.style.borderColor = ''; }, 700);
+    }
+};
+window.ConnectMyUni.Ai.toggleGuide = function(guideName){
+    var box = document.getElementById('cmu-ai-guide-' + guideName);
+    if (box) {
+        box.style.display = (box.style.display === 'none' || !box.style.display) ? 'block' : 'none';
+    }
+};
 })();
 </script>
 <?php
